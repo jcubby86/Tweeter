@@ -5,7 +5,7 @@ import android.os.Bundle;
 import edu.byu.cs.tweeter.client.model.service.FollowService;
 import edu.byu.cs.tweeter.client.model.service.backgroundTask.IsFollowerTask;
 
-public class IsFollowerHandler extends BackgroundTaskHandler<FollowService.IsFollowerObserver> {
+public class IsFollowerHandler extends DataTaskHandler<Boolean, FollowService.IsFollowerObserver> {
 
     public IsFollowerHandler(FollowService.IsFollowerObserver observer) {
         super(observer);
@@ -17,8 +17,7 @@ public class IsFollowerHandler extends BackgroundTaskHandler<FollowService.IsFol
     }
 
     @Override
-    protected void handleSuccess(Bundle bundle) {
-        boolean isFollower = bundle.getBoolean(IsFollowerTask.IS_FOLLOWER_KEY);
-        observer.handleSuccess(isFollower);
+    protected Boolean getData(Bundle bundle) {
+        return bundle.getBoolean(IsFollowerTask.IS_FOLLOWER_KEY);
     }
 }

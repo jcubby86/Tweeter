@@ -48,7 +48,7 @@ public class MainPresenter {
     public void checkIsFollower(User selectedUser) {
         followService.checkIsFollower(selectedUser, new FollowService.IsFollowerObserver() {
             @Override
-            public void handleSuccess(boolean isFollower) {
+            public void handleSuccess(Boolean isFollower) {
                 view.setFollowing(isFollower);
             }
             @Override
@@ -95,18 +95,18 @@ public class MainPresenter {
     }
 
     public void getCounts(User selectedUser) {
-        followService.getCounts(selectedUser, new FollowService.GetFollowersCountObserver() {
+        followService.getCounts(selectedUser, new FollowService.GetFollowersDataObserver() {
             @Override
-            public void handleSuccess(int followerCount) {
+            public void handleSuccess(Integer followerCount) {
                 view.setFollowerCount(followerCount);
             }
             @Override
             public void handleFailure(String message) {
                 view.displayErrorMessage(message);
             }
-        }, new FollowService.GetFollowingCountObserver() {
+        }, new FollowService.GetFollowingDataObserver() {
             @Override
-            public void handleSuccess(int followingCount) {
+            public void handleSuccess(Integer followingCount) {
                 view.setFollowingCount(followingCount);
             }
             @Override

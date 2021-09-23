@@ -8,19 +8,19 @@ import edu.byu.cs.tweeter.client.model.service.observers.AuthenticationObserver;
 import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
 
-public abstract class AuthenticationTaskHandler<T extends AuthenticationObserver> extends BackgroundTaskHandler<AuthenticationObserver>{
+public abstract class AuthenticationTaskHandler<T extends AuthenticationObserver> extends DataTaskHandler<User, AuthenticationObserver>{
     public AuthenticationTaskHandler(T observer) {
         super(observer);
     }
 
     @Override
-    protected void handleSuccess(Bundle bundle) {
+    protected User getData(Bundle bundle) {
         User authenticatedUser = (User) bundle.getSerializable(AuthenticationTask.USER_KEY);
         AuthToken authToken = (AuthToken) bundle.getSerializable(AuthenticationTask.AUTH_TOKEN_KEY);
 
         Cache.getInstance().setCurrUser(authenticatedUser);
         Cache.getInstance().setCurrUserAuthToken(authToken);
 
-        observer.handleSuccess(authenticatedUser);
+        return authenticatedUser;
     }
 }

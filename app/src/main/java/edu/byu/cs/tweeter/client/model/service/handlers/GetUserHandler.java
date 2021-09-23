@@ -6,7 +6,7 @@ import edu.byu.cs.tweeter.client.model.service.UserService;
 import edu.byu.cs.tweeter.client.model.service.backgroundTask.GetUserTask;
 import edu.byu.cs.tweeter.model.domain.User;
 
-public class GetUserHandler extends BackgroundTaskHandler<UserService.GetUserObserver> {
+public class GetUserHandler extends DataTaskHandler<User, UserService.GetUserObserver> {
 
 
     public GetUserHandler(UserService.GetUserObserver observer) {
@@ -19,9 +19,8 @@ public class GetUserHandler extends BackgroundTaskHandler<UserService.GetUserObs
     }
 
     @Override
-    protected void handleSuccess(Bundle bundle) {
-        User user = (User) bundle.getSerializable(GetUserTask.USER_KEY);
-        observer.handleSuccess(user);
+    protected User getData(Bundle bundle) {
+        return (User) bundle.getSerializable(GetUserTask.USER_KEY);
     }
 
 
