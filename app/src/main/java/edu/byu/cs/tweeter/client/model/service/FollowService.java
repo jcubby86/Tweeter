@@ -19,6 +19,7 @@ import edu.byu.cs.tweeter.client.model.service.handlers.GetFollowingCountHandler
 import edu.byu.cs.tweeter.client.model.service.handlers.GetFollowingHandler;
 import edu.byu.cs.tweeter.client.model.service.handlers.IsFollowerHandler;
 import edu.byu.cs.tweeter.client.model.service.handlers.UnfollowHandler;
+import edu.byu.cs.tweeter.client.model.service.observers.SimpleNotificationObserver;
 import edu.byu.cs.tweeter.model.domain.User;
 
 public class FollowService {
@@ -55,9 +56,7 @@ public class FollowService {
         executor.execute(isFollowerTask);
     }
 
-    public interface UnfollowObserver{
-        void handleSuccess();
-        void handleFailure(String message);
+    public interface UnfollowObserver extends SimpleNotificationObserver {
     }
     public void unfollow(User selectedUser, UnfollowObserver observer){
         UnfollowTask unfollowTask = new UnfollowTask(Cache.getInstance().getCurrUserAuthToken(),
@@ -66,9 +65,7 @@ public class FollowService {
         executor.execute(unfollowTask);
     }
 
-    public interface FollowObserver{
-        void handleSuccess();
-        void handleFailure(String message);
+    public interface FollowObserver extends SimpleNotificationObserver{
     }
     public void follow(User selectedUser, FollowObserver observer){
         FollowTask followTask = new FollowTask(Cache.getInstance().getCurrUserAuthToken(),
@@ -98,4 +95,6 @@ public class FollowService {
                 selectedUser, new GetFollowingCountHandler(getFollowingCountObserver));
         executor.execute(followingCountTask);
     }
+
+
 }
