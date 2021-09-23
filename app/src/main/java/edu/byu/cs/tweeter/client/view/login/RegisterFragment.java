@@ -139,7 +139,7 @@ public class RegisterFragment extends Fragment implements RegisterPresenter.Regi
     }
 
     @Override
-    public void registerUser(User registeredUser) {
+    public void authenticateUser(User registeredUser) {
         Intent intent = new Intent(getContext(), MainActivity.class);
         intent.putExtra(MainActivity.CURRENT_USER_KEY, registeredUser);
 

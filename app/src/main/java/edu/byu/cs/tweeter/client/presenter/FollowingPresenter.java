@@ -4,6 +4,8 @@ import java.util.List;
 
 import edu.byu.cs.tweeter.client.model.service.FollowService;
 import edu.byu.cs.tweeter.client.model.service.UserService;
+import edu.byu.cs.tweeter.client.presenter.observers.InfoPresenterObserver;
+import edu.byu.cs.tweeter.client.presenter.observers.PagedPresenterObserver;
 import edu.byu.cs.tweeter.model.domain.User;
 
 public class FollowingPresenter{
@@ -18,17 +20,7 @@ public class FollowingPresenter{
     private boolean hasMorePages = true;
     private boolean loading = false;
 
-    public interface FollowingView{
-        void displayErrorMessage(String message);
-        void displayMoreFollowing(List<User> followees);
-        void navigateToUser(User user);
-
-        void displayInfoMessage(String message);
-        void clearInfoMessage();
-
-        void removeLoadingFooter();
-        void addLoadingFooter();
-    }
+    public interface FollowingView extends PagedPresenterObserver<User> {}
 
     public FollowingPresenter(FollowingView view){
         this.view = view;
@@ -52,7 +44,7 @@ public class FollowingPresenter{
                     FollowingPresenter.this.lastFollowee = (followees.size() > 0) ? followees.get(followees.size() - 1) : null;
                     loading = false;
                     view.removeLoadingFooter();
-                    view.displayMoreFollowing(followees);
+                    view.displayMoreItems(followees);
                 }
                 @Override
                 public void handleFailure(String message) {

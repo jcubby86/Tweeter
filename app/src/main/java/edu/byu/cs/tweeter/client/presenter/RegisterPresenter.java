@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import java.io.ByteArrayOutputStream;
 
 import edu.byu.cs.tweeter.client.model.service.UserService;
+import edu.byu.cs.tweeter.client.presenter.observers.AuthenticatePresenterObserver;
 import edu.byu.cs.tweeter.model.domain.User;
 
 public class RegisterPresenter {
@@ -15,10 +16,7 @@ public class RegisterPresenter {
     private final UserService userService;
     private final RegisterView view;
 
-    public interface RegisterView{
-        void displayErrorMessage(String message);
-        void registerUser(User registeredUser);
-    }
+    public interface RegisterView extends AuthenticatePresenterObserver {}
 
     public RegisterPresenter(RegisterView view){
         this.view = view;
@@ -36,7 +34,7 @@ public class RegisterPresenter {
         userService.register(firstName, lastName, userAlias, password, imageBytesBase64, new UserService.RegisterObserver(){
             @Override
             public void handleSuccess(User registeredUser) {
-                view.registerUser(registeredUser);
+                view.authenticateUser(registeredUser);
             }
             @Override
             public void handleFailure(String message) {

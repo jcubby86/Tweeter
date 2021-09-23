@@ -4,11 +4,11 @@ import android.os.Bundle;
 
 import edu.byu.cs.tweeter.client.cache.Cache;
 import edu.byu.cs.tweeter.client.model.service.backgroundTask.AuthenticationTask;
-import edu.byu.cs.tweeter.client.model.service.observers.DataObserver;
+import edu.byu.cs.tweeter.client.model.service.observers.DataTaskObserver;
 import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
 
-public abstract class AuthenticationTaskHandler<T extends DataObserver<User>> extends DataTaskHandler<User, DataObserver<User>>{
+public abstract class AuthenticationTaskHandler<T extends DataTaskObserver<User>> extends DataTaskHandler<User, DataTaskObserver<User>>{
     public AuthenticationTaskHandler(T observer) {
         super(observer);
     }

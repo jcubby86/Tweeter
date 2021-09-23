@@ -13,6 +13,7 @@ import edu.byu.cs.tweeter.client.cache.Cache;
 import edu.byu.cs.tweeter.client.model.service.FollowService;
 import edu.byu.cs.tweeter.client.model.service.StatusService;
 import edu.byu.cs.tweeter.client.model.service.UserService;
+import edu.byu.cs.tweeter.client.presenter.observers.InfoPresenterObserver;
 import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
 
@@ -25,17 +26,13 @@ public class MainPresenter {
     private final UserService userService;
     private final MainView view;
 
-    public interface MainView{
-        void displayErrorMessage(String message);
+    public interface MainView extends InfoPresenterObserver {
         void setFollowing(boolean isFollowing);
         void enableFollowButton();
         void finishLogout();
         void statusPostComplete();
         void setFollowerCount(int count);
         void setFollowingCount(int count);
-
-        void displayInfoMessage(String message);
-        void clearInfoMessage();
     }
 
     public MainPresenter(MainView view) {

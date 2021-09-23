@@ -2,9 +2,9 @@ package edu.byu.cs.tweeter.client.model.service.handlers;
 
 import android.os.Bundle;
 
-import edu.byu.cs.tweeter.client.model.service.observers.DataObserver;
+import edu.byu.cs.tweeter.client.model.service.observers.DataTaskObserver;
 
-public abstract class DataTaskHandler<D, T extends DataObserver<D>> extends BackgroundTaskHandler<DataObserver<D>>{
+public abstract class DataTaskHandler<D, T extends DataTaskObserver<D>> extends BackgroundTaskHandler<DataTaskObserver<D>>{
     public DataTaskHandler(T observer) {
         super(observer);
     }

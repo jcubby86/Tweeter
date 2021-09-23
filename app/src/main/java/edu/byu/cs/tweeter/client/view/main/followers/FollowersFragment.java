@@ -91,7 +91,7 @@ public class FollowersFragment extends Fragment implements FollowersPresenter.Fo
         Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
     }
     @Override
-    public void displayMoreFollowers(List<User> followers) {
+    public void displayMoreItems(List<User> followers) {
         followersRecyclerViewAdapter.addItems(followers);
     }
     @Override

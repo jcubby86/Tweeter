@@ -98,7 +98,7 @@ public class StoryFragment extends Fragment implements StoryPresenter.StoryView{
         Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
     }
     @Override
-    public void displayMoreStatuses(List<Status> statuses) {
+    public void displayMoreItems(List<Status> statuses) {
         storyRecyclerViewAdapter.addItems(statuses);
     }
     @Override

@@ -98,7 +98,7 @@ public class FeedFragment extends Fragment implements FeedPresenter.FeedView{
         Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
     }
     @Override
-    public void displayMoreStatuses(List<Status> statuses) {
+    public void displayMoreItems(List<Status> statuses) {
         feedRecyclerViewAdapter.addItems(statuses);
     }
     @Override
