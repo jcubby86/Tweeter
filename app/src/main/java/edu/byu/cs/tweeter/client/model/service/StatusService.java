@@ -11,14 +11,14 @@ import edu.byu.cs.tweeter.client.model.service.backgroundTask.PostStatusTask;
 import edu.byu.cs.tweeter.client.model.service.handlers.GetFeedHandler;
 import edu.byu.cs.tweeter.client.model.service.handlers.GetStoryHandler;
 import edu.byu.cs.tweeter.client.model.service.handlers.PostStatusHandler;
+import edu.byu.cs.tweeter.client.model.service.observers.PagedObserver;
 import edu.byu.cs.tweeter.client.model.service.observers.ServiceObserver;
 import edu.byu.cs.tweeter.client.model.service.observers.SimpleNotificationObserver;
 import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
 
 public class StatusService {
-    public interface GetStoryObserver extends ServiceObserver {
-        void handleSuccess(List<Status> statuses, boolean hasMorePages);
+    public interface GetStoryObserver extends PagedObserver<Status> {
     }
     public void loadMoreOfStory(User user, int pageSize, Status lastStatus, GetStoryObserver observer) {
         GetStoryTask getStoryTask = new GetStoryTask(Cache.getInstance().getCurrUserAuthToken(),
@@ -27,8 +27,7 @@ public class StatusService {
         executor.execute(getStoryTask);
     }
 
-    public interface GetFeedObserver extends ServiceObserver {
-        void handleSuccess(List<Status> statuses, boolean hasMorePages);
+    public interface GetFeedObserver extends PagedObserver<Status> {
     }
     public void loadMoreOfFeed(User user, int pageSize, Status lastStatus, GetFeedObserver observer) {
         GetFeedTask getFeedTask = new GetFeedTask(Cache.getInstance().getCurrUserAuthToken(),
