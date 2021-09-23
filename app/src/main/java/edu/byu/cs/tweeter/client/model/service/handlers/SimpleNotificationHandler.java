@@ -11,7 +11,7 @@ public abstract class SimpleNotificationHandler<T extends SimpleNotificationObse
     }
 
     @Override
-    protected void handleSuccess(Bundle msg) {
+    protected void handleSuccess(Bundle bundle) {
         observer.handleSuccess();
     }
 }

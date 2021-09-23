@@ -4,7 +4,6 @@ import edu.byu.cs.tweeter.client.model.service.StatusService;
 
 public class PostStatusHandler extends SimpleNotificationHandler<StatusService.PostStatusObserver> {
 
-
     public PostStatusHandler(StatusService.PostStatusObserver observer) {
         super(observer);
     }

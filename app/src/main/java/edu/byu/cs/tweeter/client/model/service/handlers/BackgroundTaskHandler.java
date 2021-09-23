@@ -34,5 +34,5 @@ public abstract class BackgroundTaskHandler<T extends ServiceObserver> extends H
 
     protected abstract String getMessage();
 
-    protected abstract void handleSuccess(Bundle msg);
+    protected abstract void handleSuccess(Bundle bundle);
 }

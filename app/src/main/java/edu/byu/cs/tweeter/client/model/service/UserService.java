@@ -12,12 +12,14 @@ import edu.byu.cs.tweeter.client.model.service.backgroundTask.GetUserTask;
 import edu.byu.cs.tweeter.client.model.service.handlers.LoginHandler;
 import edu.byu.cs.tweeter.client.model.service.handlers.LogoutHandler;
 import edu.byu.cs.tweeter.client.model.service.handlers.RegisterHandler;
+import edu.byu.cs.tweeter.client.model.service.observers.AuthenticationObserver;
+import edu.byu.cs.tweeter.client.model.service.observers.ServiceObserver;
+import edu.byu.cs.tweeter.client.model.service.observers.SimpleNotificationObserver;
 import edu.byu.cs.tweeter.model.domain.User;
 
 public class UserService {
-    public interface GetUserObserver {
+    public interface GetUserObserver extends ServiceObserver {
         void handleSuccess(User user);
-        void handleFailure(String message);
     }
     public void getUser(String userAlias, GetUserObserver getUserObserver) {
         GetUserTask getUserTask = new GetUserTask(Cache.getInstance().getCurrUserAuthToken(),
@@ -26,9 +28,7 @@ public class UserService {
         executor.execute(getUserTask);
     }
 
-    public interface LoginObserver{
-        void handleSuccess(User loggedInUser);
-        void handleFailure(String message);
+    public interface LoginObserver extends AuthenticationObserver {
     }
     public void login(String userAlias, String password, LoginObserver loginObserver) {
         LoginTask loginTask = new LoginTask(userAlias,
@@ -37,9 +37,7 @@ public class UserService {
         executor.execute(loginTask);
     }
 
-    public interface RegisterObserver{
-        void handleSuccess(User loggedInUser);
-        void handleFailure(String message);
+    public interface RegisterObserver extends AuthenticationObserver {
     }
     public void register(String firstName, String lastName, String userAlias, String password, String imageBytesBase64, RegisterObserver registerObserver) {
         RegisterTask registerTask = new RegisterTask(firstName, lastName,
@@ -48,9 +46,7 @@ public class UserService {
         executor.execute(registerTask);
     }
 
-    public interface LogoutObserver{
-        void handleSuccess();
-        void handleFailure(String message);
+    public interface LogoutObserver extends SimpleNotificationObserver {
     }
     public void logout(LogoutObserver observer){
         LogoutTask logoutTask = new LogoutTask(Cache.getInstance().getCurrUserAuthToken(), new LogoutHandler(observer));

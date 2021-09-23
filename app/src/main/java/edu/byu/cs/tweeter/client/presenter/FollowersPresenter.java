@@ -45,7 +45,7 @@ public class FollowersPresenter {
             loading = true;
             view.addLoadingFooter();
 
-            followService.loadMoreFollowers(user, PAGE_SIZE, lastFollower, new FollowService.FollowersObserver(){
+            followService.loadMoreFollowers(user, PAGE_SIZE, lastFollower, new FollowService.GetFollowersObserver(){
 
                 @Override
                 public void handleSuccess(List<User> followers, boolean hasMorePages) {
