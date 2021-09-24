@@ -1,5 +1,5 @@
 package edu.byu.cs.tweeter.client.presenter.observers;
 
-public interface PresenterObserver {
+public interface View {
     void displayErrorMessage(String message);
 }

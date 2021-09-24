@@ -13,20 +13,15 @@ import edu.byu.cs.tweeter.client.cache.Cache;
 import edu.byu.cs.tweeter.client.model.service.FollowService;
 import edu.byu.cs.tweeter.client.model.service.StatusService;
 import edu.byu.cs.tweeter.client.model.service.UserService;
-import edu.byu.cs.tweeter.client.presenter.observers.InfoPresenterObserver;
+import edu.byu.cs.tweeter.client.presenter.observers.InfoView;
 import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
 
-public class MainPresenter {
+public class MainPresenter extends Presenter<MainPresenter.MainView> {
 
     private static final String LOG_TAG = "MainActivity";
 
-    private final FollowService followService;
-    private final StatusService statusService;
-    private final UserService userService;
-    private final MainView view;
-
-    public interface MainView extends InfoPresenterObserver {
+    public interface MainView extends InfoView {
         void setFollowing(boolean isFollowing);
         void enableFollowButton();
         void finishLogout();
@@ -36,10 +31,7 @@ public class MainPresenter {
     }
 
     public MainPresenter(MainView view) {
-        this.view = view;
-        followService = new FollowService();
-        statusService = new StatusService();
-        userService = new UserService();
+        super(view);
     }
 
     public void checkIsFollower(User selectedUser) {

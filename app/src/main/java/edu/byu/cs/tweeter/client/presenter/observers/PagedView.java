@@ -4,7 +4,7 @@ import java.util.List;
 
 import edu.byu.cs.tweeter.model.domain.User;
 
-public interface PagedPresenterObserver<T> extends InfoPresenterObserver {
+public interface PagedView<T> extends InfoView {
     void displayMoreItems(List<T> items);
     void navigateToUser(User user);
     void removeLoadingFooter();

@@ -14,14 +14,14 @@ import edu.byu.cs.tweeter.model.domain.User;
 
 public class StatusService extends Service{
     public interface GetStoryObserver extends PagedTaskObserver<Status> {}
-    public void loadMoreOfStory(User user, int pageSize, Status lastStatus, GetStoryObserver observer) {
+    public void loadMoreStory(User user, int pageSize, Status lastStatus, GetStoryObserver observer) {
         GetStoryTask getStoryTask = new GetStoryTask(Cache.getInstance().getCurrUserAuthToken(),
                 user, pageSize, lastStatus, new GetStoryHandler(observer));
         runTask(getStoryTask);
     }
 
     public interface GetFeedObserver extends PagedTaskObserver<Status> {}
-    public void loadMoreOfFeed(User user, int pageSize, Status lastStatus, GetFeedObserver observer) {
+    public void loadMoreFeed(User user, int pageSize, Status lastStatus, GetFeedObserver observer) {
         GetFeedTask getFeedTask = new GetFeedTask(Cache.getInstance().getCurrUserAuthToken(),
                 user, pageSize, lastStatus, new GetFeedHandler(observer));
         runTask(getFeedTask);

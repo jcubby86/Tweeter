@@ -19,7 +19,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -86,7 +85,7 @@ public class FeedFragment extends Fragment implements FeedPresenter.FeedView{
         feedRecyclerViewAdapter = new FeedRecyclerViewAdapter();
         feedRecyclerView.setAdapter(feedRecyclerViewAdapter);
         presenter = new FeedPresenter(this);
-        presenter.loadMoreOfFeed(user);
+        presenter.loadMoreItems(user);
 
         feedRecyclerView.addOnScrollListener(new FeedRecyclerViewPaginationScrollListener(layoutManager));
 
@@ -383,7 +382,7 @@ public class FeedFragment extends Fragment implements FeedPresenter.FeedView{
                     totalItemCount && firstVisibleItemPosition >= 0) {
                 // Run this code later on the UI thread
                 final Handler handler = new Handler(Looper.getMainLooper());
-                handler.postDelayed(() -> presenter.loadMoreOfFeed(user), 0);
+                handler.postDelayed(() -> presenter.loadMoreItems(user), 0);
             }
 
         }

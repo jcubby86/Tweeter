@@ -14,6 +14,7 @@ public abstract class BackgroundTaskHandler<T extends BackgroundTaskObserver> ex
     protected T observer;
 
     public BackgroundTaskHandler(T observer) {
+        super((Callback) null);
         this.observer = observer;
     }
 

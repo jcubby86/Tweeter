@@ -19,7 +19,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -86,7 +85,7 @@ public class StoryFragment extends Fragment implements StoryPresenter.StoryView{
         storyRecyclerViewAdapter = new StoryRecyclerViewAdapter();
         storyRecyclerView.setAdapter(storyRecyclerViewAdapter);
         presenter = new StoryPresenter(this);
-        presenter.loadMoreOfStory(user);
+        presenter.loadMoreItems(user);
 
         storyRecyclerView.addOnScrollListener(new StoryRecyclerViewPaginationScrollListener(layoutManager));
 
@@ -374,7 +373,7 @@ public class StoryFragment extends Fragment implements StoryPresenter.StoryView{
                     totalItemCount && firstVisibleItemPosition >= 0) {
                 // Run this code later on the UI thread
                 final Handler handler = new Handler(Looper.getMainLooper());
-                handler.postDelayed(() -> presenter.loadMoreOfStory(user), 0);
+                handler.postDelayed(() -> presenter.loadMoreItems(user), 0);
             }
 
         }

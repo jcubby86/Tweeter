@@ -13,7 +13,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -79,7 +78,7 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Fo
         followingRecyclerViewAdapter = new FollowingRecyclerViewAdapter();
         followingRecyclerView.setAdapter(followingRecyclerViewAdapter);
         presenter = new FollowingPresenter(this);
-        presenter.loadMoreFollowing(user);
+        presenter.loadMoreItems(user);
 
         followingRecyclerView.addOnScrollListener(new FollowRecyclerViewPaginationScrollListener(layoutManager));
 
@@ -322,7 +321,7 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Fo
                     totalItemCount && firstVisibleItemPosition >= 0) {
                 // Run this code later on the UI thread
                 final Handler handler = new Handler(Looper.getMainLooper());
-                handler.postDelayed(() -> presenter.loadMoreFollowing(user), 0);
+                handler.postDelayed(() -> presenter.loadMoreItems(user), 0);
             }
 
 
