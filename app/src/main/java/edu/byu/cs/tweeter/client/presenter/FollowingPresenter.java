@@ -1,16 +1,13 @@
 package edu.byu.cs.tweeter.client.presenter;
 
-import edu.byu.cs.tweeter.client.model.service.FollowService;
 import edu.byu.cs.tweeter.client.model.service.observers.PagedTaskObserver;
 import edu.byu.cs.tweeter.client.presenter.observers.PagedView;
 import edu.byu.cs.tweeter.model.domain.User;
 
 
-public class FollowingPresenter extends PagedPresenter<User,FollowingPresenter.FollowingView> {
+public class FollowingPresenter extends PagedPresenter<User> {
 
-    public interface FollowingView extends PagedView<User> {}
-
-    public FollowingPresenter(FollowingView view){
+    public FollowingPresenter(PagedView<User> view){
         super(view);
     }
 

@@ -2,21 +2,20 @@ package edu.byu.cs.tweeter.client.presenter;
 
 import java.util.List;
 
-import edu.byu.cs.tweeter.client.model.service.UserService;
 import edu.byu.cs.tweeter.client.model.service.observers.DataTaskObserver;
 import edu.byu.cs.tweeter.client.model.service.observers.PagedTaskObserver;
 import edu.byu.cs.tweeter.client.presenter.observers.PagedView;
 import edu.byu.cs.tweeter.model.domain.User;
 
-public abstract class PagedPresenter<D, T extends PagedView<D>> extends Presenter<PagedView<D>>{
+public abstract class PagedPresenter<T> extends Presenter<PagedView<T>>{
 
     protected static final int PAGE_SIZE = 10;
 
-    protected D lastItem;
+    protected T lastItem;
     protected boolean hasMorePages = true;
     protected boolean loading = false;
 
-    public PagedPresenter(T view) {
+    public PagedPresenter(PagedView<T> view) {
         super(view);
     }
 
@@ -25,9 +24,9 @@ public abstract class PagedPresenter<D, T extends PagedView<D>> extends Presente
             loading = true;
             view.addLoadingFooter();
 
-            callService(user, new PagedTaskObserver<D>() {
+            callService(user, new PagedTaskObserver<T>() {
                 @Override
-                public void handleSuccess(List<D> items, boolean hasMorePages) {
+                public void handleSuccess(List<T> items, boolean hasMorePages) {
                     PagedPresenter.this.hasMorePages = hasMorePages;
                     lastItem = (items.size() > 0) ? items.get(items.size() - 1) : null;
                     loading = false;
@@ -44,7 +43,7 @@ public abstract class PagedPresenter<D, T extends PagedView<D>> extends Presente
         }
     }
 
-    protected abstract void callService(User user, PagedTaskObserver<D> observer);
+    protected abstract void callService(User user, PagedTaskObserver<T> observer);
 
     public boolean isLoading() {
         return loading;

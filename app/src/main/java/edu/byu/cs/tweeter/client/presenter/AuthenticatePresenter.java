@@ -4,8 +4,8 @@ import edu.byu.cs.tweeter.client.model.service.observers.DataTaskObserver;
 import edu.byu.cs.tweeter.client.presenter.observers.AuthenticateView;
 import edu.byu.cs.tweeter.model.domain.User;
 
-public abstract class AuthenticatePresenter<T extends AuthenticateView> extends Presenter<AuthenticateView> {
-    public AuthenticatePresenter(T view) {
+public abstract class AuthenticatePresenter extends Presenter<AuthenticateView> {
+    public AuthenticatePresenter(AuthenticateView view) {
         super(view);
     }
 

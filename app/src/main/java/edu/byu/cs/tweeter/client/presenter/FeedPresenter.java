@@ -5,11 +5,9 @@ import edu.byu.cs.tweeter.client.presenter.observers.PagedView;
 import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
 
-public class FeedPresenter extends PagedPresenter<Status, FeedPresenter.FeedView> {
+public class FeedPresenter extends PagedPresenter<Status> {
 
-    public interface FeedView extends PagedView<Status> {}
-
-    public FeedPresenter(FeedView view) {
+    public FeedPresenter(PagedView<Status> view) {
         super(view);
     }
 

@@ -10,27 +10,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.byu.cs.tweeter.client.cache.Cache;
-import edu.byu.cs.tweeter.client.model.service.FollowService;
-import edu.byu.cs.tweeter.client.model.service.StatusService;
-import edu.byu.cs.tweeter.client.model.service.UserService;
 import edu.byu.cs.tweeter.client.model.service.observers.DataTaskObserver;
 import edu.byu.cs.tweeter.client.model.service.observers.SimpleNotificationObserver;
-import edu.byu.cs.tweeter.client.presenter.observers.InfoView;
+import edu.byu.cs.tweeter.client.presenter.observers.MainView;
 import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
 
-public class MainPresenter extends Presenter<MainPresenter.MainView> {
+public class MainPresenter extends Presenter<MainView> {
 
     private static final String LOG_TAG = "MainActivity";
-
-    public interface MainView extends InfoView {
-        void setFollowing(boolean isFollowing);
-        void enableFollowButton();
-        void finishLogout();
-        void statusPostComplete();
-        void setFollowerCount(int count);
-        void setFollowingCount(int count);
-    }
 
     public MainPresenter(MainView view) {
         super(view);

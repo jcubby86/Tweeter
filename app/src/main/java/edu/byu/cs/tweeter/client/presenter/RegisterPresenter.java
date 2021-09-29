@@ -7,15 +7,11 @@ import android.widget.ImageView;
 
 import java.io.ByteArrayOutputStream;
 
-import edu.byu.cs.tweeter.client.model.service.UserService;
 import edu.byu.cs.tweeter.client.presenter.observers.AuthenticateView;
-import edu.byu.cs.tweeter.model.domain.User;
 
-public class RegisterPresenter extends AuthenticatePresenter<RegisterPresenter.RegisterView> {
+public class RegisterPresenter extends AuthenticatePresenter {
 
-    public interface RegisterView extends AuthenticateView {}
-
-    public RegisterPresenter(RegisterView view){
+    public RegisterPresenter(AuthenticateView view){
         super(view);
     }
 
