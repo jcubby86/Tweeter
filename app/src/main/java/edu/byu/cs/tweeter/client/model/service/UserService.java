@@ -15,29 +15,25 @@ import edu.byu.cs.tweeter.model.domain.User;
 
 public class UserService extends Service{
 
-    public interface GetUserObserver extends DataTaskObserver<User> {}
-    public void getUser(String userAlias, GetUserObserver getUserObserver) {
+    public void getUser(String userAlias, DataTaskObserver<User> getUserObserver) {
         GetUserTask getUserTask = new GetUserTask(Cache.getInstance().getCurrUserAuthToken(),
                 userAlias, new GetUserHandler(getUserObserver));
         runTask(getUserTask);
     }
 
-    public interface LoginObserver extends DataTaskObserver<User> {}
-    public void login(String userAlias, String password, LoginObserver loginObserver) {
+    public void login(String userAlias, String password, DataTaskObserver<User> loginObserver) {
         LoginTask loginTask = new LoginTask(userAlias,
                 password, new LoginHandler(loginObserver));
         runTask(loginTask);
     }
 
-    public interface RegisterObserver extends DataTaskObserver<User> {}
-    public void register(String firstName, String lastName, String userAlias, String password, String imageBytesBase64, RegisterObserver registerObserver) {
+    public void register(String firstName, String lastName, String userAlias, String password, String imageBytesBase64, DataTaskObserver<User> registerObserver) {
         RegisterTask registerTask = new RegisterTask(firstName, lastName,
                 userAlias, password, imageBytesBase64, new RegisterHandler(registerObserver));
         runTask(registerTask);
     }
 
-    public interface LogoutObserver extends SimpleNotificationObserver {}
-    public void logout(LogoutObserver observer){
+    public void logout(SimpleNotificationObserver observer){
         LogoutTask logoutTask = new LogoutTask(Cache.getInstance().getCurrUserAuthToken(), new LogoutHandler(observer));
         runTask(logoutTask);
     }

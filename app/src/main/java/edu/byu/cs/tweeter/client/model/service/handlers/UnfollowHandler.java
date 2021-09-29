@@ -1,10 +1,10 @@
 package edu.byu.cs.tweeter.client.model.service.handlers;
 
-import edu.byu.cs.tweeter.client.model.service.FollowService;
+import edu.byu.cs.tweeter.client.model.service.observers.SimpleNotificationObserver;
 
-public class UnfollowHandler extends SimpleNotificationHandler<FollowService.UnfollowObserver> {
+public class UnfollowHandler extends SimpleNotificationHandler {
 
-    public UnfollowHandler(FollowService.UnfollowObserver observer) {
+    public UnfollowHandler(SimpleNotificationObserver observer) {
         super(observer);
     }
 

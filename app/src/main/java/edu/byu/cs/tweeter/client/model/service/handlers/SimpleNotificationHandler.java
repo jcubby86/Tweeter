@@ -4,9 +4,9 @@ import android.os.Bundle;
 
 import edu.byu.cs.tweeter.client.model.service.observers.SimpleNotificationObserver;
 
-public abstract class SimpleNotificationHandler<T extends SimpleNotificationObserver> extends BackgroundTaskHandler<SimpleNotificationObserver> {
+public abstract class SimpleNotificationHandler extends BackgroundTaskHandler<SimpleNotificationObserver> {
 
-    public SimpleNotificationHandler(T observer) {
+    public SimpleNotificationHandler(SimpleNotificationObserver observer) {
         super(observer);
     }
 

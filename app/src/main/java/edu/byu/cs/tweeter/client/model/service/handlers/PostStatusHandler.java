@@ -1,10 +1,10 @@
 package edu.byu.cs.tweeter.client.model.service.handlers;
 
-import edu.byu.cs.tweeter.client.model.service.StatusService;
+import edu.byu.cs.tweeter.client.model.service.observers.SimpleNotificationObserver;
 
-public class PostStatusHandler extends SimpleNotificationHandler<StatusService.PostStatusObserver> {
+public class PostStatusHandler extends SimpleNotificationHandler {
 
-    public PostStatusHandler(StatusService.PostStatusObserver observer) {
+    public PostStatusHandler(SimpleNotificationObserver observer) {
         super(observer);
     }
 

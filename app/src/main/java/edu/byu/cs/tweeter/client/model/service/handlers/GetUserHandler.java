@@ -2,14 +2,13 @@ package edu.byu.cs.tweeter.client.model.service.handlers;
 
 import android.os.Bundle;
 
-import edu.byu.cs.tweeter.client.model.service.UserService;
 import edu.byu.cs.tweeter.client.model.service.backgroundTask.GetUserTask;
+import edu.byu.cs.tweeter.client.model.service.observers.DataTaskObserver;
 import edu.byu.cs.tweeter.model.domain.User;
 
-public class GetUserHandler extends DataTaskHandler<User, UserService.GetUserObserver> {
+public class GetUserHandler extends DataTaskHandler<User> {
 
-
-    public GetUserHandler(UserService.GetUserObserver observer) {
+    public GetUserHandler(DataTaskObserver<User> observer) {
         super(observer);
     }
 

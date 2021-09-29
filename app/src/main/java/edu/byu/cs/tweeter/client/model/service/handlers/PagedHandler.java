@@ -8,14 +8,14 @@ import edu.byu.cs.tweeter.client.model.service.backgroundTask.GetFeedTask;
 import edu.byu.cs.tweeter.client.model.service.backgroundTask.PagedTask;
 import edu.byu.cs.tweeter.client.model.service.observers.PagedTaskObserver;
 
-public abstract class PagedHandler<D, T extends PagedTaskObserver<D>> extends BackgroundTaskHandler<PagedTaskObserver<D>> {
-    public PagedHandler(T observer) {
+public abstract class PagedHandler<T> extends BackgroundTaskHandler<PagedTaskObserver<T>> {
+    public PagedHandler(PagedTaskObserver<T> observer) {
         super(observer);
     }
 
     @Override
     protected void handleSuccess(Bundle bundle) {
-        List<D> items = (List<D>) bundle.getSerializable(PagedTask.ITEMS_KEY);
+        List<T> items = (List<T>) bundle.getSerializable(PagedTask.ITEMS_KEY);
         boolean hasMorePages = bundle.getBoolean(GetFeedTask.MORE_PAGES_KEY);
 
         observer.handleSuccess(items, hasMorePages);

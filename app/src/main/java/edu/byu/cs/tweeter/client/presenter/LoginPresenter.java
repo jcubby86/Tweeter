@@ -13,6 +13,6 @@ public class LoginPresenter extends AuthenticatePresenter<LoginPresenter.LoginVi
     }
 
     public void login(String userAlias, String password){
-        userService.login(userAlias, password, (UserService.LoginObserver) getObserver());
+        userService.login(userAlias, password, getObserver());
     }
 }

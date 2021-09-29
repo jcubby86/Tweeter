@@ -3,6 +3,7 @@ package edu.byu.cs.tweeter.client.presenter;
 import java.util.List;
 
 import edu.byu.cs.tweeter.client.model.service.UserService;
+import edu.byu.cs.tweeter.client.model.service.observers.DataTaskObserver;
 import edu.byu.cs.tweeter.client.model.service.observers.PagedTaskObserver;
 import edu.byu.cs.tweeter.client.presenter.observers.PagedView;
 import edu.byu.cs.tweeter.model.domain.User;
@@ -52,7 +53,7 @@ public abstract class PagedPresenter<D, T extends PagedView<D>> extends Presente
     public void getUser(String userAlias) {
         view.displayInfoMessage("Getting user's profile...");
 
-        userService.getUser(userAlias, new UserService.GetUserObserver(){
+        userService.getUser(userAlias, new DataTaskObserver<User>(){
             @Override
             public void handleSuccess(User user) {
                 view.clearInfoMessage();

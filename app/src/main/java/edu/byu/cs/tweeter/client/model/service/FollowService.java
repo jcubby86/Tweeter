@@ -21,44 +21,37 @@ import edu.byu.cs.tweeter.client.model.service.observers.SimpleNotificationObser
 import edu.byu.cs.tweeter.model.domain.User;
 
 public class FollowService extends Service{
-    public interface GetFollowingObserver extends PagedTaskObserver<User> {}
-    public void loadMoreFollowing(User user, int pageSize, User lastFollowee, GetFollowingObserver getFollowingObserver) {
+    public void loadMoreFollowing(User user, int pageSize, User lastFollowee, PagedTaskObserver<User> getFollowingObserver) {
         GetFollowingTask getFollowingTask = new GetFollowingTask(Cache.getInstance().getCurrUserAuthToken(),
                 user, pageSize, lastFollowee, new GetFollowingHandler(getFollowingObserver));
         runTask(getFollowingTask);
     }
 
-    public interface GetFollowersObserver extends PagedTaskObserver<User> {}
-    public void loadMoreFollowers(User user, int pageSize, User lastFollower, GetFollowersObserver getFollowersObserver) {
+    public void loadMoreFollowers(User user, int pageSize, User lastFollower, PagedTaskObserver<User> getFollowersObserver) {
         GetFollowersTask getFollowersTask = new GetFollowersTask(Cache.getInstance().getCurrUserAuthToken(),
                 user, pageSize, lastFollower, new GetFollowersHandler(getFollowersObserver));
         runTask(getFollowersTask);
     }
 
-    public interface IsFollowerObserver extends DataTaskObserver<Boolean> {}
-    public void checkIsFollower(User selectedUser, IsFollowerObserver observer){
+    public void checkIsFollower(User selectedUser, DataTaskObserver<Boolean> observer){
         IsFollowerTask isFollowerTask = new IsFollowerTask(Cache.getInstance().getCurrUserAuthToken(),
                 Cache.getInstance().getCurrUser(), selectedUser, new IsFollowerHandler(observer));
         runTask(isFollowerTask);
     }
 
-    public interface UnfollowObserver extends SimpleNotificationObserver {}
-    public void unfollow(User selectedUser, UnfollowObserver observer){
+    public void unfollow(User selectedUser, SimpleNotificationObserver observer){
         UnfollowTask unfollowTask = new UnfollowTask(Cache.getInstance().getCurrUserAuthToken(),
                 selectedUser, new UnfollowHandler(observer));
         runTask(unfollowTask);
     }
 
-    public interface FollowObserver extends SimpleNotificationObserver{}
-    public void follow(User selectedUser, FollowObserver observer){
+    public void follow(User selectedUser, SimpleNotificationObserver observer){
         FollowTask followTask = new FollowTask(Cache.getInstance().getCurrUserAuthToken(),
                 selectedUser, new FollowHandler(observer));
         runTask(followTask);
     }
 
-    public interface GetFollowersDataObserver extends DataTaskObserver<Integer> {}
-    public interface GetFollowingDataObserver extends DataTaskObserver<Integer> {}
-    public void getCounts(User selectedUser, GetFollowersDataObserver getFollowersCountObserver, GetFollowingDataObserver getFollowingCountObserver){
+    public void getCounts(User selectedUser, DataTaskObserver<Integer> getFollowersCountObserver, DataTaskObserver<Integer> getFollowingCountObserver){
                 // Get count of most recently selected user's followers.
         GetFollowersCountTask followersCountTask = new GetFollowersCountTask(Cache.getInstance().getCurrUserAuthToken(),
                 selectedUser, new GetFollowersCountHandler(getFollowersCountObserver));

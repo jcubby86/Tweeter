@@ -16,7 +16,7 @@ public class FollowersPresenter extends PagedPresenter<User, FollowersPresenter.
 
     @Override
     protected void callService(User user, PagedTaskObserver<User> observer) {
-        followService.loadMoreFollowers(user, PAGE_SIZE, lastItem, (FollowService.GetFollowersObserver) observer);
+        followService.loadMoreFollowers(user, PAGE_SIZE, lastItem, observer);
     }
 
 }

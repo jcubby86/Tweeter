@@ -2,12 +2,12 @@ package edu.byu.cs.tweeter.client.model.service.handlers;
 
 import android.os.Bundle;
 
-import edu.byu.cs.tweeter.client.model.service.FollowService;
 import edu.byu.cs.tweeter.client.model.service.backgroundTask.IsFollowerTask;
+import edu.byu.cs.tweeter.client.model.service.observers.DataTaskObserver;
 
-public class IsFollowerHandler extends DataTaskHandler<Boolean, FollowService.IsFollowerObserver> {
+public class IsFollowerHandler extends DataTaskHandler<Boolean> {
 
-    public IsFollowerHandler(FollowService.IsFollowerObserver observer) {
+    public IsFollowerHandler(DataTaskObserver<Boolean> observer) {
         super(observer);
     }
 

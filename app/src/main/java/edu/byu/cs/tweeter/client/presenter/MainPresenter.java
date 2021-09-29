@@ -13,6 +13,8 @@ import edu.byu.cs.tweeter.client.cache.Cache;
 import edu.byu.cs.tweeter.client.model.service.FollowService;
 import edu.byu.cs.tweeter.client.model.service.StatusService;
 import edu.byu.cs.tweeter.client.model.service.UserService;
+import edu.byu.cs.tweeter.client.model.service.observers.DataTaskObserver;
+import edu.byu.cs.tweeter.client.model.service.observers.SimpleNotificationObserver;
 import edu.byu.cs.tweeter.client.presenter.observers.InfoView;
 import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
@@ -35,7 +37,7 @@ public class MainPresenter extends Presenter<MainPresenter.MainView> {
     }
 
     public void checkIsFollower(User selectedUser) {
-        followService.checkIsFollower(selectedUser, new FollowService.IsFollowerObserver() {
+        followService.checkIsFollower(selectedUser, new DataTaskObserver<Boolean>() {
             @Override
             public void handleSuccess(Boolean isFollower) {
                 view.setFollowing(isFollower);
@@ -49,7 +51,7 @@ public class MainPresenter extends Presenter<MainPresenter.MainView> {
 
     public void unfollow(User selectedUser) {
         view.displayInfoMessage("Removing " + selectedUser.getName() + "...");
-        followService.unfollow(selectedUser, new FollowService.UnfollowObserver() {
+        followService.unfollow(selectedUser, new SimpleNotificationObserver() {
             @Override
             public void handleSuccess() {
                 view.clearInfoMessage();
@@ -67,7 +69,7 @@ public class MainPresenter extends Presenter<MainPresenter.MainView> {
 
     public void follow(User selectedUser) {
         view.displayInfoMessage("Adding " + selectedUser.getName() + "...");
-        followService.follow(selectedUser, new FollowService.FollowObserver() {
+        followService.follow(selectedUser, new SimpleNotificationObserver() {
             @Override
             public void handleSuccess() {
                 view.clearInfoMessage();
@@ -84,7 +86,7 @@ public class MainPresenter extends Presenter<MainPresenter.MainView> {
     }
 
     public void getCounts(User selectedUser) {
-        followService.getCounts(selectedUser, new FollowService.GetFollowersDataObserver() {
+        followService.getCounts(selectedUser, new DataTaskObserver<Integer>() {
             @Override
             public void handleSuccess(Integer followerCount) {
                 view.setFollowerCount(followerCount);
@@ -93,7 +95,7 @@ public class MainPresenter extends Presenter<MainPresenter.MainView> {
             public void handleFailure(String message) {
                 view.displayErrorMessage(message);
             }
-        }, new FollowService.GetFollowingDataObserver() {
+        }, new DataTaskObserver<Integer>() {
             @Override
             public void handleSuccess(Integer followingCount) {
                 view.setFollowingCount(followingCount);
@@ -106,7 +108,7 @@ public class MainPresenter extends Presenter<MainPresenter.MainView> {
     }
 
     public void logout(){
-        userService.logout(new UserService.LogoutObserver() {
+        userService.logout(new SimpleNotificationObserver() {
             @Override
             public void handleSuccess() {
                 view.finishLogout();
@@ -121,7 +123,7 @@ public class MainPresenter extends Presenter<MainPresenter.MainView> {
     public void postStatus(String post){
         try {
             Status newStatus = new Status(post, Cache.getInstance().getCurrUser(), getFormattedDateTime(), parseURLs(post), parseMentions(post));
-            statusService.postStatus(newStatus, new StatusService.PostStatusObserver() {
+            statusService.postStatus(newStatus, new SimpleNotificationObserver() {
                 @Override
                 public void handleSuccess() {
                     view.statusPostComplete();

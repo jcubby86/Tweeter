@@ -1,11 +1,11 @@
 package edu.byu.cs.tweeter.client.model.service.handlers;
 
-import edu.byu.cs.tweeter.client.model.service.UserService;
+import edu.byu.cs.tweeter.client.model.service.observers.DataTaskObserver;
+import edu.byu.cs.tweeter.model.domain.User;
 
-public class RegisterHandler extends AuthenticationTaskHandler<UserService.RegisterObserver> {
+public class RegisterHandler extends AuthenticationTaskHandler{
 
-
-    public RegisterHandler(UserService.RegisterObserver observer) {
+    public RegisterHandler(DataTaskObserver<User> observer) {
         super(observer);
     }
 

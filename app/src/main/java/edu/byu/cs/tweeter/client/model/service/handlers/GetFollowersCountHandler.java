@@ -1,10 +1,10 @@
 package edu.byu.cs.tweeter.client.model.service.handlers;
 
-import edu.byu.cs.tweeter.client.model.service.FollowService;
+import edu.byu.cs.tweeter.client.model.service.observers.DataTaskObserver;
 
-public class GetFollowersCountHandler extends CountTaskHandler<FollowService.GetFollowersDataObserver> {
+public class GetFollowersCountHandler extends CountTaskHandler{
 
-    public GetFollowersCountHandler(FollowService.GetFollowersDataObserver observer) {
+    public GetFollowersCountHandler(DataTaskObserver<Integer> observer) {
         super(observer);
     }
 

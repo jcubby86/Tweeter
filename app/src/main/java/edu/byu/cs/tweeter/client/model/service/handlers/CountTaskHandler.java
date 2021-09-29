@@ -5,9 +5,9 @@ import android.os.Bundle;
 import edu.byu.cs.tweeter.client.model.service.backgroundTask.CountTask;
 import edu.byu.cs.tweeter.client.model.service.observers.DataTaskObserver;
 
-public abstract class CountTaskHandler <T extends DataTaskObserver<Integer>> extends DataTaskHandler<Integer, DataTaskObserver<Integer>> {
+public abstract class CountTaskHandler extends DataTaskHandler<Integer> {
 
-    public CountTaskHandler(T observer) {
+    public CountTaskHandler(DataTaskObserver<Integer> observer) {
         super(observer);
     }
 

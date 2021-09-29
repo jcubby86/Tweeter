@@ -1,14 +1,15 @@
 package edu.byu.cs.tweeter.client.model.service.handlers;
 
 import edu.byu.cs.tweeter.client.model.service.FollowService;
+import edu.byu.cs.tweeter.client.model.service.observers.PagedTaskObserver;
 import edu.byu.cs.tweeter.model.domain.User;
 
 /**
  * Message handler (i.e., observer) for GetFollowersTask.
  */
-public class GetFollowersHandler extends PagedHandler<User, FollowService.GetFollowersObserver> {
+public class GetFollowersHandler extends PagedHandler<User> {
 
-    public GetFollowersHandler(FollowService.GetFollowersObserver observer) {
+    public GetFollowersHandler(PagedTaskObserver<User> observer) {
         super(observer);
     }
 
