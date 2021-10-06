@@ -4,7 +4,7 @@ import android.os.Bundle;
 
 import edu.byu.cs.tweeter.client.model.service.observers.DataTaskObserver;
 
-public abstract class DataTaskHandler<T> extends BackgroundTaskHandler<DataTaskObserver<T>>{
+public abstract class DataTaskHandler<T> extends BackgroundTaskHandler<DataTaskObserver<T>> {
     public DataTaskHandler(DataTaskObserver<T> observer) {
         super(observer);
     }

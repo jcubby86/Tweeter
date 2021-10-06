@@ -90,29 +90,35 @@ public class FollowersFragment extends Fragment implements PagedView<User> {
     public void displayErrorMessage(String message) {
         Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
     }
+
     @Override
     public void displayMoreItems(List<User> followers) {
         followersRecyclerViewAdapter.addItems(followers);
     }
+
     @Override
     public void navigateToUser(User user) {
         Intent intent = new Intent(getContext(), MainActivity.class);
         intent.putExtra(MainActivity.CURRENT_USER_KEY, user);
         startActivity(intent);
     }
+
     @Override
     public void displayInfoMessage(String message) {
         infoToast = Toast.makeText(getContext(), message, Toast.LENGTH_LONG);
         infoToast.show();
     }
+
     @Override
     public void clearInfoMessage() {
         infoToast.cancel();
     }
+
     @Override
     public void removeLoadingFooter() {
         followersRecyclerViewAdapter.removeLoadingFooter();
     }
+
     @Override
     public void addLoadingFooter() {
         followersRecyclerViewAdapter.addLoadingFooter();

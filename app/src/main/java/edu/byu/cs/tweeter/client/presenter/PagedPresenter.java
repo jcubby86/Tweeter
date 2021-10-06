@@ -7,7 +7,7 @@ import edu.byu.cs.tweeter.client.model.service.observers.PagedTaskObserver;
 import edu.byu.cs.tweeter.client.presenter.observers.PagedView;
 import edu.byu.cs.tweeter.model.domain.User;
 
-public abstract class PagedPresenter<T> extends Presenter<PagedView<T>>{
+public abstract class PagedPresenter<T> extends Presenter<PagedView<T>> {
 
     protected static final int PAGE_SIZE = 10;
 
@@ -20,7 +20,7 @@ public abstract class PagedPresenter<T> extends Presenter<PagedView<T>>{
     }
 
     public void loadMoreItems(User user) {
-        if (!loading && hasMorePages){
+        if (!loading && hasMorePages) {
             loading = true;
             view.addLoadingFooter();
 
@@ -33,6 +33,7 @@ public abstract class PagedPresenter<T> extends Presenter<PagedView<T>>{
                     view.removeLoadingFooter();
                     view.displayMoreItems(items);
                 }
+
                 @Override
                 public void handleFailure(String message) {
                     loading = false;
@@ -52,12 +53,13 @@ public abstract class PagedPresenter<T> extends Presenter<PagedView<T>>{
     public void getUser(String userAlias) {
         view.displayInfoMessage("Getting user's profile...");
 
-        userService.getUser(userAlias, new DataTaskObserver<User>(){
+        userService.getUser(userAlias, new DataTaskObserver<User>() {
             @Override
             public void handleSuccess(User user) {
                 view.clearInfoMessage();
                 view.navigateToUser(user);
             }
+
             @Override
             public void handleFailure(String message) {
                 view.clearInfoMessage();

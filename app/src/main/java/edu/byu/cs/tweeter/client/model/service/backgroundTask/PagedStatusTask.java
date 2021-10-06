@@ -6,7 +6,7 @@ import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
 
-public abstract class PagedStatusTask extends PagedTask<Status>{
+public abstract class PagedStatusTask extends PagedTask<Status> {
 
     private static final String LOG_TAG = "PagedStatusTask";
 

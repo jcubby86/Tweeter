@@ -1,11 +1,11 @@
 package edu.byu.cs.tweeter.client.model.service;
 
 import edu.byu.cs.tweeter.client.cache.Cache;
+import edu.byu.cs.tweeter.client.model.service.backgroundTask.GetUserTask;
 import edu.byu.cs.tweeter.client.model.service.backgroundTask.LoginTask;
 import edu.byu.cs.tweeter.client.model.service.backgroundTask.LogoutTask;
 import edu.byu.cs.tweeter.client.model.service.backgroundTask.RegisterTask;
 import edu.byu.cs.tweeter.client.model.service.handlers.GetUserHandler;
-import edu.byu.cs.tweeter.client.model.service.backgroundTask.GetUserTask;
 import edu.byu.cs.tweeter.client.model.service.handlers.LoginHandler;
 import edu.byu.cs.tweeter.client.model.service.handlers.LogoutHandler;
 import edu.byu.cs.tweeter.client.model.service.handlers.RegisterHandler;
@@ -13,7 +13,7 @@ import edu.byu.cs.tweeter.client.model.service.observers.DataTaskObserver;
 import edu.byu.cs.tweeter.client.model.service.observers.SimpleNotificationObserver;
 import edu.byu.cs.tweeter.model.domain.User;
 
-public class UserService extends Service{
+public class UserService extends Service {
 
     public void getUser(String userAlias, DataTaskObserver<User> getUserObserver) {
         GetUserTask getUserTask = new GetUserTask(Cache.getInstance().getCurrUserAuthToken(),
@@ -33,7 +33,7 @@ public class UserService extends Service{
         runTask(registerTask);
     }
 
-    public void logout(SimpleNotificationObserver observer){
+    public void logout(SimpleNotificationObserver observer) {
         LogoutTask logoutTask = new LogoutTask(Cache.getInstance().getCurrUserAuthToken(), new LogoutHandler(observer));
         runTask(logoutTask);
     }

@@ -10,7 +10,7 @@ import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.util.Pair;
 
-public abstract class AuthenticationTask extends BackgroundTask{
+public abstract class AuthenticationTask extends BackgroundTask {
 
     private static final String LOG_TAG = "AuthenticationTask";
 
@@ -24,7 +24,7 @@ public abstract class AuthenticationTask extends BackgroundTask{
      * The user's password.
      */
     protected String password;
-    
+
     protected User authenticatedUser;
     protected AuthToken authToken;
 

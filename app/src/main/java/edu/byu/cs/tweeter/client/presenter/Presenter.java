@@ -11,6 +11,7 @@ public abstract class Presenter<T extends View> {
     protected final FollowService followService;
     protected final StatusService statusService;
     protected T view;
+
     public Presenter(T view) {
         this.view = view;
         userService = new UserService();

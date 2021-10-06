@@ -18,7 +18,7 @@ import edu.byu.cs.tweeter.model.domain.User;
 
 public class MainPresenter extends Presenter<MainView> {
 
-    private static final String LOG_TAG = "MainActivity";
+    private static final String LOG_TAG = "MainPresenter";
 
     public MainPresenter(MainView view) {
         super(view);
@@ -30,6 +30,7 @@ public class MainPresenter extends Presenter<MainView> {
             public void handleSuccess(Boolean isFollower) {
                 view.setFollowing(isFollower);
             }
+
             @Override
             public void handleFailure(String message) {
                 view.displayErrorMessage(message);
@@ -46,6 +47,7 @@ public class MainPresenter extends Presenter<MainView> {
                 view.setFollowing(false);
                 view.enableFollowButton();
             }
+
             @Override
             public void handleFailure(String message) {
                 view.clearInfoMessage();
@@ -64,6 +66,7 @@ public class MainPresenter extends Presenter<MainView> {
                 view.setFollowing(true);
                 view.enableFollowButton();
             }
+
             @Override
             public void handleFailure(String message) {
                 view.clearInfoMessage();
@@ -79,6 +82,7 @@ public class MainPresenter extends Presenter<MainView> {
             public void handleSuccess(Integer followerCount) {
                 view.setFollowerCount(followerCount);
             }
+
             @Override
             public void handleFailure(String message) {
                 view.displayErrorMessage(message);
@@ -88,6 +92,7 @@ public class MainPresenter extends Presenter<MainView> {
             public void handleSuccess(Integer followingCount) {
                 view.setFollowingCount(followingCount);
             }
+
             @Override
             public void handleFailure(String message) {
                 view.displayErrorMessage(message);
@@ -95,12 +100,13 @@ public class MainPresenter extends Presenter<MainView> {
         });
     }
 
-    public void logout(){
+    public void logout() {
         userService.logout(new SimpleNotificationObserver() {
             @Override
             public void handleSuccess() {
                 view.finishLogout();
             }
+
             @Override
             public void handleFailure(String message) {
                 view.displayErrorMessage(message);
@@ -108,7 +114,7 @@ public class MainPresenter extends Presenter<MainView> {
         });
     }
 
-    public void postStatus(String post){
+    public void postStatus(String post) {
         try {
             Status newStatus = new Status(post, Cache.getInstance().getCurrUser(), getFormattedDateTime(), parseURLs(post), parseMentions(post));
             statusService.postStatus(newStatus, new SimpleNotificationObserver() {
@@ -116,6 +122,7 @@ public class MainPresenter extends Presenter<MainView> {
                 public void handleSuccess() {
                     view.statusPostComplete();
                 }
+
                 @Override
                 public void handleFailure(String message) {
                     view.displayErrorMessage(message);
@@ -133,6 +140,7 @@ public class MainPresenter extends Presenter<MainView> {
 
         return statusFormat.format(userFormat.parse(LocalDate.now().toString() + " " + LocalTime.now().toString().substring(0, 8)));
     }
+
     public List<String> parseURLs(String post) {
         List<String> containedUrls = new ArrayList<>();
         for (String word : post.split("\\s")) {
@@ -148,6 +156,7 @@ public class MainPresenter extends Presenter<MainView> {
 
         return containedUrls;
     }
+
     public List<String> parseMentions(String post) {
         List<String> containedMentions = new ArrayList<>();
 
@@ -162,6 +171,7 @@ public class MainPresenter extends Presenter<MainView> {
 
         return containedMentions;
     }
+
     public int findUrlEndIndex(String word) {
         if (word.contains(".com")) {
             int index = word.indexOf(".com");

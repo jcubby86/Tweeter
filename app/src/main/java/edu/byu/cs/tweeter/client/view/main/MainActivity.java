@@ -138,6 +138,7 @@ public class MainActivity extends AppCompatActivity implements StatusDialogFragm
     public void displayErrorMessage(String message) {
         Toast.makeText(MainActivity.this, message, Toast.LENGTH_LONG).show();
     }
+
     @Override
     public void setFollowing(boolean isFollowing) {
         presenter.getCounts(selectedUser);
@@ -152,13 +153,14 @@ public class MainActivity extends AppCompatActivity implements StatusDialogFragm
             followButton.setTextColor(getResources().getColor(R.color.white));
         }
     }
+
     @Override
-    public void enableFollowButton(){
+    public void enableFollowButton() {
         followButton.setEnabled(true);
     }
 
     @Override
-    public void finishLogout(){
+    public void finishLogout() {
         logOutToast.cancel();
 
         //Revert to login screen.
@@ -169,15 +171,18 @@ public class MainActivity extends AppCompatActivity implements StatusDialogFragm
         Cache.getInstance().clearCache();
         startActivity(intent);
     }
+
     @Override
-    public void statusPostComplete(){
+    public void statusPostComplete() {
         postingToast.cancel();
         Toast.makeText(this, "Successfully Posted!", Toast.LENGTH_LONG).show();
     }
+
     @Override
     public void setFollowerCount(int count) {
         followerCount.setText(getString(R.string.followerCount, String.valueOf(count)));
     }
+
     @Override
     public void setFollowingCount(int count) {
         followeeCount.setText(getString(R.string.followeeCount, String.valueOf(count)));
@@ -188,6 +193,7 @@ public class MainActivity extends AppCompatActivity implements StatusDialogFragm
         infoToast = Toast.makeText(this, message, Toast.LENGTH_LONG);
         infoToast.show();
     }
+
     @Override
     public void clearInfoMessage() {
         infoToast.cancel();

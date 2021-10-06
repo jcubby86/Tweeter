@@ -13,7 +13,7 @@ public class GetFollowingCountTask extends CountTask {
     private static final String LOG_TAG = "LogoutTask";
 
     public GetFollowingCountTask(AuthToken authToken, User targetUser, Handler messageHandler) {
-        super(messageHandler,authToken, targetUser);
+        super(messageHandler, authToken, targetUser);
     }
 
     @Override

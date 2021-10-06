@@ -11,7 +11,7 @@ import java.io.IOException;
 
 import edu.byu.cs.tweeter.util.FakeData;
 
-public abstract class BackgroundTask implements Runnable{
+public abstract class BackgroundTask implements Runnable {
 
     private static final String LOG_TAG = "BackgroundTask";
 

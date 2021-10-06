@@ -11,7 +11,7 @@ import edu.byu.cs.tweeter.client.presenter.observers.AuthenticateView;
 
 public class RegisterPresenter extends AuthenticatePresenter {
 
-    public RegisterPresenter(AuthenticateView view){
+    public RegisterPresenter(AuthenticateView view) {
         super(view);
     }
 

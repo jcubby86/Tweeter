@@ -6,7 +6,7 @@ import android.os.Handler;
 import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
 
-public abstract class CountTask extends AuthorizedTask{
+public abstract class CountTask extends AuthorizedTask {
 
     private static final String LOG_TAG = "AuthorizedTask";
 

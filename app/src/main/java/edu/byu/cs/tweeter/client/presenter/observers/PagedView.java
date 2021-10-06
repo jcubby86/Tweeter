@@ -6,7 +6,10 @@ import edu.byu.cs.tweeter.model.domain.User;
 
 public interface PagedView<T> extends InfoView {
     void displayMoreItems(List<T> items);
+
     void navigateToUser(User user);
+
     void removeLoadingFooter();
+
     void addLoadingFooter();
 }

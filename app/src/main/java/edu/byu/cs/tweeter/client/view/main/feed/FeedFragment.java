@@ -97,29 +97,35 @@ public class FeedFragment extends Fragment implements PagedView<Status> {
     public void displayErrorMessage(String message) {
         Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
     }
+
     @Override
     public void displayMoreItems(List<Status> statuses) {
         feedRecyclerViewAdapter.addItems(statuses);
     }
+
     @Override
     public void navigateToUser(User user) {
         Intent intent = new Intent(getContext(), MainActivity.class);
         intent.putExtra(MainActivity.CURRENT_USER_KEY, user);
         startActivity(intent);
     }
+
     @Override
     public void displayInfoMessage(String message) {
         infoToast = Toast.makeText(getContext(), message, Toast.LENGTH_LONG);
         infoToast.show();
     }
+
     @Override
     public void clearInfoMessage() {
         infoToast.cancel();
     }
+
     @Override
     public void removeLoadingFooter() {
         feedRecyclerViewAdapter.removeLoadingFooter();
     }
+
     @Override
     public void addLoadingFooter() {
         feedRecyclerViewAdapter.addLoadingFooter();

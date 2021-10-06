@@ -97,29 +97,35 @@ public class StoryFragment extends Fragment implements PagedView<Status> {
     public void displayErrorMessage(String message) {
         Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
     }
+
     @Override
     public void displayMoreItems(List<Status> statuses) {
         storyRecyclerViewAdapter.addItems(statuses);
     }
+
     @Override
     public void navigateToUser(User user) {
         Intent intent = new Intent(getContext(), MainActivity.class);
         intent.putExtra(MainActivity.CURRENT_USER_KEY, user);
         startActivity(intent);
     }
+
     @Override
     public void displayInfoMessage(String message) {
         infoToast = Toast.makeText(getContext(), message, Toast.LENGTH_LONG);
         infoToast.show();
     }
+
     @Override
     public void clearInfoMessage() {
         infoToast.cancel();
     }
+
     @Override
     public void removeLoadingFooter() {
         storyRecyclerViewAdapter.removeLoadingFooter();
     }
+
     @Override
     public void addLoadingFooter() {
         storyRecyclerViewAdapter.addLoadingFooter();
@@ -149,7 +155,7 @@ public class StoryFragment extends Fragment implements PagedView<Status> {
             userName = itemView.findViewById(R.id.statusName);
             post = itemView.findViewById(R.id.statusPost);
             datetime = itemView.findViewById(R.id.statusDatetime);
-                    }
+        }
 
         /**
          * Binds the status's data to the view.

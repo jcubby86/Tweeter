@@ -4,7 +4,7 @@ import android.os.Handler;
 
 import edu.byu.cs.tweeter.model.domain.AuthToken;
 
-public abstract class AuthorizedTask extends BackgroundTask{
+public abstract class AuthorizedTask extends BackgroundTask {
 
     private static final String LOG_TAG = "AuthorizedTask";
 

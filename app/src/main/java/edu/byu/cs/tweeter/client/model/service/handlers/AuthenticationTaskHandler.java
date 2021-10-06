@@ -8,7 +8,7 @@ import edu.byu.cs.tweeter.client.model.service.observers.DataTaskObserver;
 import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
 
-public abstract class AuthenticationTaskHandler extends DataTaskHandler<User>{
+public abstract class AuthenticationTaskHandler extends DataTaskHandler<User> {
     public AuthenticationTaskHandler(DataTaskObserver<User> observer) {
         super(observer);
     }

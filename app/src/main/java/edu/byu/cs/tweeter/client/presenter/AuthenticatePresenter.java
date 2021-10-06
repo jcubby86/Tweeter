@@ -9,12 +9,13 @@ public abstract class AuthenticatePresenter extends Presenter<AuthenticateView> 
         super(view);
     }
 
-    protected DataTaskObserver<User> getObserver(){
-        return new DataTaskObserver<User>(){
+    protected DataTaskObserver<User> getObserver() {
+        return new DataTaskObserver<User>() {
             @Override
             public void handleSuccess(User registeredUser) {
                 view.authenticateUser(registeredUser);
             }
+
             @Override
             public void handleFailure(String message) {
                 view.displayErrorMessage(message);

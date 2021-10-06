@@ -12,7 +12,7 @@ import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.util.Pair;
 
-public abstract class PagedTask<T> extends AuthorizedTask{
+public abstract class PagedTask<T> extends AuthorizedTask {
 
     private static final String LOG_TAG = "PagedTask";
 

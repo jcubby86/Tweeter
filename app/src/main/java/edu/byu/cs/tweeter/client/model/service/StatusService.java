@@ -12,7 +12,7 @@ import edu.byu.cs.tweeter.client.model.service.observers.SimpleNotificationObser
 import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
 
-public class StatusService extends Service{
+public class StatusService extends Service {
 
     public void loadMoreStory(User user, int pageSize, Status lastStatus, PagedTaskObserver<Status> observer) {
         GetStoryTask getStoryTask = new GetStoryTask(Cache.getInstance().getCurrUserAuthToken(),
@@ -26,7 +26,7 @@ public class StatusService extends Service{
         runTask(getFeedTask);
     }
 
-    public void postStatus(Status newStatus, SimpleNotificationObserver observer){
+    public void postStatus(Status newStatus, SimpleNotificationObserver observer) {
         PostStatusTask statusTask = new PostStatusTask(Cache.getInstance().getCurrUserAuthToken(),
                 newStatus, new PostStatusHandler(observer));
         runTask(statusTask);

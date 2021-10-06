@@ -1,6 +1,5 @@
 package edu.byu.cs.tweeter.client.model.service.handlers;
 
-import edu.byu.cs.tweeter.client.model.service.StatusService;
 import edu.byu.cs.tweeter.client.model.service.observers.PagedTaskObserver;
 import edu.byu.cs.tweeter.model.domain.Status;
 
