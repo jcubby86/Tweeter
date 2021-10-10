@@ -9,6 +9,6 @@ public class LoginPresenter extends AuthenticatePresenter {
     }
 
     public void login(String userAlias, String password) {
-        userService.login(userAlias, password, getObserver());
+        getUserService().login(userAlias, password, getObserver());
     }
 }

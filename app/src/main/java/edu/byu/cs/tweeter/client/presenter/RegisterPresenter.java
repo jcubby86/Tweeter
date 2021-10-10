@@ -23,7 +23,7 @@ public class RegisterPresenter extends AuthenticatePresenter {
         byte[] imageBytes = bos.toByteArray();
         String imageBytesBase64 = Base64.encodeToString(imageBytes, Base64.NO_WRAP);
 
-        userService.register(firstName, lastName, userAlias, password, imageBytesBase64, getObserver());
+        getUserService().register(firstName, lastName, userAlias, password, imageBytesBase64, getObserver());
 
     }
 

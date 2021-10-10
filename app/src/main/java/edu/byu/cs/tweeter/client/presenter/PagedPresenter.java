@@ -53,7 +53,7 @@ public abstract class PagedPresenter<T> extends Presenter<PagedView<T>> {
     public void getUser(String userAlias) {
         view.displayInfoMessage("Getting user's profile...");
 
-        userService.getUser(userAlias, new DataTaskObserver<User>() {
+        getUserService().getUser(userAlias, new DataTaskObserver<User>() {
             @Override
             public void handleSuccess(User user) {
                 view.clearInfoMessage();

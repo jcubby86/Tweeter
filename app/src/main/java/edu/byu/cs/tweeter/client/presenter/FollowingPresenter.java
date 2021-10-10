@@ -13,7 +13,7 @@ public class FollowingPresenter extends PagedPresenter<User> {
 
     @Override
     protected void callService(User user, PagedTaskObserver<User> observer) {
-        followService.loadMoreFollowing(user, PAGE_SIZE, lastItem, observer);
+        getFollowService().loadMoreFollowing(user, PAGE_SIZE, lastItem, observer);
     }
 
 }

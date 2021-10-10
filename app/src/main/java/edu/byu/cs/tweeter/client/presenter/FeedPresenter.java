@@ -13,7 +13,7 @@ public class FeedPresenter extends PagedPresenter<Status> {
 
     @Override
     protected void callService(User user, PagedTaskObserver<Status> observer) {
-        statusService.loadMoreFeed(user, PAGE_SIZE, lastItem, observer);
+        getStatusService().loadMoreFeed(user, PAGE_SIZE, lastItem, observer);
     }
 
 }

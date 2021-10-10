@@ -13,7 +13,7 @@ public class StoryPresenter extends PagedPresenter<Status> {
 
     @Override
     protected void callService(User user, PagedTaskObserver<Status> observer) {
-        statusService.loadMoreStory(user, PAGE_SIZE, lastItem, observer);
+        getStatusService().loadMoreStory(user, PAGE_SIZE, lastItem, observer);
     }
 
 }

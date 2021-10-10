@@ -7,16 +7,36 @@ import edu.byu.cs.tweeter.client.presenter.observers.View;
 
 public abstract class Presenter<T extends View> {
 
-    protected final UserService userService;
-    protected final FollowService followService;
-    protected final StatusService statusService;
+
+
+    private UserService userService;
+    private FollowService followService;
+    private StatusService statusService;
     protected T view;
 
     public Presenter(T view) {
         this.view = view;
-        userService = new UserService();
-        followService = new FollowService();
-        statusService = new StatusService();
+    }
+
+    public UserService getUserService() {
+        if (userService == null){
+            userService = new UserService();
+        }
+        return userService;
+    }
+
+    public FollowService getFollowService() {
+        if (followService == null){
+            followService = new FollowService();
+        }
+        return followService;
+    }
+
+    public StatusService getStatusService() {
+        if (statusService == null){
+            statusService = new StatusService();
+        }
+        return statusService;
     }
 
 }

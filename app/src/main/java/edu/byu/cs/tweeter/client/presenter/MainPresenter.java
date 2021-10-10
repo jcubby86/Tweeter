@@ -25,7 +25,7 @@ public class MainPresenter extends Presenter<MainView> {
     }
 
     public void checkIsFollower(User selectedUser) {
-        followService.checkIsFollower(selectedUser, new DataTaskObserver<Boolean>() {
+        getFollowService().checkIsFollower(selectedUser, new DataTaskObserver<Boolean>() {
             @Override
             public void handleSuccess(Boolean isFollower) {
                 view.setFollowing(isFollower);
@@ -40,7 +40,7 @@ public class MainPresenter extends Presenter<MainView> {
 
     public void unfollow(User selectedUser) {
         view.displayInfoMessage("Removing " + selectedUser.getName() + "...");
-        followService.unfollow(selectedUser, new SimpleNotificationObserver() {
+        getFollowService().unfollow(selectedUser, new SimpleNotificationObserver() {
             @Override
             public void handleSuccess() {
                 view.clearInfoMessage();
@@ -59,7 +59,7 @@ public class MainPresenter extends Presenter<MainView> {
 
     public void follow(User selectedUser) {
         view.displayInfoMessage("Adding " + selectedUser.getName() + "...");
-        followService.follow(selectedUser, new SimpleNotificationObserver() {
+        getFollowService().follow(selectedUser, new SimpleNotificationObserver() {
             @Override
             public void handleSuccess() {
                 view.clearInfoMessage();
@@ -77,7 +77,7 @@ public class MainPresenter extends Presenter<MainView> {
     }
 
     public void getCounts(User selectedUser) {
-        followService.getCounts(selectedUser, new DataTaskObserver<Integer>() {
+        getFollowService().getCounts(selectedUser, new DataTaskObserver<Integer>() {
             @Override
             public void handleSuccess(Integer followerCount) {
                 view.setFollowerCount(followerCount);
@@ -101,7 +101,7 @@ public class MainPresenter extends Presenter<MainView> {
     }
 
     public void logout() {
-        userService.logout(new SimpleNotificationObserver() {
+        getUserService().logout(new SimpleNotificationObserver() {
             @Override
             public void handleSuccess() {
                 view.finishLogout();
@@ -117,7 +117,7 @@ public class MainPresenter extends Presenter<MainView> {
     public void postStatus(String post) {
         try {
             Status newStatus = new Status(post, Cache.getInstance().getCurrUser(), getFormattedDateTime(), parseURLs(post), parseMentions(post));
-            statusService.postStatus(newStatus, new SimpleNotificationObserver() {
+            getStatusService().postStatus(newStatus, new SimpleNotificationObserver() {
                 @Override
                 public void handleSuccess() {
                     view.statusPostComplete();
