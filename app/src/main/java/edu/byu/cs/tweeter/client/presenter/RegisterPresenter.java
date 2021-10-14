@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import java.io.ByteArrayOutputStream;
 
 import edu.byu.cs.tweeter.client.presenter.observers.AuthenticateView;
+import edu.byu.cs.tweeter.model.net.request.RegisterRequest;
 
 public class RegisterPresenter extends AuthenticatePresenter {
 
@@ -23,7 +24,9 @@ public class RegisterPresenter extends AuthenticatePresenter {
         byte[] imageBytes = bos.toByteArray();
         String imageBytesBase64 = Base64.encodeToString(imageBytes, Base64.NO_WRAP);
 
-        getUserService().register(firstName, lastName, userAlias, password, imageBytesBase64, getObserver());
+        RegisterRequest registerRequest = new RegisterRequest(userAlias, password, firstName, lastName, userAlias);
+
+        getUserService().register(registerRequest, getObserver());
 
     }
 

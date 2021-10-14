@@ -2,20 +2,14 @@ package edu.byu.cs.tweeter.client.model.service.backgroundTask;
 
 import android.os.Handler;
 
-import edu.byu.cs.tweeter.model.domain.AuthToken;
+import edu.byu.cs.tweeter.model.net.request.AuthorizedRequest;
 
-public abstract class AuthorizedTask extends BackgroundTask {
+public abstract class AuthorizedTask<T extends AuthorizedRequest> extends BackgroundTask<T> {
 
     private static final String LOG_TAG = "AuthorizedTask";
 
-    /**
-     * Auth token for logged-in user.
-     */
-    protected AuthToken authToken;
-
-    public AuthorizedTask(Handler messageHandler, AuthToken authToken) {
-        super(messageHandler);
-        this.authToken = authToken;
+    public AuthorizedTask(T request, Handler messageHandler) {
+        super(request, messageHandler);
     }
 
 }

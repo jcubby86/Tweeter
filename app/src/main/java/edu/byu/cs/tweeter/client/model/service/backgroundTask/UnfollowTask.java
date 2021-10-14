@@ -2,17 +2,16 @@ package edu.byu.cs.tweeter.client.model.service.backgroundTask;
 
 import android.os.Handler;
 
-import edu.byu.cs.tweeter.model.domain.AuthToken;
-import edu.byu.cs.tweeter.model.domain.User;
+import edu.byu.cs.tweeter.model.net.request.UnfollowRequest;
 
 /**
  * Background task that removes a following relationship between two users.
  */
-public class UnfollowTask extends ChangeFollowStatusTask {
+public class UnfollowTask extends ChangeFollowStatusTask<UnfollowRequest> {
     private static final String LOG_TAG = "UnfollowTask";
 
-    public UnfollowTask(AuthToken authToken, User followee, Handler messageHandler) {
-        super(messageHandler, authToken, followee);
+    public UnfollowTask(UnfollowRequest request, Handler messageHandler) {
+        super(request, messageHandler);
     }
 
     @Override

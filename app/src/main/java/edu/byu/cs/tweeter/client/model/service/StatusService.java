@@ -10,25 +10,24 @@ import edu.byu.cs.tweeter.client.model.service.handlers.PostStatusHandler;
 import edu.byu.cs.tweeter.client.model.service.observers.PagedTaskObserver;
 import edu.byu.cs.tweeter.client.model.service.observers.SimpleNotificationObserver;
 import edu.byu.cs.tweeter.model.domain.Status;
-import edu.byu.cs.tweeter.model.domain.User;
+import edu.byu.cs.tweeter.model.net.request.GetFeedRequest;
+import edu.byu.cs.tweeter.model.net.request.GetStoryRequest;
+import edu.byu.cs.tweeter.model.net.request.PostStatusRequest;
 
 public class StatusService extends Service {
 
-    public void loadMoreStory(User user, int pageSize, Status lastStatus, PagedTaskObserver<Status> observer) {
-        GetStoryTask getStoryTask = new GetStoryTask(Cache.getInstance().getCurrUserAuthToken(),
-                user, pageSize, lastStatus, new GetStoryHandler(observer));
+    public void loadMoreStory(GetStoryRequest request, PagedTaskObserver<Status> observer) {
+        GetStoryTask getStoryTask = new GetStoryTask(request, new GetStoryHandler(observer));
         runTask(getStoryTask);
     }
 
-    public void loadMoreFeed(User user, int pageSize, Status lastStatus, PagedTaskObserver<Status> observer) {
-        GetFeedTask getFeedTask = new GetFeedTask(Cache.getInstance().getCurrUserAuthToken(),
-                user, pageSize, lastStatus, new GetFeedHandler(observer));
+    public void loadMoreFeed(GetFeedRequest request, PagedTaskObserver<Status> observer) {
+        GetFeedTask getFeedTask = new GetFeedTask(request, new GetFeedHandler(observer));
         runTask(getFeedTask);
     }
 
-    public void postStatus(Status newStatus, SimpleNotificationObserver observer) {
-        PostStatusTask statusTask = new PostStatusTask(Cache.getInstance().getCurrUserAuthToken(),
-                newStatus, new PostStatusHandler(observer));
+    public void postStatus(PostStatusRequest request, SimpleNotificationObserver observer) {
+        PostStatusTask statusTask = new PostStatusTask(request, new PostStatusHandler(observer));
         runTask(statusTask);
     }
 }

@@ -3,36 +3,31 @@ package edu.byu.cs.tweeter.client.model.service.backgroundTask;
 import android.os.Bundle;
 import android.os.Handler;
 
-import edu.byu.cs.tweeter.model.domain.AuthToken;
-import edu.byu.cs.tweeter.model.domain.User;
+import edu.byu.cs.tweeter.model.net.request.CountRequest;
 
-public abstract class CountTask extends AuthorizedTask {
+public class CountTask extends AuthorizedTask<CountRequest> {
 
     private static final String LOG_TAG = "AuthorizedTask";
 
-    public static final String COUNT_KEY = "count";
-    /**
-     * The user whose follower count is being retrieved.
-     * (This can be any user, not just the currently logged-in user.)
-     */
-    protected User targetUser;
+    public static final String FOLLOWERS_COUNT_KEY = "followers";
+    public static final String FOLLOWING_COUNT_KEY = "following";
 
-    private int count;
+    private int followersCount;
+    private int followingCount;
 
-    public CountTask(Handler messageHandler, AuthToken authToken, User targetUser) {
-        super(messageHandler, authToken);
-        this.targetUser = targetUser;
+    public CountTask(CountRequest request, Handler messageHandler) {
+        super(request, messageHandler);
     }
 
     @Override
     protected void runTask() {
-        count = runCountTask();
+        followersCount = 20;
+        followingCount = 20;
     }
-
-    protected abstract int runCountTask();
 
     @Override
     protected void loadMessageBundle(Bundle msgBundle) {
-        msgBundle.putInt(COUNT_KEY, count);
+        msgBundle.putInt(FOLLOWERS_COUNT_KEY, followersCount);
+        msgBundle.putInt(FOLLOWING_COUNT_KEY, followingCount);
     }
 }

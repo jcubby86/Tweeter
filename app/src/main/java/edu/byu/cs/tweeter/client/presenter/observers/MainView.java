@@ -9,7 +9,6 @@ public interface MainView extends InfoView {
 
     void statusPostComplete();
 
-    void setFollowerCount(int count);
+    void setCounts(int followersCount, int followingCount);
 
-    void setFollowingCount(int count);
 }

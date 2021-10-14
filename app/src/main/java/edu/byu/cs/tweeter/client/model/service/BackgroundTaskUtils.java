@@ -25,6 +25,7 @@ public class BackgroundTaskUtils {
             user.setImageBytes(bytes);
         } catch (Exception e) {
             Log.e(LOG_TAG, e.toString(), e);
+            user.setImageBytes(new byte[]{});
         }
     }
 

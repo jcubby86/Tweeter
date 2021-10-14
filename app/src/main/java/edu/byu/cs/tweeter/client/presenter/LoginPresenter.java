@@ -1,6 +1,7 @@
 package edu.byu.cs.tweeter.client.presenter;
 
 import edu.byu.cs.tweeter.client.presenter.observers.AuthenticateView;
+import edu.byu.cs.tweeter.model.net.request.LoginRequest;
 
 public class LoginPresenter extends AuthenticatePresenter {
 
@@ -9,6 +10,7 @@ public class LoginPresenter extends AuthenticatePresenter {
     }
 
     public void login(String userAlias, String password) {
-        getUserService().login(userAlias, password, getObserver());
+        LoginRequest loginRequest = new LoginRequest(userAlias, password);
+        getUserService().login(loginRequest, getObserver());
     }
 }

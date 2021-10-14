@@ -17,6 +17,13 @@ import edu.byu.cs.tweeter.client.model.service.observers.SimpleNotificationObser
 import edu.byu.cs.tweeter.client.presenter.observers.MainView;
 import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
+import edu.byu.cs.tweeter.model.net.request.CountRequest;
+import edu.byu.cs.tweeter.model.net.request.FollowRequest;
+import edu.byu.cs.tweeter.model.net.request.IsFollowerRequest;
+import edu.byu.cs.tweeter.model.net.request.LogoutRequest;
+import edu.byu.cs.tweeter.model.net.request.PostStatusRequest;
+import edu.byu.cs.tweeter.model.net.request.UnfollowRequest;
+import edu.byu.cs.tweeter.util.Pair;
 
 public class MainPresenter extends Presenter<MainView> {
 
@@ -27,7 +34,8 @@ public class MainPresenter extends Presenter<MainView> {
     }
 
     public void checkIsFollower(User selectedUser) {
-        getFollowService().checkIsFollower(selectedUser, new DataTaskObserver<Boolean>() {
+        IsFollowerRequest request = new IsFollowerRequest(Cache.getInstance().getCurrUserAuthToken(), Cache.getInstance().getCurrUser(), selectedUser);
+        getFollowService().checkIsFollower(request, new DataTaskObserver<Boolean>() {
             @Override
             public void handleSuccess(Boolean isFollower) {
                 view.setFollowing(isFollower);
@@ -42,7 +50,8 @@ public class MainPresenter extends Presenter<MainView> {
 
     public void unfollow(User selectedUser) {
         view.displayInfoMessage("Removing " + selectedUser.getName() + "...");
-        getFollowService().unfollow(selectedUser, new SimpleNotificationObserver() {
+        UnfollowRequest unfollowRequest = new UnfollowRequest(Cache.getInstance().getCurrUserAuthToken(), selectedUser);
+        getFollowService().unfollow(unfollowRequest, new SimpleNotificationObserver() {
             @Override
             public void handleSuccess() {
                 view.clearInfoMessage();
@@ -60,7 +69,8 @@ public class MainPresenter extends Presenter<MainView> {
 
     public void follow(User selectedUser) {
         view.displayInfoMessage("Adding " + selectedUser.getName() + "...");
-        getFollowService().follow(selectedUser, new SimpleNotificationObserver() {
+        FollowRequest followRequest = new FollowRequest(Cache.getInstance().getCurrUserAuthToken(), selectedUser);
+        getFollowService().follow(followRequest, new SimpleNotificationObserver() {
             @Override
             public void handleSuccess() {
                 view.clearInfoMessage();
@@ -78,20 +88,11 @@ public class MainPresenter extends Presenter<MainView> {
     }
 
     public void getCounts(User selectedUser) {
-        getFollowService().getCounts(selectedUser, new DataTaskObserver<Integer>() {
+        CountRequest request = new CountRequest(Cache.getInstance().getCurrUserAuthToken(), selectedUser);
+        getFollowService().getCounts(request, new DataTaskObserver<Pair<Integer, Integer>>() {
             @Override
-            public void handleSuccess(Integer followerCount) {
-                view.setFollowerCount(followerCount);
-            }
-
-            @Override
-            public void handleFailure(String message) {
-                view.displayErrorMessage(message);
-            }
-        }, new DataTaskObserver<Integer>() {
-            @Override
-            public void handleSuccess(Integer followingCount) {
-                view.setFollowingCount(followingCount);
+            public void handleSuccess(Pair<Integer, Integer> data) {
+                view.setCounts(data.getFirst(), data.getSecond());
             }
 
             @Override
@@ -102,7 +103,8 @@ public class MainPresenter extends Presenter<MainView> {
     }
 
     public void logout() {
-        getUserService().logout(new SimpleNotificationObserver() {
+        LogoutRequest request = new LogoutRequest(Cache.getInstance().getCurrUserAuthToken());
+        getUserService().logout(request, new SimpleNotificationObserver() {
             @Override
             public void handleSuccess() {
                 view.finishLogout();
@@ -119,7 +121,8 @@ public class MainPresenter extends Presenter<MainView> {
         try {
             view.displayInfoMessage("Posting Status...");
             Status newStatus = new Status(post, Cache.getInstance().getCurrUser(), getFormattedDateTime(), parseURLs(post), parseMentions(post));
-            getStatusService().postStatus(newStatus, new SimpleNotificationObserver() {
+            PostStatusRequest request = new PostStatusRequest(Cache.getInstance().getCurrUserAuthToken(), newStatus);
+            getStatusService().postStatus(request, new SimpleNotificationObserver() {
                 @Override
                 public void handleSuccess() {
                     view.clearInfoMessage();

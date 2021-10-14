@@ -3,32 +3,26 @@ package edu.byu.cs.tweeter.client.model.service.backgroundTask;
 import android.os.Bundle;
 import android.os.Handler;
 
-import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
+import edu.byu.cs.tweeter.model.net.request.GetUserRequest;
 
 /**
  * Background task that returns the profile for a specified user.
  */
-public class GetUserTask extends AuthorizedTask {
+public class GetUserTask extends AuthorizedTask<GetUserRequest> {
 
     private static final String LOG_TAG = "GetUserTask";
 
     public static final String USER_KEY = "user";
 
-    /**
-     * Alias (or handle) for user whose profile is being retrieved.
-     */
-    private final String alias;
-
     private User user;
 
-    public GetUserTask(AuthToken authToken, String alias, Handler messageHandler) {
-        super(messageHandler, authToken);
-        this.alias = alias;
+    public GetUserTask(GetUserRequest request, Handler messageHandler) {
+        super(request, messageHandler);
     }
 
     private User getUser() {
-        return getFakeData().findUserByAlias(alias);
+        return getFakeData().findUserByAlias(request.getAlias());
     }
 
     @Override

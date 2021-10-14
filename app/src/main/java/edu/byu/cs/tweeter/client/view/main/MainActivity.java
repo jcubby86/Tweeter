@@ -179,14 +179,11 @@ public class MainActivity extends AppCompatActivity implements StatusDialogFragm
     }
 
     @Override
-    public void setFollowerCount(int count) {
-        followerCount.setText(getString(R.string.followerCount, String.valueOf(count)));
+    public void setCounts(int followersCount, int followingCount) {
+        followerCount.setText(getString(R.string.followerCount, String.valueOf(followersCount)));
+        followeeCount.setText(getString(R.string.followeeCount, String.valueOf(followingCount)));
     }
 
-    @Override
-    public void setFollowingCount(int count) {
-        followeeCount.setText(getString(R.string.followeeCount, String.valueOf(count)));
-    }
 
     @Override
     public void displayInfoMessage(String message) {

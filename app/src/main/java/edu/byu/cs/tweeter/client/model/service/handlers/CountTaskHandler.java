@@ -4,15 +4,21 @@ import android.os.Bundle;
 
 import edu.byu.cs.tweeter.client.model.service.backgroundTask.CountTask;
 import edu.byu.cs.tweeter.client.model.service.observers.DataTaskObserver;
+import edu.byu.cs.tweeter.util.Pair;
 
-public abstract class CountTaskHandler extends DataTaskHandler<Integer> {
+public class CountTaskHandler extends DataTaskHandler<Pair<Integer, Integer>> {
 
-    public CountTaskHandler(DataTaskObserver<Integer> observer) {
+    public CountTaskHandler(DataTaskObserver<Pair<Integer, Integer>> observer) {
         super(observer);
     }
 
     @Override
-    protected Integer getData(Bundle bundle) {
-        return bundle.getInt(CountTask.COUNT_KEY);
+    protected Pair<Integer, Integer> getData(Bundle bundle) {
+        return new Pair<>(bundle.getInt(CountTask.FOLLOWERS_COUNT_KEY), bundle.getInt(CountTask.FOLLOWING_COUNT_KEY));
+    }
+
+    @Override
+    protected String getMessage() {
+        return "Failed to get followers/following counts";
     }
 }

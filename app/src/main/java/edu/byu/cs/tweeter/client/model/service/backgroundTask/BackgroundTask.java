@@ -9,9 +9,10 @@ import androidx.annotation.NonNull;
 
 import java.io.IOException;
 
+import edu.byu.cs.tweeter.model.net.request.Request;
 import edu.byu.cs.tweeter.util.FakeData;
 
-public abstract class BackgroundTask implements Runnable {
+public abstract class BackgroundTask<T extends Request> implements Runnable {
 
     private static final String LOG_TAG = "BackgroundTask";
 
@@ -22,10 +23,12 @@ public abstract class BackgroundTask implements Runnable {
     /**
      * Message handler that will receive task results.
      */
+    protected final T request;
     private final Handler messageHandler;
 
-    public BackgroundTask(Handler messageHandler) {
+    public BackgroundTask(T request, Handler messageHandler) {
         this.messageHandler = messageHandler;
+        this.request = request;
     }
 
     @Override
