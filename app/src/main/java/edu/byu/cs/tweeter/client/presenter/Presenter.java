@@ -18,21 +18,21 @@ public abstract class Presenter<T extends View> {
         this.view = view;
     }
 
-    public UserService getUserService() {
+    protected UserService getUserService() {
         if (userService == null){
             userService = new UserService();
         }
         return userService;
     }
 
-    public FollowService getFollowService() {
+    protected FollowService getFollowService() {
         if (followService == null){
             followService = new FollowService();
         }
         return followService;
     }
 
-    public StatusService getStatusService() {
+    protected StatusService getStatusService() {
         if (statusService == null){
             statusService = new StatusService();
         }

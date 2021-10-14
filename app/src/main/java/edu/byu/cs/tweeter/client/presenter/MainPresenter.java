@@ -1,5 +1,6 @@
 package edu.byu.cs.tweeter.client.presenter;
 
+import android.annotation.SuppressLint;
 import android.util.Log;
 
 import java.text.ParseException;
@@ -8,6 +9,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import edu.byu.cs.tweeter.client.cache.Cache;
 import edu.byu.cs.tweeter.client.model.service.observers.DataTaskObserver;
@@ -47,7 +49,6 @@ public class MainPresenter extends Presenter<MainView> {
                 view.setFollowing(false);
                 view.enableFollowButton();
             }
-
             @Override
             public void handleFailure(String message) {
                 view.clearInfoMessage();
@@ -116,32 +117,37 @@ public class MainPresenter extends Presenter<MainView> {
 
     public void postStatus(String post) {
         try {
+            view.displayInfoMessage("Posting Status...");
             Status newStatus = new Status(post, Cache.getInstance().getCurrUser(), getFormattedDateTime(), parseURLs(post), parseMentions(post));
             getStatusService().postStatus(newStatus, new SimpleNotificationObserver() {
                 @Override
                 public void handleSuccess() {
+                    view.clearInfoMessage();
                     view.statusPostComplete();
                 }
 
                 @Override
                 public void handleFailure(String message) {
+                    view.clearInfoMessage();
                     view.displayErrorMessage(message);
                 }
             });
         } catch (Exception ex) {
             Log.e(LOG_TAG, ex.getMessage(), ex);
+            view.clearInfoMessage();
             view.displayErrorMessage("Failed to post the status because of exception: " + ex.getMessage());
         }
     }
 
-    public String getFormattedDateTime() throws ParseException {
-        SimpleDateFormat userFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+    @SuppressLint("SimpleDateFormat")
+    private String getFormattedDateTime() throws ParseException {
+         SimpleDateFormat userFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         SimpleDateFormat statusFormat = new SimpleDateFormat("MMM d yyyy h:mm aaa");
 
-        return statusFormat.format(userFormat.parse(LocalDate.now().toString() + " " + LocalTime.now().toString().substring(0, 8)));
+        return statusFormat.format(Objects.requireNonNull(userFormat.parse(LocalDate.now().toString() + " " + LocalTime.now().toString().substring(0, 8))));
     }
 
-    public List<String> parseURLs(String post) {
+    private List<String> parseURLs(String post) {
         List<String> containedUrls = new ArrayList<>();
         for (String word : post.split("\\s")) {
             if (word.startsWith("http://") || word.startsWith("https://")) {
@@ -157,7 +163,7 @@ public class MainPresenter extends Presenter<MainView> {
         return containedUrls;
     }
 
-    public List<String> parseMentions(String post) {
+    private List<String> parseMentions(String post) {
         List<String> containedMentions = new ArrayList<>();
 
         for (String word : post.split("\\s")) {
@@ -172,7 +178,7 @@ public class MainPresenter extends Presenter<MainView> {
         return containedMentions;
     }
 
-    public int findUrlEndIndex(String word) {
+    private int findUrlEndIndex(String word) {
         if (word.contains(".com")) {
             int index = word.indexOf(".com");
             index += 4;

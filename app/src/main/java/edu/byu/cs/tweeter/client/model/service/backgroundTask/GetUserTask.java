@@ -32,7 +32,7 @@ public class GetUserTask extends AuthorizedTask {
     }
 
     @Override
-    public void runTask() {
+    protected void runTask() {
         user = getUser();
     }
 

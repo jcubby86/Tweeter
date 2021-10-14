@@ -33,7 +33,6 @@ public abstract class PagedPresenter<T> extends Presenter<PagedView<T>> {
                     view.removeLoadingFooter();
                     view.displayMoreItems(items);
                 }
-
                 @Override
                 public void handleFailure(String message) {
                     loading = false;

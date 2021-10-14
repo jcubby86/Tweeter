@@ -26,7 +26,7 @@ import edu.byu.cs.tweeter.model.domain.User;
 public class LoginFragment extends Fragment implements AuthenticateView {
     private static final String LOG_TAG = "LoginFragment";
 
-    private Toast loginInToast;
+    private Toast loginToast;
     private EditText alias;
     private EditText password;
     private TextView errorView;
@@ -64,8 +64,8 @@ public class LoginFragment extends Fragment implements AuthenticateView {
                 validateLogin();
                 errorView.setText(null);
 
-                loginInToast = Toast.makeText(getContext(), "Logging In...", Toast.LENGTH_LONG);
-                loginInToast.show();
+                loginToast = Toast.makeText(getContext(), "Logging In...", Toast.LENGTH_LONG);
+                loginToast.show();
 
                 presenter.login(alias.getText().toString(), password.getText().toString());
             } catch (Exception e) {
@@ -99,7 +99,7 @@ public class LoginFragment extends Fragment implements AuthenticateView {
         Intent intent = new Intent(getContext(), MainActivity.class);
         intent.putExtra(MainActivity.CURRENT_USER_KEY, loggedInUser);
 
-        loginInToast.cancel();
+        loginToast.cancel();
 
         Toast.makeText(getContext(), "Hello " + Cache.getInstance().getCurrUser().getName(), Toast.LENGTH_LONG).show();
         startActivity(intent);

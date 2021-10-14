@@ -43,7 +43,7 @@ public abstract class PagedTask<T> extends AuthorizedTask {
     }
 
     @Override
-    public void runTask() throws IOException {
+    protected void runTask() throws IOException {
         Pair<List<T>, Boolean> pageOfUsers = getItems();
 
         items = pageOfUsers.getFirst();
