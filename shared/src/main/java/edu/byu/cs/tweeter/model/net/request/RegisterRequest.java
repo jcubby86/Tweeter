@@ -15,12 +15,12 @@ public class RegisterRequest extends AuthenticationRequest{
      */
     private String image;
 
+
     /**
      * Allows construction of the object from Json. Private so it won't be called in normal code.
      */
     private RegisterRequest() {
     }
-
 
     /**
      * Creates an instance.

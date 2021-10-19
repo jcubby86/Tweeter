@@ -12,8 +12,7 @@ import java.util.List;
 import java.util.Objects;
 
 import edu.byu.cs.tweeter.client.cache.Cache;
-import edu.byu.cs.tweeter.client.model.service.observers.DataTaskObserver;
-import edu.byu.cs.tweeter.client.model.service.observers.SimpleNotificationObserver;
+import edu.byu.cs.tweeter.client.model.service.BackgroundTaskObserver;
 import edu.byu.cs.tweeter.client.presenter.observers.MainView;
 import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
@@ -23,7 +22,12 @@ import edu.byu.cs.tweeter.model.net.request.IsFollowerRequest;
 import edu.byu.cs.tweeter.model.net.request.LogoutRequest;
 import edu.byu.cs.tweeter.model.net.request.PostStatusRequest;
 import edu.byu.cs.tweeter.model.net.request.UnfollowRequest;
-import edu.byu.cs.tweeter.util.Pair;
+import edu.byu.cs.tweeter.model.net.response.CountResponse;
+import edu.byu.cs.tweeter.model.net.response.FollowResponse;
+import edu.byu.cs.tweeter.model.net.response.IsFollowerResponse;
+import edu.byu.cs.tweeter.model.net.response.LogoutResponse;
+import edu.byu.cs.tweeter.model.net.response.PostStatusResponse;
+import edu.byu.cs.tweeter.model.net.response.UnfollowResponse;
 
 public class MainPresenter extends Presenter<MainView> {
 
@@ -35,15 +39,15 @@ public class MainPresenter extends Presenter<MainView> {
 
     public void checkIsFollower(User selectedUser) {
         IsFollowerRequest request = new IsFollowerRequest(Cache.getInstance().getCurrUserAuthToken(), Cache.getInstance().getCurrUser(), selectedUser);
-        getFollowService().checkIsFollower(request, new DataTaskObserver<Boolean>() {
-            @Override
-            public void handleSuccess(Boolean isFollower) {
-                view.setFollowing(isFollower);
-            }
-
+        getFollowService().checkIsFollower(request, new BackgroundTaskObserver<IsFollowerResponse>() {
             @Override
             public void handleFailure(String message) {
                 view.displayErrorMessage(message);
+            }
+
+            @Override
+            public void handleSuccess(IsFollowerResponse response) {
+                view.setFollowing(response.isFollower());
             }
         });
     }
@@ -51,17 +55,18 @@ public class MainPresenter extends Presenter<MainView> {
     public void unfollow(User selectedUser) {
         view.displayInfoMessage("Removing " + selectedUser.getName() + "...");
         UnfollowRequest unfollowRequest = new UnfollowRequest(Cache.getInstance().getCurrUserAuthToken(), selectedUser);
-        getFollowService().unfollow(unfollowRequest, new SimpleNotificationObserver() {
-            @Override
-            public void handleSuccess() {
-                view.clearInfoMessage();
-                view.setFollowing(false);
-                view.enableFollowButton();
-            }
+        getFollowService().unfollow(unfollowRequest, new BackgroundTaskObserver<UnfollowResponse>() {
             @Override
             public void handleFailure(String message) {
                 view.clearInfoMessage();
                 view.displayErrorMessage(message);
+                view.enableFollowButton();
+            }
+
+            @Override
+            public void handleSuccess(UnfollowResponse response) {
+                view.clearInfoMessage();
+                view.setFollowing(false);
                 view.enableFollowButton();
             }
         });
@@ -70,18 +75,18 @@ public class MainPresenter extends Presenter<MainView> {
     public void follow(User selectedUser) {
         view.displayInfoMessage("Adding " + selectedUser.getName() + "...");
         FollowRequest followRequest = new FollowRequest(Cache.getInstance().getCurrUserAuthToken(), selectedUser);
-        getFollowService().follow(followRequest, new SimpleNotificationObserver() {
-            @Override
-            public void handleSuccess() {
-                view.clearInfoMessage();
-                view.setFollowing(true);
-                view.enableFollowButton();
-            }
-
+        getFollowService().follow(followRequest, new BackgroundTaskObserver<FollowResponse>() {
             @Override
             public void handleFailure(String message) {
                 view.clearInfoMessage();
                 view.displayErrorMessage(message);
+                view.enableFollowButton();
+            }
+
+            @Override
+            public void handleSuccess(FollowResponse response) {
+                view.clearInfoMessage();
+                view.setFollowing(true);
                 view.enableFollowButton();
             }
         });
@@ -89,30 +94,30 @@ public class MainPresenter extends Presenter<MainView> {
 
     public void getCounts(User selectedUser) {
         CountRequest request = new CountRequest(Cache.getInstance().getCurrUserAuthToken(), selectedUser);
-        getFollowService().getCounts(request, new DataTaskObserver<Pair<Integer, Integer>>() {
-            @Override
-            public void handleSuccess(Pair<Integer, Integer> data) {
-                view.setCounts(data.getFirst(), data.getSecond());
-            }
-
+        getFollowService().getCounts(request, new BackgroundTaskObserver<CountResponse>() {
             @Override
             public void handleFailure(String message) {
                 view.displayErrorMessage(message);
+            }
+
+            @Override
+            public void handleSuccess(CountResponse response) {
+                view.setCounts(response.getFollowersCount(), response.getFollowingCount());
             }
         });
     }
 
     public void logout() {
         LogoutRequest request = new LogoutRequest(Cache.getInstance().getCurrUserAuthToken());
-        getUserService().logout(request, new SimpleNotificationObserver() {
-            @Override
-            public void handleSuccess() {
-                view.finishLogout();
-            }
-
+        getUserService().logout(request, new BackgroundTaskObserver<LogoutResponse>() {
             @Override
             public void handleFailure(String message) {
                 view.displayErrorMessage(message);
+            }
+
+            @Override
+            public void handleSuccess(LogoutResponse response) {
+                view.finishLogout();
             }
         });
     }
@@ -122,17 +127,17 @@ public class MainPresenter extends Presenter<MainView> {
             view.displayInfoMessage("Posting Status...");
             Status newStatus = new Status(post, Cache.getInstance().getCurrUser(), getFormattedDateTime(), parseURLs(post), parseMentions(post));
             PostStatusRequest request = new PostStatusRequest(Cache.getInstance().getCurrUserAuthToken(), newStatus);
-            getStatusService().postStatus(request, new SimpleNotificationObserver() {
-                @Override
-                public void handleSuccess() {
-                    view.clearInfoMessage();
-                    view.statusPostComplete();
-                }
-
+            getStatusService().postStatus(request, new BackgroundTaskObserver<PostStatusResponse>() {
                 @Override
                 public void handleFailure(String message) {
                     view.clearInfoMessage();
                     view.displayErrorMessage(message);
+                }
+
+                @Override
+                public void handleSuccess(PostStatusResponse response) {
+                    view.clearInfoMessage();
+                    view.statusPostComplete();
                 }
             });
         } catch (Exception ex) {

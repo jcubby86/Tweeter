@@ -5,12 +5,13 @@ import android.os.Handler;
 import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.net.request.PagedRequest;
+import edu.byu.cs.tweeter.model.net.response.PagedResponse;
 
-public abstract class PagedStatusTask<T extends PagedRequest<Status>> extends PagedTask<Status, T> {
+public abstract class PagedStatusTask<REQUEST extends PagedRequest<Status>, RESPONSE extends PagedResponse<Status>> extends PagedTask<Status, REQUEST, RESPONSE> {
 
     private static final String LOG_TAG = "PagedStatusTask";
 
-    public PagedStatusTask(T request, Handler messageHandler) {
+    public PagedStatusTask(REQUEST request, Handler messageHandler) {
         super(request, messageHandler);
     }
 

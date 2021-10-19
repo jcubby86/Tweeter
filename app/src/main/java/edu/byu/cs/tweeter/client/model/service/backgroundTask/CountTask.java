@@ -1,33 +1,28 @@
 package edu.byu.cs.tweeter.client.model.service.backgroundTask;
 
-import android.os.Bundle;
 import android.os.Handler;
 
-import edu.byu.cs.tweeter.model.net.request.CountRequest;
+import java.io.IOException;
 
-public class CountTask extends AuthorizedTask<CountRequest> {
+import edu.byu.cs.tweeter.model.net.request.CountRequest;
+import edu.byu.cs.tweeter.model.net.response.CountResponse;
+
+public class CountTask extends AuthorizedTask<CountRequest, CountResponse> {
 
     private static final String LOG_TAG = "AuthorizedTask";
-
-    public static final String FOLLOWERS_COUNT_KEY = "followers";
-    public static final String FOLLOWING_COUNT_KEY = "following";
-
-    private int followersCount;
-    private int followingCount;
 
     public CountTask(CountRequest request, Handler messageHandler) {
         super(request, messageHandler);
     }
 
     @Override
-    protected void runTask() {
-        followersCount = 20;
-        followingCount = 20;
+    protected CountResponse error(String message) {
+        return new CountResponse("Failed to get followers/following counts" + message);
     }
 
     @Override
-    protected void loadMessageBundle(Bundle msgBundle) {
-        msgBundle.putInt(FOLLOWERS_COUNT_KEY, followersCount);
-        msgBundle.putInt(FOLLOWING_COUNT_KEY, followingCount);
+    protected CountResponse runTask(CountRequest request) throws IOException {
+        return new CountResponse(20, 20);
     }
+
 }

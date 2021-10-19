@@ -5,28 +5,26 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-
 import java.io.IOException;
 
 import edu.byu.cs.tweeter.model.net.request.Request;
+import edu.byu.cs.tweeter.model.net.response.Response;
 import edu.byu.cs.tweeter.util.FakeData;
 
-public abstract class BackgroundTask<T extends Request> implements Runnable {
+public abstract class BackgroundTask<REQUEST extends Request, RESPONSE extends Response> implements Runnable {
 
     private static final String LOG_TAG = "BackgroundTask";
 
-    public static final String SUCCESS_KEY = "success";
-    public static final String MESSAGE_KEY = "message";
-    public static final String EXCEPTION_KEY = "exception";
+    public static final String RESPONSE_KEY = "response";
 
     /**
      * Message handler that will receive task results.
      */
-    protected final T request;
+    private final REQUEST request;
+    private RESPONSE response;
     private final Handler messageHandler;
 
-    public BackgroundTask(T request, Handler messageHandler) {
+    public BackgroundTask(REQUEST request, Handler messageHandler) {
         this.messageHandler = messageHandler;
         this.request = request;
     }
@@ -34,48 +32,25 @@ public abstract class BackgroundTask<T extends Request> implements Runnable {
     @Override
     public void run() {
         try {
-            runTask();
-            sendSuccessMessage();
+            response = runTask(request);
         } catch (Exception ex) {
             Log.e(LOG_TAG, ex.getMessage(), ex);
-            sendExceptionMessage(ex);
+            response = error(" because of exception: " + ex.getMessage());
         }
+        sendMessage();
     }
 
-    private void sendSuccessMessage() {
-        Bundle msgBundle = createBundle(true);
-        loadMessageBundle(msgBundle);
-        sendMessage(msgBundle);
-    }
-
-    private void sendFailedMessage(String message) {
-        Bundle msgBundle = createBundle(false);
-        msgBundle.putString(MESSAGE_KEY, message);
-        sendMessage(msgBundle);
-    }
-
-    private void sendExceptionMessage(Exception exception) {
-        Bundle msgBundle = createBundle(false);
-        msgBundle.putSerializable(EXCEPTION_KEY, exception);
-        sendMessage(msgBundle);
-    }
-
-    protected abstract void loadMessageBundle(Bundle msgBundle);
-
-    protected abstract void runTask() throws IOException;
+    protected abstract RESPONSE error(String message);
+    protected abstract RESPONSE runTask(REQUEST request) throws IOException;
 
     protected FakeData getFakeData() {
         return new FakeData();
     }
 
-    @NonNull
-    private Bundle createBundle(boolean success) {
+    private void sendMessage() {
         Bundle msgBundle = new Bundle();
-        msgBundle.putBoolean(SUCCESS_KEY, success);
-        return msgBundle;
-    }
+        msgBundle.putSerializable(RESPONSE_KEY, response);
 
-    private void sendMessage(Bundle msgBundle) {
         Message msg = Message.obtain();
         msg.setData(msgBundle);
 

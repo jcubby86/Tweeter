@@ -1,33 +1,31 @@
 package edu.byu.cs.tweeter.client.model.service.backgroundTask;
 
-import android.os.Bundle;
 import android.os.Handler;
 
+import java.io.IOException;
 import java.util.Random;
 
 import edu.byu.cs.tweeter.model.net.request.IsFollowerRequest;
+import edu.byu.cs.tweeter.model.net.response.IsFollowerResponse;
 
 /**
  * Background task that determines if one user is following another.
  */
-public class IsFollowerTask extends AuthorizedTask<IsFollowerRequest> {
+public class IsFollowerTask extends AuthorizedTask<IsFollowerRequest, IsFollowerResponse> {
     private static final String LOG_TAG = "IsFollowerTask";
-
-    public static final String IS_FOLLOWER_KEY = "is-follower";
-
-    private boolean isFollower;
 
     public IsFollowerTask(IsFollowerRequest request, Handler messageHandler) {
         super(request, messageHandler);
     }
 
     @Override
-    protected void loadMessageBundle(Bundle msgBundle) {
-        msgBundle.putBoolean(IS_FOLLOWER_KEY, isFollower);
+    protected IsFollowerResponse error(String message) {
+        return new IsFollowerResponse("Failed to determine following relationship" + message);
     }
 
     @Override
-    protected void runTask() {
-        isFollower = new Random().nextInt() > 0;
+    protected IsFollowerResponse runTask(IsFollowerRequest request) throws IOException {
+        return new IsFollowerResponse(new Random().nextInt() > 0);
     }
+
 }
