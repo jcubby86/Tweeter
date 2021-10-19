@@ -26,7 +26,7 @@ public class LogoutTask extends AuthorizedTask<LogoutRequest, LogoutResponse> {
 
     @Override
     protected LogoutResponse runTask(LogoutRequest request) throws IOException {
-        return null;
+        return new LogoutResponse();
     }
 
 }

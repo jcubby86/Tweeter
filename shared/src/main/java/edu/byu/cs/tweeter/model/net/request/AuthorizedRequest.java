@@ -10,7 +10,6 @@ public abstract class AuthorizedRequest extends Request{
     private AuthToken authToken;
 
     protected AuthorizedRequest(){
-        super();
     }
 
     public AuthorizedRequest(AuthToken authToken) {
