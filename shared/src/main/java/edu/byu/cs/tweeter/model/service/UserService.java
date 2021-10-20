@@ -1,4 +1,4 @@
-package edu.byu.cs.tweeter.server.service;
+package edu.byu.cs.tweeter.model.service;
 
 import edu.byu.cs.tweeter.model.net.request.GetUserRequest;
 import edu.byu.cs.tweeter.model.net.request.LoginRequest;

@@ -1,6 +1,6 @@
-package edu.byu.cs.tweeter.server.service;
+package edu.byu.cs.tweeter.model.service;
 
-import edu.byu.cs.tweeter.server.util.FakeData;
+import edu.byu.cs.tweeter.model.util.FakeData;
 
 public abstract class Service {
     protected FakeData getFakeData() {

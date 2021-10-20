@@ -1,4 +1,4 @@
-package edu.byu.cs.tweeter.server.service;
+package edu.byu.cs.tweeter.model.service;
 
 import java.util.List;
 
@@ -9,7 +9,7 @@ import edu.byu.cs.tweeter.model.net.request.PostStatusRequest;
 import edu.byu.cs.tweeter.model.net.response.GetFeedResponse;
 import edu.byu.cs.tweeter.model.net.response.GetStoryResponse;
 import edu.byu.cs.tweeter.model.net.response.PostStatusResponse;
-import edu.byu.cs.tweeter.server.util.Pair;
+import edu.byu.cs.tweeter.model.util.Pair;
 
 public class StatusService extends Service{
     public GetStoryResponse getStory(GetStoryRequest request){

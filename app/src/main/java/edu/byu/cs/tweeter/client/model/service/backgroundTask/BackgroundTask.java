@@ -9,9 +9,9 @@ import java.io.IOException;
 
 import edu.byu.cs.tweeter.model.net.request.Request;
 import edu.byu.cs.tweeter.model.net.response.Response;
-import edu.byu.cs.tweeter.server.service.FollowService;
-import edu.byu.cs.tweeter.server.service.StatusService;
-import edu.byu.cs.tweeter.server.service.UserService;
+import edu.byu.cs.tweeter.model.service.FollowService;
+import edu.byu.cs.tweeter.model.service.StatusService;
+import edu.byu.cs.tweeter.model.service.UserService;
 
 public abstract class BackgroundTask<REQUEST extends Request, RESPONSE extends Response> implements Runnable {
 

@@ -4,10 +4,11 @@ buildscript {
     repositories {
         google()
         jcenter()
-        
+        mavenCentral()
+
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.0.2'
+        classpath 'com.android.tools.build:gradle:7.0.3'
         classpath 'com.github.jengelman.gradle.plugins:shadow:5.2.0'
 
         
@@ -20,6 +21,7 @@ allprojects {
     repositories {
         google()
         jcenter()
+        mavenCentral()
         
     }
 }
