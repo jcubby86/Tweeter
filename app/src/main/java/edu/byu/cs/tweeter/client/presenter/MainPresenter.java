@@ -16,13 +16,13 @@ import edu.byu.cs.tweeter.client.model.service.BackgroundTaskObserver;
 import edu.byu.cs.tweeter.client.presenter.observers.MainView;
 import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
-import edu.byu.cs.tweeter.model.net.request.CountRequest;
+import edu.byu.cs.tweeter.model.net.request.GetCountRequest;
 import edu.byu.cs.tweeter.model.net.request.FollowRequest;
 import edu.byu.cs.tweeter.model.net.request.IsFollowerRequest;
 import edu.byu.cs.tweeter.model.net.request.LogoutRequest;
 import edu.byu.cs.tweeter.model.net.request.PostStatusRequest;
 import edu.byu.cs.tweeter.model.net.request.UnfollowRequest;
-import edu.byu.cs.tweeter.model.net.response.CountResponse;
+import edu.byu.cs.tweeter.model.net.response.GetCountResponse;
 import edu.byu.cs.tweeter.model.net.response.FollowResponse;
 import edu.byu.cs.tweeter.model.net.response.IsFollowerResponse;
 import edu.byu.cs.tweeter.model.net.response.LogoutResponse;
@@ -93,15 +93,15 @@ public class MainPresenter extends Presenter<MainView> {
     }
 
     public void getCounts(User selectedUser) {
-        CountRequest request = new CountRequest(Cache.getInstance().getCurrUserAuthToken(), selectedUser);
-        getFollowService().getCounts(request, new BackgroundTaskObserver<CountResponse>() {
+        GetCountRequest request = new GetCountRequest(Cache.getInstance().getCurrUserAuthToken(), selectedUser);
+        getFollowService().getCounts(request, new BackgroundTaskObserver<GetCountResponse>() {
             @Override
             public void handleFailure(String message) {
                 view.displayErrorMessage(message);
             }
 
             @Override
-            public void handleSuccess(CountResponse response) {
+            public void handleSuccess(GetCountResponse response) {
                 view.setCounts(response.getFollowersCount(), response.getFollowingCount());
             }
         });

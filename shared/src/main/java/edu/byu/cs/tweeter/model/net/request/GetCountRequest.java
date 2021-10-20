@@ -3,7 +3,7 @@ package edu.byu.cs.tweeter.model.net.request;
 import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
 
-public class CountRequest extends AuthorizedRequest{
+public class GetCountRequest extends AuthorizedRequest{
 
     /**
      * The user whose follower count is being retrieved.
@@ -11,10 +11,10 @@ public class CountRequest extends AuthorizedRequest{
      */
     protected User targetUser;
 
-    private CountRequest() {
+    private GetCountRequest() {
     }
 
-    public CountRequest(AuthToken authToken, User targetUser) {
+    public GetCountRequest(AuthToken authToken, User targetUser) {
         super(authToken);
         this.targetUser = targetUser;
     }

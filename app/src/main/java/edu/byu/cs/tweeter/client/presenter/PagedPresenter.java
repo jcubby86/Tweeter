@@ -10,7 +10,7 @@ import edu.byu.cs.tweeter.model.net.request.GetUserRequest;
 import edu.byu.cs.tweeter.model.net.response.GetUserResponse;
 import edu.byu.cs.tweeter.model.net.response.PagedResponse;
 
-public abstract class PagedPresenter<T> extends Presenter<PagedView<T>> {
+public abstract class PagedPresenter<T, RESPONSE extends PagedResponse<T>> extends Presenter<PagedView<T>> {
 
     protected static final int PAGE_SIZE = 10;
 
@@ -22,19 +22,35 @@ public abstract class PagedPresenter<T> extends Presenter<PagedView<T>> {
         super(view);
     }
 
+    public boolean isLoading() {
+        return loading;
+    }
+
     public void loadMoreItems(User user) {
         if (!loading && hasMorePages) {
             loading = true;
             view.addLoadingFooter();
 
-            callService(user);
+            callService(user, new BackgroundTaskObserver<RESPONSE>() {
+                @Override
+                public void handleFailure(String message) {
+                    loading = false;
+                    view.removeLoadingFooter();
+                    view.displayErrorMessage(message);
+                }
+
+                @Override
+                public void handleSuccess(RESPONSE response) {
+                    List<T> items = response.getItems();
+
+                    hasMorePages = response.isHasMorePages();
+                    lastItem = (items.size() > 0) ? items.get(items.size() - 1) : null;
+                    loading = false;
+                    view.removeLoadingFooter();
+                    view.displayMoreItems(items);
+                }
+            });
         }
-    }
-
-    protected abstract void callService(User user);
-
-    public boolean isLoading() {
-        return loading;
     }
 
     public void getUser(String userAlias) {
@@ -56,4 +72,6 @@ public abstract class PagedPresenter<T> extends Presenter<PagedView<T>> {
             }
         });
     }
+
+    protected abstract void callService(User user, BackgroundTaskObserver<RESPONSE> observer);
 }

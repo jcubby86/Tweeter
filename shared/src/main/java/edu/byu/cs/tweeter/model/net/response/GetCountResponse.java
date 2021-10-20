@@ -1,17 +1,17 @@
 package edu.byu.cs.tweeter.model.net.response;
 
-public class CountResponse extends Response{
+public class GetCountResponse extends Response{
 
     private int followersCount;
     private int followingCount;
 
-    private CountResponse(){}
+    private GetCountResponse(){}
 
-    public CountResponse(String message) {
+    public GetCountResponse(String message) {
         super(message);
     }
 
-    public CountResponse(int followersCount, int followingCount) {
+    public GetCountResponse(int followersCount, int followingCount) {
         this.followersCount = followersCount;
         this.followingCount = followingCount;
     }

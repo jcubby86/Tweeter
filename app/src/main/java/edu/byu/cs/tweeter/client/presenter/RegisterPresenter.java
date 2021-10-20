@@ -7,13 +7,11 @@ import android.widget.ImageView;
 
 import java.io.ByteArrayOutputStream;
 
-import edu.byu.cs.tweeter.client.cache.Cache;
-import edu.byu.cs.tweeter.client.model.service.BackgroundTaskObserver;
 import edu.byu.cs.tweeter.client.presenter.observers.AuthenticateView;
 import edu.byu.cs.tweeter.model.net.request.RegisterRequest;
 import edu.byu.cs.tweeter.model.net.response.RegisterResponse;
 
-public class RegisterPresenter extends Presenter<AuthenticateView> {
+public class RegisterPresenter extends AuthenticationPresenter<RegisterResponse> {
 
     public RegisterPresenter(AuthenticateView view) {
         super(view);
@@ -29,20 +27,7 @@ public class RegisterPresenter extends Presenter<AuthenticateView> {
 
         RegisterRequest registerRequest = new RegisterRequest(userAlias, password, firstName, lastName, imageBytesBase64);
 
-        getUserService().register(registerRequest, new BackgroundTaskObserver<RegisterResponse>() {
-            @Override
-            public void handleFailure(String message) {
-                view.displayErrorMessage(message);
-            }
-
-            @Override
-            public void handleSuccess(RegisterResponse response) {
-                Cache.getInstance().setCurrUserAuthToken(response.getAuthToken());
-                Cache.getInstance().setCurrUser(response.getUser());
-
-                view.authenticateUser(response.getUser());
-            }
-        });
+        getUserService().register(registerRequest, getObserver());
 
     }
 
