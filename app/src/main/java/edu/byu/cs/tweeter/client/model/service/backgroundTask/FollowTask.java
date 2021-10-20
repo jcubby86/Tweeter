@@ -5,9 +5,7 @@ import android.os.Handler;
 import java.io.IOException;
 
 import edu.byu.cs.tweeter.model.net.request.FollowRequest;
-import edu.byu.cs.tweeter.model.net.request.Request;
 import edu.byu.cs.tweeter.model.net.response.FollowResponse;
-import edu.byu.cs.tweeter.model.net.response.Response;
 
 /**
  * Background task that establishes a following relationship between two users.
@@ -26,7 +24,7 @@ public class FollowTask extends ChangeFollowStatusTask<FollowRequest, FollowResp
 
     @Override
     protected FollowResponse runTask(FollowRequest request) throws IOException {
-        return new FollowResponse();
+        return getFollowService().follow(request);
     }
 
 }

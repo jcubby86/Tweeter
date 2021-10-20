@@ -1,6 +1,5 @@
 package edu.byu.cs.tweeter.client.model.service.backgroundTask;
 
-import android.os.Bundle;
 import android.os.Handler;
 
 import java.io.IOException;
@@ -13,20 +12,18 @@ public abstract class AuthenticationTask<REQUEST extends AuthenticationRequest, 
 
     private static final String LOG_TAG = "AuthenticationTask";
 
-    public static final String USER_KEY = "user";
-    public static final String AUTH_TOKEN_KEY = "auth-token";
-
     public AuthenticationTask(REQUEST request, Handler messageHandler) {
         super(request, messageHandler);
     }
 
     @Override
     protected RESPONSE runTask(REQUEST request) throws IOException {
-        RESPONSE response = doAuthenticate();
+        RESPONSE response = doAuthenticate(request);
+
         BackgroundTaskUtils.loadImage(response.getUser());
 
         return response;
     }
 
-    protected abstract RESPONSE doAuthenticate();
+    protected abstract RESPONSE doAuthenticate(REQUEST request);
 }

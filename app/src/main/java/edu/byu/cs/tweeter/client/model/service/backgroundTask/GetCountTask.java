@@ -22,7 +22,7 @@ public class GetCountTask extends AuthorizedTask<GetCountRequest, GetCountRespon
 
     @Override
     protected GetCountResponse runTask(GetCountRequest request) throws IOException {
-        return new GetCountResponse(20, 20);
+        return getFollowService().getCounts(request);
     }
 
 }

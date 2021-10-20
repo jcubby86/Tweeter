@@ -24,7 +24,7 @@ public class UnfollowTask extends ChangeFollowStatusTask<UnfollowRequest, Unfoll
 
     @Override
     protected UnfollowResponse runTask(UnfollowRequest request) throws IOException {
-        return new UnfollowResponse();
+        return getFollowService().unfollow(request);
     }
 
 }

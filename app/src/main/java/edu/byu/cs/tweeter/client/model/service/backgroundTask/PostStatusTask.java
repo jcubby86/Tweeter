@@ -26,7 +26,7 @@ public class PostStatusTask extends AuthorizedTask<PostStatusRequest, PostStatus
 
     @Override
     protected PostStatusResponse runTask(PostStatusRequest request) throws IOException {
-        return new PostStatusResponse();
+        return getStatusService().postStatus(request);
     }
 
 }

@@ -12,12 +12,12 @@ import edu.byu.cs.tweeter.model.net.response.PostStatusResponse;
 
 public class StatusService extends Service {
 
-    public void loadMoreStory(GetStoryRequest request, BackgroundTaskObserver<GetStoryResponse> observer) {
+    public void getStory(GetStoryRequest request, BackgroundTaskObserver<GetStoryResponse> observer) {
         GetStoryTask getStoryTask = new GetStoryTask(request, new BackgroundTaskHandler<>(observer));
         runTask(getStoryTask);
     }
 
-    public void loadMoreFeed(GetFeedRequest request, BackgroundTaskObserver<GetFeedResponse> observer) {
+    public void getFeed(GetFeedRequest request, BackgroundTaskObserver<GetFeedResponse> observer) {
         GetFeedTask getFeedTask = new GetFeedTask(request, new BackgroundTaskHandler<>(observer));
         runTask(getFeedTask);
     }

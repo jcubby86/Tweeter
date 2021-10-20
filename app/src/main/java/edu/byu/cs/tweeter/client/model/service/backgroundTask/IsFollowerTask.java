@@ -3,7 +3,6 @@ package edu.byu.cs.tweeter.client.model.service.backgroundTask;
 import android.os.Handler;
 
 import java.io.IOException;
-import java.util.Random;
 
 import edu.byu.cs.tweeter.model.net.request.IsFollowerRequest;
 import edu.byu.cs.tweeter.model.net.response.IsFollowerResponse;
@@ -25,7 +24,7 @@ public class IsFollowerTask extends AuthorizedTask<IsFollowerRequest, IsFollower
 
     @Override
     protected IsFollowerResponse runTask(IsFollowerRequest request) throws IOException {
-        return new IsFollowerResponse(new Random().nextInt() > 0);
+        return getFollowService().isFollower(request);
     }
 
 }

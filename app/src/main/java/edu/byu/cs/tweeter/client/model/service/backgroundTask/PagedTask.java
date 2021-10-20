@@ -9,7 +9,6 @@ import edu.byu.cs.tweeter.client.model.service.BackgroundTaskUtils;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.net.request.PagedRequest;
 import edu.byu.cs.tweeter.model.net.response.PagedResponse;
-import edu.byu.cs.tweeter.util.Pair;
 
 public abstract class PagedTask<DATA, REQUEST extends PagedRequest<DATA>, RESPONSE extends PagedResponse<DATA>> extends AuthorizedTask<REQUEST, RESPONSE> {
 
@@ -21,15 +20,13 @@ public abstract class PagedTask<DATA, REQUEST extends PagedRequest<DATA>, RESPON
 
     @Override
     protected RESPONSE runTask(REQUEST request) throws IOException {
-        Pair<List<DATA>, Boolean> pageOfUsers = getItems(request);
+        RESPONSE response = getResponse(request);
 
-        List<DATA> items = pageOfUsers.getFirst();
-        boolean hasMorePages = pageOfUsers.getSecond();
+        loadImages(response.getItems());
 
-        loadImages(items);
-
-        return getResponse(items, hasMorePages);
+        return response;
     }
+
 
     private void loadImages(List<DATA> items) throws IOException {
         for (DATA item : items) {
@@ -37,8 +34,7 @@ public abstract class PagedTask<DATA, REQUEST extends PagedRequest<DATA>, RESPON
         }
     }
 
-    protected abstract RESPONSE getResponse(List<DATA> items, boolean hasMorePages);
-    protected abstract Pair<List<DATA>, Boolean> getItems(REQUEST request);
+    protected abstract RESPONSE getResponse(REQUEST request);
     protected abstract User convertItemToUser(DATA item);
 
 }

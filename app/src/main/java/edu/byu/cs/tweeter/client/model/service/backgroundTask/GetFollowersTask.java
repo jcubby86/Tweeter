@@ -2,12 +2,8 @@ package edu.byu.cs.tweeter.client.model.service.backgroundTask;
 
 import android.os.Handler;
 
-import java.util.List;
-
-import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.net.request.GetFollowersRequest;
 import edu.byu.cs.tweeter.model.net.response.GetFollowersResponse;
-import edu.byu.cs.tweeter.util.Pair;
 
 /**
  * Background task that retrieves a page of followers.
@@ -20,8 +16,8 @@ public class GetFollowersTask extends PagedUserTask<GetFollowersRequest, GetFoll
     }
 
     @Override
-    protected GetFollowersResponse getResponse(List<User> items, boolean hasMorePages) {
-        return new GetFollowersResponse(items, hasMorePages);
+    protected GetFollowersResponse getResponse(GetFollowersRequest request) {
+        return getFollowService().getFollowers(request);
     }
 
     @Override
@@ -29,10 +25,5 @@ public class GetFollowersTask extends PagedUserTask<GetFollowersRequest, GetFoll
         return new GetFollowersResponse("Failed to get followers" + message);
     }
 
-    @Override
-    protected Pair<List<User>, Boolean> getItems(GetFollowersRequest request) {
-        return getFakeData().getPageOfUsers(request.getLastItem(), request.getLimit(),
-                getFakeData().findUserByAlias(request.getTargetUserAlias()));
-    }
 
 }

@@ -9,7 +9,9 @@ import java.io.IOException;
 
 import edu.byu.cs.tweeter.model.net.request.Request;
 import edu.byu.cs.tweeter.model.net.response.Response;
-import edu.byu.cs.tweeter.util.FakeData;
+import edu.byu.cs.tweeter.server.service.FollowService;
+import edu.byu.cs.tweeter.server.service.StatusService;
+import edu.byu.cs.tweeter.server.service.UserService;
 
 public abstract class BackgroundTask<REQUEST extends Request, RESPONSE extends Response> implements Runnable {
 
@@ -40,13 +42,6 @@ public abstract class BackgroundTask<REQUEST extends Request, RESPONSE extends R
         sendMessage();
     }
 
-    protected abstract RESPONSE error(String message);
-    protected abstract RESPONSE runTask(REQUEST request) throws IOException;
-
-    protected FakeData getFakeData() {
-        return new FakeData();
-    }
-
     private void sendMessage() {
         Bundle msgBundle = new Bundle();
         msgBundle.putSerializable(RESPONSE_KEY, response);
@@ -56,4 +51,19 @@ public abstract class BackgroundTask<REQUEST extends Request, RESPONSE extends R
 
         messageHandler.sendMessage(msg);
     }
+
+    protected FollowService getFollowService(){
+        return new FollowService();
+    }
+
+    protected UserService getUserService(){
+        return new UserService();
+    }
+
+    protected StatusService getStatusService(){
+        return new StatusService();
+    }
+
+    protected abstract RESPONSE error(String message);
+    protected abstract RESPONSE runTask(REQUEST request) throws IOException;
 }

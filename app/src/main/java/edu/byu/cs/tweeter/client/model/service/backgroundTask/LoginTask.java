@@ -20,7 +20,7 @@ public class LoginTask extends AuthenticationTask<LoginRequest, LoginResponse> {
         return new LoginResponse("Failed to login" + message);
     }
 
-    protected LoginResponse doAuthenticate() {
-        return new LoginResponse(getFakeData().getFirstUser(), getFakeData().getAuthToken());
+    protected LoginResponse doAuthenticate(LoginRequest request) {
+        return getUserService().login(request);
     }
 }

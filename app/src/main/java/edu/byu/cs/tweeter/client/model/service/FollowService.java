@@ -20,27 +20,21 @@ import edu.byu.cs.tweeter.model.net.response.IsFollowerResponse;
 import edu.byu.cs.tweeter.model.net.response.UnfollowResponse;
 
 public class FollowService extends Service {
-    public void loadMoreFollowing(GetFollowingRequest request, BackgroundTaskObserver<GetFollowingResponse> getFollowingObserver) {
+    public void getFollowing(GetFollowingRequest request, BackgroundTaskObserver<GetFollowingResponse> getFollowingObserver) {
         GetFollowingTask getFollowingTask = new GetFollowingTask(request,
                 new BackgroundTaskHandler<>(getFollowingObserver));
         runTask(getFollowingTask);
     }
 
-    public void loadMoreFollowers(GetFollowersRequest request, BackgroundTaskObserver<GetFollowersResponse> getFollowersObserver) {
-
+    public void getFollowers(GetFollowersRequest request, BackgroundTaskObserver<GetFollowersResponse> getFollowersObserver) {
         GetFollowersTask getFollowersTask = new GetFollowersTask(request,
                 new BackgroundTaskHandler<>(getFollowersObserver));
         runTask(getFollowersTask);
     }
 
-    public void checkIsFollower(IsFollowerRequest request, BackgroundTaskObserver<IsFollowerResponse> observer) {
+    public void isFollower(IsFollowerRequest request, BackgroundTaskObserver<IsFollowerResponse> observer) {
         IsFollowerTask isFollowerTask = new IsFollowerTask(request, new BackgroundTaskHandler<>(observer));
         runTask(isFollowerTask);
-    }
-
-    public void unfollow(UnfollowRequest request, BackgroundTaskObserver<UnfollowResponse> observer) {
-        UnfollowTask unfollowTask = new UnfollowTask(request, new BackgroundTaskHandler<>(observer));
-        runTask(unfollowTask);
     }
 
     public void follow(FollowRequest request, BackgroundTaskObserver<FollowResponse> observer) {
@@ -48,8 +42,12 @@ public class FollowService extends Service {
         runTask(followTask);
     }
 
+    public void unfollow(UnfollowRequest request, BackgroundTaskObserver<UnfollowResponse> observer) {
+        UnfollowTask unfollowTask = new UnfollowTask(request, new BackgroundTaskHandler<>(observer));
+        runTask(unfollowTask);
+    }
+
     public void getCounts(GetCountRequest request, BackgroundTaskObserver<GetCountResponse> observer) {
-        // Get count of most recently selected user's followers.
         GetCountTask getCountTask = new GetCountTask(request, new BackgroundTaskHandler<>(observer));
         runTask(getCountTask);
     }

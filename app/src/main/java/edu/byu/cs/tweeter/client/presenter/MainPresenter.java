@@ -39,7 +39,7 @@ public class MainPresenter extends Presenter<MainView> {
 
     public void checkIsFollower(User selectedUser) {
         IsFollowerRequest request = new IsFollowerRequest(Cache.getInstance().getCurrUserAuthToken(), Cache.getInstance().getCurrUser().getAlias(), selectedUser.getAlias());
-        getFollowService().checkIsFollower(request, new BackgroundTaskObserver<IsFollowerResponse>() {
+        getFollowService().isFollower(request, new BackgroundTaskObserver<IsFollowerResponse>() {
             @Override
             public void handleFailure(String message) {
                 view.displayErrorMessage(message);
