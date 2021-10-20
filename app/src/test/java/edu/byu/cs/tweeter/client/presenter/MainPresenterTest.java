@@ -9,9 +9,11 @@ import org.mockito.Mockito;
 import org.mockito.stubbing.Answer;
 
 import edu.byu.cs.tweeter.client.cache.Cache;
+import edu.byu.cs.tweeter.client.model.service.BackgroundTaskObserver;
 import edu.byu.cs.tweeter.client.model.service.StatusService;
 import edu.byu.cs.tweeter.client.presenter.observers.MainView;
-import edu.byu.cs.tweeter.model.domain.Status;
+import edu.byu.cs.tweeter.model.net.request.PostStatusRequest;
+import edu.byu.cs.tweeter.model.net.response.PostStatusResponse;
 
 class MainPresenterTest {
 
@@ -36,8 +38,9 @@ class MainPresenterTest {
     @Test
     public void testPostStatus_postStatusSucceeds(){
         Answer<Void> successAnswer = invocation -> {
-            //BackgroundTaskObserver observer = invocation.getArgumentAt(1, BackgroundTaskObserver.class);
-            //observer.handleSuccess(new PostStatusResponse());
+            @SuppressWarnings("unchecked")
+            BackgroundTaskObserver<PostStatusResponse> observer = invocation.getArgumentAt(1, BackgroundTaskObserver.class);
+            observer.handleSuccess(new PostStatusResponse());
             return null;
         };
 
@@ -50,8 +53,9 @@ class MainPresenterTest {
     @Test
     public void testPostStatus_postStatusFails(){
         Answer<Void> failureAnswer = invocation -> {
-            //BackgroundTaskObserver observer = invocation.getArgumentAt(1, BackgroundTaskObserver.class);
-            //observer.handleFailure("Failure Message");
+            @SuppressWarnings("unchecked")
+            BackgroundTaskObserver<PostStatusResponse> observer = invocation.getArgumentAt(1, BackgroundTaskObserver.class);
+            observer.handleFailure("Failure Message");
             return null;
         };
 
@@ -62,18 +66,18 @@ class MainPresenterTest {
     }
 
     private void runTest(Answer<Void> a){
-        //Mockito.doAnswer(a).when(mockStatusService).postStatus(Mockito.any(Status.class), Mockito.any(BackgroundTaskObserver.class));
+        Mockito.doAnswer(a).when(mockStatusService).postStatus(Mockito.any(PostStatusRequest.class), Mockito.any());
 
         mainPresenterSpy.postStatus("Test Post");
 
         Mockito.verify(mockView).displayInfoMessage("Posting Status...");
         Mockito.verify(mockCache).getCurrUser();
 
-        ArgumentCaptor<Status> captor = ArgumentCaptor.forClass(Status.class);
-        //Mockito.verify(mockStatusService).postStatus(captor.capture(), Mockito.any(BackgroundTaskObserver.class));
+        ArgumentCaptor<PostStatusRequest> captor = ArgumentCaptor.forClass(PostStatusRequest.class);
+        Mockito.verify(mockStatusService).postStatus(captor.capture(), Mockito.any());
 
-        assertEquals("Test Post", captor.getValue().getPost());
-        assertEquals(mockCache.getCurrUser(), captor.getValue().getUser());
+        assertEquals("Test Post", captor.getValue().getStatus().getPost());
+        assertEquals(mockCache.getCurrUser(), captor.getValue().getStatus().getUser());
 
         Mockito.verify(mockView).clearInfoMessage();
     }

@@ -31,7 +31,8 @@ public class GetFollowersTask extends PagedUserTask<GetFollowersRequest, GetFoll
 
     @Override
     protected Pair<List<User>, Boolean> getItems(GetFollowersRequest request) {
-        return getFakeData().getPageOfUsers(request.getLastItem(), request.getLimit(), request.getTargetUser());
+        return getFakeData().getPageOfUsers(request.getLastItem(), request.getLimit(),
+                getFakeData().findUserByAlias(request.getTargetUserAlias()));
     }
 
 }

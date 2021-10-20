@@ -16,7 +16,7 @@ public class FollowersPresenter extends PagedPresenter<User, GetFollowersRespons
 
     @Override
     protected void callService(User user, BackgroundTaskObserver<GetFollowersResponse> observer) {
-        GetFollowersRequest request = new GetFollowersRequest(Cache.getInstance().getCurrUserAuthToken(), user, PAGE_SIZE, lastItem);
+        GetFollowersRequest request = new GetFollowersRequest(Cache.getInstance().getCurrUserAuthToken(), user.getAlias(), PAGE_SIZE, lastItem);
         getFollowService().loadMoreFollowers(request, observer);
     }
 

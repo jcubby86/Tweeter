@@ -8,7 +8,7 @@ public class PostStatusRequest extends AuthorizedRequest{
      * The new status being sent. Contains all properties of the status,
      * including the identity of the user sending the status.
      */
-    private  Status status;
+    private Status status;
 
     private PostStatusRequest() {
     }

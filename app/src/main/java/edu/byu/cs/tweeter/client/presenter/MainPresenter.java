@@ -38,7 +38,7 @@ public class MainPresenter extends Presenter<MainView> {
     }
 
     public void checkIsFollower(User selectedUser) {
-        IsFollowerRequest request = new IsFollowerRequest(Cache.getInstance().getCurrUserAuthToken(), Cache.getInstance().getCurrUser(), selectedUser);
+        IsFollowerRequest request = new IsFollowerRequest(Cache.getInstance().getCurrUserAuthToken(), Cache.getInstance().getCurrUser().getAlias(), selectedUser.getAlias());
         getFollowService().checkIsFollower(request, new BackgroundTaskObserver<IsFollowerResponse>() {
             @Override
             public void handleFailure(String message) {
@@ -54,7 +54,7 @@ public class MainPresenter extends Presenter<MainView> {
 
     public void unfollow(User selectedUser) {
         view.displayInfoMessage("Removing " + selectedUser.getName() + "...");
-        UnfollowRequest unfollowRequest = new UnfollowRequest(Cache.getInstance().getCurrUserAuthToken(), selectedUser);
+        UnfollowRequest unfollowRequest = new UnfollowRequest(Cache.getInstance().getCurrUserAuthToken(), selectedUser.getAlias());
         getFollowService().unfollow(unfollowRequest, new BackgroundTaskObserver<UnfollowResponse>() {
             @Override
             public void handleFailure(String message) {
@@ -74,7 +74,7 @@ public class MainPresenter extends Presenter<MainView> {
 
     public void follow(User selectedUser) {
         view.displayInfoMessage("Adding " + selectedUser.getName() + "...");
-        FollowRequest followRequest = new FollowRequest(Cache.getInstance().getCurrUserAuthToken(), selectedUser);
+        FollowRequest followRequest = new FollowRequest(Cache.getInstance().getCurrUserAuthToken(), selectedUser.getAlias());
         getFollowService().follow(followRequest, new BackgroundTaskObserver<FollowResponse>() {
             @Override
             public void handleFailure(String message) {
@@ -93,7 +93,7 @@ public class MainPresenter extends Presenter<MainView> {
     }
 
     public void getCounts(User selectedUser) {
-        GetCountRequest request = new GetCountRequest(Cache.getInstance().getCurrUserAuthToken(), selectedUser);
+        GetCountRequest request = new GetCountRequest(Cache.getInstance().getCurrUserAuthToken(), selectedUser.getAlias());
         getFollowService().getCounts(request, new BackgroundTaskObserver<GetCountResponse>() {
             @Override
             public void handleFailure(String message) {

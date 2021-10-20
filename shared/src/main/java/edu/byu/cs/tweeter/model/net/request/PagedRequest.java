@@ -1,14 +1,13 @@
 package edu.byu.cs.tweeter.model.net.request;
 
 import edu.byu.cs.tweeter.model.domain.AuthToken;
-import edu.byu.cs.tweeter.model.domain.User;
 
 public abstract class PagedRequest<DATA> extends AuthorizedRequest{
     /**
      * The user whose following is being retrieved.
      * (This can be any user, not just the currently logged-in user.)
      */
-    private User targetUser;
+    private String targetUserAlias;
     /**
      * Maximum number of followed users to return (i.e., page size).
      */
@@ -22,18 +21,18 @@ public abstract class PagedRequest<DATA> extends AuthorizedRequest{
     protected PagedRequest() {
     }
 
-    public PagedRequest(AuthToken authToken, User targetUser, int limit, DATA lastItem) {
+    public PagedRequest(AuthToken authToken, String targetUserAlias, int limit, DATA lastItem) {
         super(authToken);
-        this.targetUser = targetUser;
+        this.targetUserAlias = targetUserAlias;
         this.limit = limit;
         this.lastItem = lastItem;
     }
 
-    public User getTargetUser() {
-        return targetUser;
+    public String getTargetUserAlias() {
+        return targetUserAlias;
     }
-    public void setTargetUser(User targetUser) {
-        this.targetUser = targetUser;
+    public void setTargetUserAlias(String targetUserAlias) {
+        this.targetUserAlias = targetUserAlias;
     }
 
     public int getLimit() {

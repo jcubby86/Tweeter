@@ -8,7 +8,7 @@ public class GetFeedRequest extends PagedRequest<Status>{
     private GetFeedRequest() {
     }
 
-    public GetFeedRequest(AuthToken authToken, User targetUser, int limit, Status lastItem) {
-        super(authToken, targetUser, limit, lastItem);
+    public GetFeedRequest(AuthToken authToken, String targetUserAlias, int limit, Status lastItem) {
+        super(authToken, targetUserAlias, limit, lastItem);
     }
 }

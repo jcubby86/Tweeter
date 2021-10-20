@@ -6,7 +6,6 @@ import java.util.List;
 
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.net.request.GetFollowingRequest;
-import edu.byu.cs.tweeter.model.net.request.PagedRequest;
 import edu.byu.cs.tweeter.model.net.response.GetFollowingResponse;
 import edu.byu.cs.tweeter.util.Pair;
 
@@ -33,7 +32,8 @@ public class GetFollowingTask extends PagedUserTask<GetFollowingRequest, GetFoll
 
     @Override
     protected Pair<List<User>, Boolean> getItems(GetFollowingRequest request) {
-        return getFakeData().getPageOfUsers(request.getLastItem(), request.getLimit(), request.getTargetUser());
+        return getFakeData().getPageOfUsers(request.getLastItem(), request.getLimit(),
+                getFakeData().findUserByAlias(request.getTargetUserAlias()));
     }
 
 }

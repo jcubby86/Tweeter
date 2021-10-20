@@ -7,7 +7,7 @@ public class FollowRequest extends ChangeFollowStatusRequest{
 
     private FollowRequest(){}
 
-    public FollowRequest(AuthToken authToken, User followee) {
-        super(authToken, followee);
+    public FollowRequest(AuthToken authToken, String followeeRequest) {
+        super(authToken, followeeRequest);
     }
 }

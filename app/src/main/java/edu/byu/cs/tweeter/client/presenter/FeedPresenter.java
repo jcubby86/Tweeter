@@ -16,7 +16,7 @@ public class FeedPresenter extends PagedPresenter<Status, GetFeedResponse> {
 
     @Override
     protected void callService(User user, BackgroundTaskObserver<GetFeedResponse> observer) {
-        GetFeedRequest request = new GetFeedRequest(Cache.getInstance().getCurrUserAuthToken(), user, PAGE_SIZE, lastItem);
+        GetFeedRequest request = new GetFeedRequest(Cache.getInstance().getCurrUserAuthToken(), user.getAlias(), PAGE_SIZE, lastItem);
         getStatusService().loadMoreFeed(request, observer);
     }
 
