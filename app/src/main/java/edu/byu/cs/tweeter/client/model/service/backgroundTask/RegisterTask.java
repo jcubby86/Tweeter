@@ -20,6 +20,7 @@ public class RegisterTask extends AuthenticationTask<RegisterRequest, RegisterRe
         return new RegisterResponse("Failed to register" + message);
     }
 
+    @Override
     protected RegisterResponse doAuthenticate(RegisterRequest request) {
         return getUserService().register(request);
     }

@@ -2,6 +2,10 @@ package edu.byu.cs.tweeter.client.model.service.backgroundTask;
 
 import android.os.Handler;
 
+import java.io.IOException;
+
+import edu.byu.cs.tweeter.client.model.net.ServerFacade;
+import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
 import edu.byu.cs.tweeter.model.net.request.LoginRequest;
 import edu.byu.cs.tweeter.model.net.response.LoginResponse;
 
@@ -20,7 +24,9 @@ public class LoginTask extends AuthenticationTask<LoginRequest, LoginResponse> {
         return new LoginResponse("Failed to login" + message);
     }
 
-    protected LoginResponse doAuthenticate(LoginRequest request) {
-        return getUserService().login(request);
+    @Override
+    protected LoginResponse doAuthenticate(LoginRequest request) throws IOException, TweeterRemoteException {
+        //return getUserService().login(request);
+        return getServerFacade().login(request, "/login");
     }
 }

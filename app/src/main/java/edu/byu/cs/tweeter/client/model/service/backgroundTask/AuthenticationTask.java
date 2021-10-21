@@ -5,6 +5,7 @@ import android.os.Handler;
 import java.io.IOException;
 
 import edu.byu.cs.tweeter.client.model.service.BackgroundTaskUtils;
+import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
 import edu.byu.cs.tweeter.model.net.request.AuthenticationRequest;
 import edu.byu.cs.tweeter.model.net.response.AuthenticationResponse;
 
@@ -17,7 +18,7 @@ public abstract class AuthenticationTask<REQUEST extends AuthenticationRequest, 
     }
 
     @Override
-    protected RESPONSE runTask(REQUEST request) throws IOException {
+    protected RESPONSE runTask(REQUEST request) throws IOException, TweeterRemoteException {
         RESPONSE response = doAuthenticate(request);
 
         BackgroundTaskUtils.loadImage(response.getUser());
@@ -25,5 +26,5 @@ public abstract class AuthenticationTask<REQUEST extends AuthenticationRequest, 
         return response;
     }
 
-    protected abstract RESPONSE doAuthenticate(REQUEST request);
+    protected abstract RESPONSE doAuthenticate(REQUEST request) throws IOException, TweeterRemoteException;
 }

@@ -7,6 +7,8 @@ import android.util.Log;
 
 import java.io.IOException;
 
+import edu.byu.cs.tweeter.client.model.net.ServerFacade;
+import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
 import edu.byu.cs.tweeter.model.net.request.Request;
 import edu.byu.cs.tweeter.model.net.response.Response;
 import edu.byu.cs.tweeter.model.service.FollowService;
@@ -64,6 +66,8 @@ public abstract class BackgroundTask<REQUEST extends Request, RESPONSE extends R
         return new StatusService();
     }
 
+    protected ServerFacade getServerFacade() { return new ServerFacade();}
+
     protected abstract RESPONSE error(String message);
-    protected abstract RESPONSE runTask(REQUEST request) throws IOException;
+    protected abstract RESPONSE runTask(REQUEST request) throws IOException, TweeterRemoteException;
 }
