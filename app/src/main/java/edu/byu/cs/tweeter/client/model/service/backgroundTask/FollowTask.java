@@ -4,6 +4,7 @@ import android.os.Handler;
 
 import java.io.IOException;
 
+import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
 import edu.byu.cs.tweeter.model.net.request.FollowRequest;
 import edu.byu.cs.tweeter.model.net.response.FollowResponse;
 
@@ -23,8 +24,8 @@ public class FollowTask extends ChangeFollowStatusTask<FollowRequest, FollowResp
     }
 
     @Override
-    protected FollowResponse runTask(FollowRequest request) throws IOException {
-        return getFollowService().follow(request);
+    protected FollowResponse runTask(FollowRequest request) throws IOException, TweeterRemoteException {
+        return getServerFacade().follow(request);
     }
 
 }

@@ -4,12 +4,14 @@ import java.io.IOException;
 import java.util.Map;
 
 import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
+import edu.byu.cs.tweeter.model.net.request.FollowRequest;
 import edu.byu.cs.tweeter.model.net.request.GetFollowingRequest;
 import edu.byu.cs.tweeter.model.net.request.GetUserRequest;
 import edu.byu.cs.tweeter.model.net.request.LoginRequest;
 import edu.byu.cs.tweeter.model.net.request.LogoutRequest;
 import edu.byu.cs.tweeter.model.net.request.RegisterRequest;
 import edu.byu.cs.tweeter.model.net.request.Request;
+import edu.byu.cs.tweeter.model.net.response.FollowResponse;
 import edu.byu.cs.tweeter.model.net.response.GetFollowingResponse;
 import edu.byu.cs.tweeter.model.net.response.GetUserResponse;
 import edu.byu.cs.tweeter.model.net.response.LoginResponse;
@@ -28,6 +30,16 @@ public class ServerFacade {
     private static final String SERVER_URL = "https://89ttjrxeeg.execute-api.us-west-2.amazonaws.com/dev";
 
     private final ClientCommunicator clientCommunicator = new ClientCommunicator(SERVER_URL);
+
+    private <REQUEST extends Request, RESPONSE extends Response> RESPONSE post(String urlPath, REQUEST request, Map<String, String> headers, Class<RESPONSE> returnType) throws IOException, TweeterRemoteException {
+        RESPONSE response = clientCommunicator.doPost(urlPath, request, headers, returnType);
+
+        if(response.isSuccess()) {
+            return response;
+        } else {
+            throw new RuntimeException(response.getMessage());
+        }
+    }
 
     /**
      * Performs a login and if successful, returns the logged in user and an auth token.
@@ -66,15 +78,7 @@ public class ServerFacade {
         return post(urlPath, request, null, GetFollowingResponse.class);
     }
 
-
-    private <REQUEST extends Request, RESPONSE extends Response> RESPONSE post(String urlPath, REQUEST request, Map<String, String> headers, Class<RESPONSE> returnType) throws IOException, TweeterRemoteException {
-        RESPONSE response = clientCommunicator.doPost(urlPath, request, headers, returnType);
-
-        if(response.isSuccess()) {
-            return response;
-        } else {
-            throw new RuntimeException(response.getMessage());
-        }
+    public FollowResponse follow(FollowRequest request) throws IOException, TweeterRemoteException {
+        return post("/follow", request, null, FollowResponse.class);
     }
-
 }
