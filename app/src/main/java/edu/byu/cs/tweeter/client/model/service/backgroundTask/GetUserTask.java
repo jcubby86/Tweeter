@@ -4,6 +4,8 @@ import android.os.Handler;
 
 import java.io.IOException;
 
+import edu.byu.cs.tweeter.client.model.service.BackgroundTaskUtils;
+import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
 import edu.byu.cs.tweeter.model.net.request.GetUserRequest;
 import edu.byu.cs.tweeter.model.net.response.GetUserResponse;
 
@@ -24,8 +26,12 @@ public class GetUserTask extends AuthorizedTask<GetUserRequest, GetUserResponse>
     }
 
     @Override
-    protected GetUserResponse runTask(GetUserRequest request) throws IOException {
-        return getUserService().getUser(request);
+    protected GetUserResponse runTask(GetUserRequest request) throws IOException, TweeterRemoteException {
+        GetUserResponse response = getServerFacade().getUser(request);
+
+        BackgroundTaskUtils.loadImage(response.getUser());
+
+        return response;
     }
 
 }

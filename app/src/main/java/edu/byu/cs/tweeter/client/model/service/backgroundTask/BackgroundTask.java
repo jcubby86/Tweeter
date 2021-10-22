@@ -13,7 +13,6 @@ import edu.byu.cs.tweeter.model.net.request.Request;
 import edu.byu.cs.tweeter.model.net.response.Response;
 import edu.byu.cs.tweeter.model.service.FollowService;
 import edu.byu.cs.tweeter.model.service.StatusService;
-import edu.byu.cs.tweeter.model.service.UserService;
 
 public abstract class BackgroundTask<REQUEST extends Request, RESPONSE extends Response> implements Runnable {
 
@@ -56,10 +55,6 @@ public abstract class BackgroundTask<REQUEST extends Request, RESPONSE extends R
 
     protected FollowService getFollowService(){
         return new FollowService();
-    }
-
-    protected UserService getUserService(){
-        return new UserService();
     }
 
     protected StatusService getStatusService(){

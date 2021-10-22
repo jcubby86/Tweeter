@@ -1,12 +1,21 @@
 package edu.byu.cs.tweeter.client.model.net;
 
 import java.io.IOException;
+import java.util.Map;
 
 import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
 import edu.byu.cs.tweeter.model.net.request.GetFollowingRequest;
+import edu.byu.cs.tweeter.model.net.request.GetUserRequest;
 import edu.byu.cs.tweeter.model.net.request.LoginRequest;
+import edu.byu.cs.tweeter.model.net.request.LogoutRequest;
+import edu.byu.cs.tweeter.model.net.request.RegisterRequest;
+import edu.byu.cs.tweeter.model.net.request.Request;
 import edu.byu.cs.tweeter.model.net.response.GetFollowingResponse;
+import edu.byu.cs.tweeter.model.net.response.GetUserResponse;
 import edu.byu.cs.tweeter.model.net.response.LoginResponse;
+import edu.byu.cs.tweeter.model.net.response.LogoutResponse;
+import edu.byu.cs.tweeter.model.net.response.RegisterResponse;
+import edu.byu.cs.tweeter.model.net.response.Response;
 
 /**
  * Acts as a Facade to the Tweeter server. All network requests to the server should go through
@@ -26,15 +35,22 @@ public class ServerFacade {
      * @param request contains all information needed to perform a login.
      * @return the login response.
      */
-    public LoginResponse login(LoginRequest request, String urlPath) throws IOException, TweeterRemoteException {
-        LoginResponse response = clientCommunicator.doPost(urlPath, request, null, LoginResponse.class);
-
-        if(response.isSuccess()) {
-            return response;
-        } else {
-            throw new RuntimeException(response.getMessage());
-        }
+    public LoginResponse login(LoginRequest request) throws IOException, TweeterRemoteException {
+        return post("/login", request, null, LoginResponse.class);
     }
+
+    public RegisterResponse register(RegisterRequest request) throws IOException, TweeterRemoteException {
+        return post("/register", request, null, RegisterResponse.class);
+    }
+
+    public LogoutResponse logout(LogoutRequest request) throws IOException, TweeterRemoteException {
+        return post("/logout", request, null, LogoutResponse.class);
+    }
+
+    public GetUserResponse getUser(GetUserRequest request) throws IOException, TweeterRemoteException {
+        return post("/getuser", request, null, GetUserResponse.class);
+    }
+
 
     /**
      * Returns the users that the user specified in the request is following. Uses information in
@@ -47,8 +63,12 @@ public class ServerFacade {
      */
     public GetFollowingResponse getFollowees(GetFollowingRequest request, String urlPath)
             throws IOException, TweeterRemoteException {
+        return post(urlPath, request, null, GetFollowingResponse.class);
+    }
 
-        GetFollowingResponse response = clientCommunicator.doPost(urlPath, request, null, GetFollowingResponse.class);
+
+    private <REQUEST extends Request, RESPONSE extends Response> RESPONSE post(String urlPath, REQUEST request, Map<String, String> headers, Class<RESPONSE> returnType) throws IOException, TweeterRemoteException {
+        RESPONSE response = clientCommunicator.doPost(urlPath, request, headers, returnType);
 
         if(response.isSuccess()) {
             return response;
@@ -56,4 +76,5 @@ public class ServerFacade {
             throw new RuntimeException(response.getMessage());
         }
     }
+
 }

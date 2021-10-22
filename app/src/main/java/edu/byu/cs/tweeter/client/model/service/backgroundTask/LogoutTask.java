@@ -5,6 +5,7 @@ import android.os.Handler;
 
 import java.io.IOException;
 
+import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
 import edu.byu.cs.tweeter.model.net.request.LogoutRequest;
 import edu.byu.cs.tweeter.model.net.response.LogoutResponse;
 import edu.byu.cs.tweeter.model.net.response.Response;
@@ -25,8 +26,8 @@ public class LogoutTask extends AuthorizedTask<LogoutRequest, LogoutResponse> {
     }
 
     @Override
-    protected LogoutResponse runTask(LogoutRequest request) throws IOException {
-        return getUserService().logout(request);
+    protected LogoutResponse runTask(LogoutRequest request) throws IOException, TweeterRemoteException {
+        return getServerFacade().logout(request);
     }
 
 }

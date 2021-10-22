@@ -2,6 +2,9 @@ package edu.byu.cs.tweeter.client.model.service.backgroundTask;
 
 import android.os.Handler;
 
+import java.io.IOException;
+
+import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
 import edu.byu.cs.tweeter.model.net.request.RegisterRequest;
 import edu.byu.cs.tweeter.model.net.response.RegisterResponse;
 
@@ -21,7 +24,7 @@ public class RegisterTask extends AuthenticationTask<RegisterRequest, RegisterRe
     }
 
     @Override
-    protected RegisterResponse doAuthenticate(RegisterRequest request) {
-        return getUserService().register(request);
+    protected RegisterResponse doAuthenticate(RegisterRequest request) throws IOException, TweeterRemoteException {
+        return getServerFacade().register(request);
     }
 }
