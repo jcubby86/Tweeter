@@ -1,4 +1,4 @@
-package edu.byu.cs.tweeter.model.util;
+package edu.byu.cs.tweeter.server.util;
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -4,6 +4,7 @@ import android.os.Handler;
 
 import java.io.IOException;
 
+import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
 import edu.byu.cs.tweeter.model.net.request.UnfollowRequest;
 import edu.byu.cs.tweeter.model.net.response.UnfollowResponse;
 
@@ -23,8 +24,8 @@ public class UnfollowTask extends ChangeFollowStatusTask<UnfollowRequest, Unfoll
     }
 
     @Override
-    protected UnfollowResponse runTask(UnfollowRequest request) throws IOException {
-        return getFollowService().unfollow(request);
+    protected UnfollowResponse runTask(UnfollowRequest request) throws IOException, TweeterRemoteException {
+        return getServerFacade().unfollow(request);
     }
 
 }

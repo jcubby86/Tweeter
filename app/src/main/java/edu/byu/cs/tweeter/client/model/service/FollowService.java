@@ -47,7 +47,7 @@ public class FollowService extends Service {
         runTask(unfollowTask);
     }
 
-    public void getCounts(GetCountRequest request, BackgroundTaskObserver<GetCountResponse> observer) {
+    public void getCount(GetCountRequest request, BackgroundTaskObserver<GetCountResponse> observer) {
         GetCountTask getCountTask = new GetCountTask(request, new BackgroundTaskHandler<>(observer));
         runTask(getCountTask);
     }

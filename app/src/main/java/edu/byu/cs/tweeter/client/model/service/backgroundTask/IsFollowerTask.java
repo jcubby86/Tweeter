@@ -4,6 +4,7 @@ import android.os.Handler;
 
 import java.io.IOException;
 
+import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
 import edu.byu.cs.tweeter.model.net.request.IsFollowerRequest;
 import edu.byu.cs.tweeter.model.net.response.IsFollowerResponse;
 
@@ -23,8 +24,8 @@ public class IsFollowerTask extends AuthorizedTask<IsFollowerRequest, IsFollower
     }
 
     @Override
-    protected IsFollowerResponse runTask(IsFollowerRequest request) throws IOException {
-        return getFollowService().isFollower(request);
+    protected IsFollowerResponse runTask(IsFollowerRequest request) throws IOException, TweeterRemoteException {
+        return getServerFacade().isFollower(request);
     }
 
 }

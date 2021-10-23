@@ -92,9 +92,9 @@ public class MainPresenter extends Presenter<MainView> {
         });
     }
 
-    public void getCounts(User selectedUser) {
+    public void getCount(User selectedUser) {
         GetCountRequest request = new GetCountRequest(Cache.getInstance().getCurrUserAuthToken(), selectedUser.getAlias());
-        getFollowService().getCounts(request, new BackgroundTaskObserver<GetCountResponse>() {
+        getFollowService().getCount(request, new BackgroundTaskObserver<GetCountResponse>() {
             @Override
             public void handleFailure(String message) {
                 view.displayErrorMessage(message);

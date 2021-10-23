@@ -2,6 +2,9 @@ package edu.byu.cs.tweeter.client.model.service.backgroundTask;
 
 import android.os.Handler;
 
+import java.io.IOException;
+
+import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
 import edu.byu.cs.tweeter.model.net.request.GetFeedRequest;
 import edu.byu.cs.tweeter.model.net.response.GetFeedResponse;
 
@@ -16,8 +19,8 @@ public class GetFeedTask extends PagedStatusTask<GetFeedRequest, GetFeedResponse
     }
 
     @Override
-    protected GetFeedResponse getResponse(GetFeedRequest request) {
-        return getStatusService().getFeed(request);
+    protected GetFeedResponse getResponse(GetFeedRequest request) throws IOException, TweeterRemoteException {
+        return getServerFacade().getFeed(request);
     }
 
     @Override

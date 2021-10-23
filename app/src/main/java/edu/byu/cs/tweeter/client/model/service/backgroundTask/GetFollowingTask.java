@@ -2,6 +2,9 @@ package edu.byu.cs.tweeter.client.model.service.backgroundTask;
 
 import android.os.Handler;
 
+import java.io.IOException;
+
+import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
 import edu.byu.cs.tweeter.model.net.request.GetFollowingRequest;
 import edu.byu.cs.tweeter.model.net.response.GetFollowingResponse;
 
@@ -16,8 +19,8 @@ public class GetFollowingTask extends PagedUserTask<GetFollowingRequest, GetFoll
     }
 
     @Override
-    protected GetFollowingResponse getResponse(GetFollowingRequest request) {
-        return getFollowService().getFollowing(request);
+    protected GetFollowingResponse getResponse(GetFollowingRequest request) throws IOException, TweeterRemoteException {
+        return getServerFacade().getFollowing(request);
     }
 
     @Override

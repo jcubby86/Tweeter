@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements StatusDialogFragm
 
         if (selectedUser.compareTo(Cache.getInstance().getCurrUser()) == 0) {
             followButton.setVisibility(View.GONE);
-            presenter.getCounts(selectedUser);
+            presenter.getCount(selectedUser);
         } else {
             followButton.setVisibility(View.VISIBLE);
             presenter.checkIsFollower(selectedUser);
@@ -141,7 +141,7 @@ public class MainActivity extends AppCompatActivity implements StatusDialogFragm
 
     @Override
     public void setFollowing(boolean isFollowing) {
-        presenter.getCounts(selectedUser);
+        presenter.getCount(selectedUser);
 
         if (isFollowing) {
             followButton.setText(R.string.following);

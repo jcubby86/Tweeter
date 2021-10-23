@@ -5,19 +5,33 @@ import java.util.Map;
 
 import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
 import edu.byu.cs.tweeter.model.net.request.FollowRequest;
+import edu.byu.cs.tweeter.model.net.request.GetCountRequest;
+import edu.byu.cs.tweeter.model.net.request.GetFeedRequest;
+import edu.byu.cs.tweeter.model.net.request.GetFollowersRequest;
 import edu.byu.cs.tweeter.model.net.request.GetFollowingRequest;
+import edu.byu.cs.tweeter.model.net.request.GetStoryRequest;
 import edu.byu.cs.tweeter.model.net.request.GetUserRequest;
+import edu.byu.cs.tweeter.model.net.request.IsFollowerRequest;
 import edu.byu.cs.tweeter.model.net.request.LoginRequest;
 import edu.byu.cs.tweeter.model.net.request.LogoutRequest;
+import edu.byu.cs.tweeter.model.net.request.PostStatusRequest;
 import edu.byu.cs.tweeter.model.net.request.RegisterRequest;
 import edu.byu.cs.tweeter.model.net.request.Request;
+import edu.byu.cs.tweeter.model.net.request.UnfollowRequest;
 import edu.byu.cs.tweeter.model.net.response.FollowResponse;
+import edu.byu.cs.tweeter.model.net.response.GetCountResponse;
+import edu.byu.cs.tweeter.model.net.response.GetFeedResponse;
+import edu.byu.cs.tweeter.model.net.response.GetFollowersResponse;
 import edu.byu.cs.tweeter.model.net.response.GetFollowingResponse;
+import edu.byu.cs.tweeter.model.net.response.GetStoryResponse;
 import edu.byu.cs.tweeter.model.net.response.GetUserResponse;
+import edu.byu.cs.tweeter.model.net.response.IsFollowerResponse;
 import edu.byu.cs.tweeter.model.net.response.LoginResponse;
 import edu.byu.cs.tweeter.model.net.response.LogoutResponse;
+import edu.byu.cs.tweeter.model.net.response.PostStatusResponse;
 import edu.byu.cs.tweeter.model.net.response.RegisterResponse;
 import edu.byu.cs.tweeter.model.net.response.Response;
+import edu.byu.cs.tweeter.model.net.response.UnfollowResponse;
 
 /**
  * Acts as a Facade to the Tweeter server. All network requests to the server should go through
@@ -73,12 +87,40 @@ public class ServerFacade {
      *                other information required to satisfy the request.
      * @return the followees.
      */
-    public GetFollowingResponse getFollowees(GetFollowingRequest request, String urlPath)
-            throws IOException, TweeterRemoteException {
-        return post(urlPath, request, null, GetFollowingResponse.class);
+    public GetFollowingResponse getFollowing(GetFollowingRequest request) throws IOException, TweeterRemoteException {
+        return post("/getfollowing", request, null, GetFollowingResponse.class);
+    }
+
+    public GetFollowersResponse getFollowers(GetFollowersRequest request) throws IOException, TweeterRemoteException {
+        return post("/getfollowers", request, null, GetFollowersResponse.class);
     }
 
     public FollowResponse follow(FollowRequest request) throws IOException, TweeterRemoteException {
         return post("/follow", request, null, FollowResponse.class);
+    }
+
+    public UnfollowResponse unfollow(UnfollowRequest request) throws IOException, TweeterRemoteException {
+        return post("/unfollow", request, null, UnfollowResponse.class);
+    }
+
+    public IsFollowerResponse isFollower(IsFollowerRequest request) throws IOException, TweeterRemoteException {
+        return post("/isfollower", request, null, IsFollowerResponse.class);
+    }
+
+    public GetCountResponse getCount(GetCountRequest request) throws IOException, TweeterRemoteException {
+        return post("/getcount", request, null, GetCountResponse.class);
+    }
+
+
+    public GetStoryResponse getStory(GetStoryRequest request) throws IOException, TweeterRemoteException {
+        return post("/getstory", request, null, GetStoryResponse.class);
+    }
+
+    public GetFeedResponse getFeed(GetFeedRequest request) throws IOException, TweeterRemoteException {
+        return post("/getfeed", request, null, GetFeedResponse.class);
+    }
+
+    public PostStatusResponse postStatus(PostStatusRequest request) throws IOException, TweeterRemoteException {
+        return post("/poststatus", request, null, PostStatusResponse.class);
     }
 }

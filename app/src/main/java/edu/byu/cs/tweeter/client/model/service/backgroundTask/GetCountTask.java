@@ -4,6 +4,7 @@ import android.os.Handler;
 
 import java.io.IOException;
 
+import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
 import edu.byu.cs.tweeter.model.net.request.GetCountRequest;
 import edu.byu.cs.tweeter.model.net.response.GetCountResponse;
 
@@ -21,8 +22,8 @@ public class GetCountTask extends AuthorizedTask<GetCountRequest, GetCountRespon
     }
 
     @Override
-    protected GetCountResponse runTask(GetCountRequest request) throws IOException {
-        return getFollowService().getCounts(request);
+    protected GetCountResponse runTask(GetCountRequest request) throws IOException, TweeterRemoteException {
+        return getServerFacade().getCount(request);
     }
 
 }

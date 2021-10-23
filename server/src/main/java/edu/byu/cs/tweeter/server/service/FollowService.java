@@ -1,4 +1,4 @@
-package edu.byu.cs.tweeter.model.service;
+package edu.byu.cs.tweeter.server.service;
 
 import java.util.List;
 import java.util.Random;
@@ -16,7 +16,7 @@ import edu.byu.cs.tweeter.model.net.response.GetFollowersResponse;
 import edu.byu.cs.tweeter.model.net.response.GetFollowingResponse;
 import edu.byu.cs.tweeter.model.net.response.IsFollowerResponse;
 import edu.byu.cs.tweeter.model.net.response.UnfollowResponse;
-import edu.byu.cs.tweeter.model.util.Pair;
+import edu.byu.cs.tweeter.server.util.Pair;
 
 
 public class FollowService extends Service{
@@ -46,7 +46,7 @@ public class FollowService extends Service{
         return new UnfollowResponse();
     }
 
-    public GetCountResponse getCounts(GetCountRequest request) {
+    public GetCountResponse getCount(GetCountRequest request) {
         return new GetCountResponse(20, 20);
     }
 

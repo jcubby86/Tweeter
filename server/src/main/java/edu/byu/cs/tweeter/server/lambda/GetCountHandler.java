@@ -8,6 +8,6 @@ import edu.byu.cs.tweeter.model.net.response.GetCountResponse;
 public class GetCountHandler extends Handler<GetCountRequest, GetCountResponse> {
     @Override
     public GetCountResponse handleRequest(GetCountRequest input, Context context) {
-        return getFollowService().getCounts(input);
+        return getFollowService().getCount(input);
     }
 }

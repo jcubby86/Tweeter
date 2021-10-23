@@ -11,8 +11,6 @@ import edu.byu.cs.tweeter.client.model.net.ServerFacade;
 import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
 import edu.byu.cs.tweeter.model.net.request.Request;
 import edu.byu.cs.tweeter.model.net.response.Response;
-import edu.byu.cs.tweeter.model.service.FollowService;
-import edu.byu.cs.tweeter.model.service.StatusService;
 
 public abstract class BackgroundTask<REQUEST extends Request, RESPONSE extends Response> implements Runnable {
 
@@ -51,14 +49,6 @@ public abstract class BackgroundTask<REQUEST extends Request, RESPONSE extends R
         msg.setData(msgBundle);
 
         messageHandler.sendMessage(msg);
-    }
-
-    protected FollowService getFollowService(){
-        return new FollowService();
-    }
-
-    protected StatusService getStatusService(){
-        return new StatusService();
     }
 
     protected ServerFacade getServerFacade() { return new ServerFacade();}

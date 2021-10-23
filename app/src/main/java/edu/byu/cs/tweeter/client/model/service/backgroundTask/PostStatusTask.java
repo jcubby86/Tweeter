@@ -5,6 +5,7 @@ import android.os.Handler;
 
 import java.io.IOException;
 
+import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
 import edu.byu.cs.tweeter.model.net.request.PostStatusRequest;
 import edu.byu.cs.tweeter.model.net.response.PostStatusResponse;
 import edu.byu.cs.tweeter.model.net.response.Response;
@@ -25,8 +26,8 @@ public class PostStatusTask extends AuthorizedTask<PostStatusRequest, PostStatus
     }
 
     @Override
-    protected PostStatusResponse runTask(PostStatusRequest request) throws IOException {
-        return getStatusService().postStatus(request);
+    protected PostStatusResponse runTask(PostStatusRequest request) throws IOException, TweeterRemoteException {
+        return getServerFacade().postStatus(request);
     }
 
 }

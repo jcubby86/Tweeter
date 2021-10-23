@@ -7,6 +7,7 @@ import java.util.List;
 
 import edu.byu.cs.tweeter.client.model.service.BackgroundTaskUtils;
 import edu.byu.cs.tweeter.model.domain.User;
+import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
 import edu.byu.cs.tweeter.model.net.request.PagedRequest;
 import edu.byu.cs.tweeter.model.net.response.PagedResponse;
 
@@ -19,7 +20,7 @@ public abstract class PagedTask<DATA, REQUEST extends PagedRequest<DATA>, RESPON
     }
 
     @Override
-    protected RESPONSE runTask(REQUEST request) throws IOException {
+    protected RESPONSE runTask(REQUEST request) throws IOException, TweeterRemoteException {
         RESPONSE response = getResponse(request);
 
         loadImages(response.getItems());
@@ -34,7 +35,7 @@ public abstract class PagedTask<DATA, REQUEST extends PagedRequest<DATA>, RESPON
         }
     }
 
-    protected abstract RESPONSE getResponse(REQUEST request);
+    protected abstract RESPONSE getResponse(REQUEST request) throws IOException, TweeterRemoteException;
     protected abstract User convertItemToUser(DATA item);
 
 }

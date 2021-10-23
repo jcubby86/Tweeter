@@ -1,4 +1,4 @@
-package edu.byu.cs.tweeter.model.util;
+package edu.byu.cs.tweeter.server.util;
 
 /**
  * Generic pair class that represents a pair of values.
