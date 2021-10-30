@@ -39,7 +39,7 @@ class MainPresenterTest {
     public void testPostStatus_postStatusSucceeds(){
         Answer<Void> successAnswer = invocation -> {
             @SuppressWarnings("unchecked")
-            BackgroundTaskObserver<PostStatusResponse> observer = invocation.getArgumentAt(1, BackgroundTaskObserver.class);
+            BackgroundTaskObserver<PostStatusResponse> observer = invocation.getArgument(1, BackgroundTaskObserver.class);
             observer.handleSuccess(new PostStatusResponse());
             return null;
         };
@@ -54,7 +54,7 @@ class MainPresenterTest {
     public void testPostStatus_postStatusFails(){
         Answer<Void> failureAnswer = invocation -> {
             @SuppressWarnings("unchecked")
-            BackgroundTaskObserver<PostStatusResponse> observer = invocation.getArgumentAt(1, BackgroundTaskObserver.class);
+            BackgroundTaskObserver<PostStatusResponse> observer = invocation.getArgument(1, BackgroundTaskObserver.class);
             observer.handleFailure("Failure Message");
             return null;
         };

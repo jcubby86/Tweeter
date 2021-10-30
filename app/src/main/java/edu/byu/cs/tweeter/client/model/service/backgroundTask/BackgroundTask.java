@@ -42,7 +42,7 @@ public abstract class BackgroundTask<REQUEST extends Request, RESPONSE extends R
         sendMessage(response);
     }
 
-    public void sendMessage(RESPONSE response) {
+    private void sendMessage(RESPONSE response) {
         Bundle msgBundle = new Bundle();
         msgBundle.putSerializable(RESPONSE_KEY, response);
 
