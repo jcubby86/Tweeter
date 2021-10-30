@@ -11,4 +11,5 @@ public class UnfollowRequest extends ChangeFollowStatusRequest{
     public UnfollowRequest(AuthToken authToken, String followeeAlias) {
         super(authToken, followeeAlias);
     }
+
 }

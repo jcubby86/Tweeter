@@ -22,4 +22,11 @@ public abstract class AuthorizedRequest extends Request{
     public void setAuthToken(AuthToken authToken) {
         this.authToken = authToken;
     }
+
+    @Override
+    public void checkRequest() {
+        if (authToken == null){
+            badRequest();
+        }
+    }
 }

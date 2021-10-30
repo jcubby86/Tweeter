@@ -10,4 +10,5 @@ public class FollowRequest extends ChangeFollowStatusRequest{
     public FollowRequest(AuthToken authToken, String followeeRequest) {
         super(authToken, followeeRequest);
     }
+
 }

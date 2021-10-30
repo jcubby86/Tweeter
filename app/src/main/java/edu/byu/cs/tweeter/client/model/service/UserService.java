@@ -16,22 +16,22 @@ import edu.byu.cs.tweeter.model.net.response.RegisterResponse;
 public class UserService extends Service {
 
     public void getUser(GetUserRequest request, BackgroundTaskObserver<GetUserResponse> getUserObserver) {
-        GetUserTask getUserTask = new GetUserTask(request, new BackgroundTaskHandler<>(getUserObserver));
+        GetUserTask getUserTask = new GetUserTask(request, getHandler(getUserObserver));
         runTask(getUserTask);
     }
 
     public void login(LoginRequest request, BackgroundTaskObserver<LoginResponse> loginObserver) {
-        LoginTask loginTask = new LoginTask(request, new BackgroundTaskHandler<>(loginObserver));
+        LoginTask loginTask = new LoginTask(request, getHandler(loginObserver));
         runTask(loginTask);
     }
 
     public void register(RegisterRequest request, BackgroundTaskObserver<RegisterResponse> registerObserver) {
-        RegisterTask registerTask = new RegisterTask(request, new BackgroundTaskHandler<>(registerObserver));
+        RegisterTask registerTask = new RegisterTask(request, getHandler(registerObserver));
         runTask(registerTask);
     }
 
     public void logout(LogoutRequest request, BackgroundTaskObserver<LogoutResponse> observer) {
-        LogoutTask logoutTask = new LogoutTask(request, new BackgroundTaskHandler<>(observer));
+        LogoutTask logoutTask = new LogoutTask(request, getHandler(observer));
         runTask(logoutTask);
     }
 }

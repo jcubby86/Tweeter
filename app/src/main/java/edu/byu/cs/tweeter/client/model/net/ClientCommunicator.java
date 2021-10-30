@@ -28,7 +28,7 @@ class ClientCommunicator {
         void sendRequest(HttpURLConnection connection) throws IOException;
     }
 
-    <T> T doPost(String urlPath, final Object requestInfo, Map<String, String> headers, Class<T> returnType)
+    public <T> T doPost(String urlPath, final Object requestInfo, Map<String, String> headers, Class<T> returnType)
             throws IOException, TweeterRemoteException {
         RequestStrategy requestStrategy = new RequestStrategy() {
             @Override
@@ -51,7 +51,7 @@ class ClientCommunicator {
         return doRequest(urlPath, headers, returnType, requestStrategy);
     }
 
-    <T> T doGet(String urlPath, Map<String, String> headers, Class<T> returnType)
+    public <T> T doGet(String urlPath, Map<String, String> headers, Class<T> returnType)
             throws IOException, TweeterRemoteException {
         RequestStrategy requestStrategy = new RequestStrategy() {
             @Override
@@ -142,7 +142,6 @@ class ClientCommunicator {
      * A class for de-serializing the json string the API Gateway returns with a 400 or 500 status
      * code.
      */
-    @SuppressWarnings("unused")
     private static class ErrorResponse {
         private String errorMessage;
         private String errorType;

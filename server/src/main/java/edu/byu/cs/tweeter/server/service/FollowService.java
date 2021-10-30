@@ -20,14 +20,15 @@ import edu.byu.cs.tweeter.server.util.Pair;
 
 
 public class FollowService extends Service{
-    public GetFollowingResponse getFollowing(GetFollowingRequest request){
+    public GetFollowingResponse getFollowing(GetFollowingRequest request) {
+        request.checkRequest();
         Pair<List<User>, Boolean> data = getFakeData().getPageOfUsers(request.getLastItem(), request.getLimit(),
                 getFakeData().findUserByAlias(request.getTargetUserAlias()));
-
         return new GetFollowingResponse(data.getFirst(), data.getSecond());
     }
 
     public GetFollowersResponse getFollowers(GetFollowersRequest request){
+        request.checkRequest();
         Pair<List<User>, Boolean> data = getFakeData().getPageOfUsers(request.getLastItem(), request.getLimit(),
                 getFakeData().findUserByAlias(request.getTargetUserAlias()));
 
@@ -35,18 +36,22 @@ public class FollowService extends Service{
     }
 
     public IsFollowerResponse isFollower(IsFollowerRequest request) {
+        request.checkRequest();
         return new IsFollowerResponse(new Random().nextInt() > 0);
     }
 
     public FollowResponse follow(FollowRequest request) {
+        request.checkRequest();
         return new FollowResponse();
     }
 
     public UnfollowResponse unfollow(UnfollowRequest request) {
+        request.checkRequest();
         return new UnfollowResponse();
     }
 
     public GetCountResponse getCount(GetCountRequest request) {
+        request.checkRequest();
         return new GetCountResponse(20, 20);
     }
 

@@ -9,4 +9,5 @@ public class LogoutRequest extends AuthorizedRequest{
     public LogoutRequest(AuthToken authToken) {
         super(authToken);
     }
+
 }

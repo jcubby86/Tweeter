@@ -11,18 +11,22 @@ import edu.byu.cs.tweeter.model.net.response.RegisterResponse;
 
 public class UserService extends Service {
     public GetUserResponse getUser(GetUserRequest request) {
+        request.checkRequest();
         return new GetUserResponse(getFakeData().findUserByAlias(request.getAlias()));
     }
 
     public LoginResponse login(LoginRequest request) {
+        request.checkRequest();
         return new LoginResponse(getFakeData().getFirstUser(), getFakeData().getAuthToken());
     }
 
     public RegisterResponse register(RegisterRequest request) {
+        request.checkRequest();
         return new RegisterResponse(getFakeData().getFirstUser(), getFakeData().getAuthToken());
     }
 
     public LogoutResponse logout(LogoutRequest request) {
+        request.checkRequest();
         return new LogoutResponse();
     }
 }

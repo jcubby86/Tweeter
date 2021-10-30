@@ -24,4 +24,12 @@ public class GetCountRequest extends AuthorizedRequest{
     public void setTargetUserAlias(String targetUserAlias) {
         this.targetUserAlias = targetUserAlias;
     }
+
+    @Override
+    public void checkRequest() {
+        super.checkRequest();
+        if (targetUserAlias == null){
+            badRequest();
+        }
+    }
 }

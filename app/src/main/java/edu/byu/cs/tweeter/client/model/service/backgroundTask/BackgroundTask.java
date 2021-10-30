@@ -8,6 +8,7 @@ import android.util.Log;
 import java.io.IOException;
 
 import edu.byu.cs.tweeter.client.model.net.ServerFacade;
+import edu.byu.cs.tweeter.client.model.service.BackgroundTaskHandler;
 import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
 import edu.byu.cs.tweeter.model.net.request.Request;
 import edu.byu.cs.tweeter.model.net.response.Response;
@@ -22,7 +23,6 @@ public abstract class BackgroundTask<REQUEST extends Request, RESPONSE extends R
      * Message handler that will receive task results.
      */
     private final REQUEST request;
-    private RESPONSE response;
     private final Handler messageHandler;
 
     public BackgroundTask(REQUEST request, Handler messageHandler) {
@@ -32,16 +32,17 @@ public abstract class BackgroundTask<REQUEST extends Request, RESPONSE extends R
 
     @Override
     public void run() {
+        RESPONSE response;
         try {
             response = runTask(request);
         } catch (Exception ex) {
             Log.e(LOG_TAG, ex.getMessage(), ex);
             response = error(" because of exception: " + ex.getMessage());
         }
-        sendMessage();
+        sendMessage(response);
     }
 
-    private void sendMessage() {
+    public void sendMessage(RESPONSE response) {
         Bundle msgBundle = new Bundle();
         msgBundle.putSerializable(RESPONSE_KEY, response);
 

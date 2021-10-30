@@ -22,33 +22,33 @@ import edu.byu.cs.tweeter.model.net.response.UnfollowResponse;
 public class FollowService extends Service {
     public void getFollowing(GetFollowingRequest request, BackgroundTaskObserver<GetFollowingResponse> getFollowingObserver) {
         GetFollowingTask getFollowingTask = new GetFollowingTask(request,
-                new BackgroundTaskHandler<>(getFollowingObserver));
+                getHandler(getFollowingObserver));
         runTask(getFollowingTask);
     }
 
     public void getFollowers(GetFollowersRequest request, BackgroundTaskObserver<GetFollowersResponse> getFollowersObserver) {
         GetFollowersTask getFollowersTask = new GetFollowersTask(request,
-                new BackgroundTaskHandler<>(getFollowersObserver));
+                getHandler(getFollowersObserver));
         runTask(getFollowersTask);
     }
 
     public void isFollower(IsFollowerRequest request, BackgroundTaskObserver<IsFollowerResponse> observer) {
-        IsFollowerTask isFollowerTask = new IsFollowerTask(request, new BackgroundTaskHandler<>(observer));
+        IsFollowerTask isFollowerTask = new IsFollowerTask(request, getHandler(observer));
         runTask(isFollowerTask);
     }
 
     public void follow(FollowRequest request, BackgroundTaskObserver<FollowResponse> observer) {
-        FollowTask followTask = new FollowTask(request, new BackgroundTaskHandler<>(observer));
+        FollowTask followTask = new FollowTask(request, getHandler(observer));
         runTask(followTask);
     }
 
     public void unfollow(UnfollowRequest request, BackgroundTaskObserver<UnfollowResponse> observer) {
-        UnfollowTask unfollowTask = new UnfollowTask(request, new BackgroundTaskHandler<>(observer));
+        UnfollowTask unfollowTask = new UnfollowTask(request, getHandler(observer));
         runTask(unfollowTask);
     }
 
     public void getCount(GetCountRequest request, BackgroundTaskObserver<GetCountResponse> observer) {
-        GetCountTask getCountTask = new GetCountTask(request, new BackgroundTaskHandler<>(observer));
+        GetCountTask getCountTask = new GetCountTask(request, getHandler(observer));
         runTask(getCountTask);
     }
 

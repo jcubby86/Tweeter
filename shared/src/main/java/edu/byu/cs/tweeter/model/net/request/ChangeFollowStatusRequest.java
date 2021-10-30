@@ -22,4 +22,12 @@ public abstract class ChangeFollowStatusRequest extends AuthorizedRequest{
     public void setFolloweeAlias(String followeeAlias) {
         this.followeeAlias = followeeAlias;
     }
+
+    @Override
+    public void checkRequest() {
+        super.checkRequest();
+        if (followeeAlias == null){
+            badRequest();
+        }
+    }
 }

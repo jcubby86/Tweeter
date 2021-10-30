@@ -13,16 +13,19 @@ import edu.byu.cs.tweeter.server.util.Pair;
 
 public class StatusService extends Service{
     public GetStoryResponse getStory(GetStoryRequest request){
+        request.checkRequest();
         Pair<List<Status>, Boolean> data = getFakeData().getPageOfStatus(request.getLastItem(), request.getLimit());
         return new GetStoryResponse(data.getFirst(), data.getSecond());
     }
 
     public GetFeedResponse getFeed(GetFeedRequest request){
+        request.checkRequest();
         Pair<List<Status>, Boolean> data = getFakeData().getPageOfStatus(request.getLastItem(), request.getLimit());
         return new GetFeedResponse(data.getFirst(), data.getSecond());
     }
 
     public PostStatusResponse postStatus(PostStatusRequest request) {
+        request.checkRequest();
         return new PostStatusResponse();
     }
 }

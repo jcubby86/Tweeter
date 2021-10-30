@@ -10,4 +10,5 @@ public class GetFollowingRequest extends PagedRequest<User>{
     public GetFollowingRequest(AuthToken authToken, String targetUserAlias, int limit, User lastItem) {
         super(authToken, targetUserAlias, limit, lastItem);
     }
+
 }

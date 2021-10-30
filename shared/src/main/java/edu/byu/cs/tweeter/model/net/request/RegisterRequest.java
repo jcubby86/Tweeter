@@ -57,4 +57,12 @@ public class RegisterRequest extends AuthenticationRequest{
     public void setImage(String image) {
         this.image = image;
     }
+
+    @Override
+    public void checkRequest() {
+        super.checkRequest();
+        if (firstName == null || lastName == null || image == null){
+            badRequest();
+        }
+    }
 }

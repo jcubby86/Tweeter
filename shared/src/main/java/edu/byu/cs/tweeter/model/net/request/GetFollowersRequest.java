@@ -10,4 +10,5 @@ public class GetFollowersRequest extends PagedRequest<User>{
     public GetFollowersRequest(AuthToken authToken, String targetUserAlias, int limit, User lastItem) {
         super(authToken, targetUserAlias, limit, lastItem);
     }
+
 }

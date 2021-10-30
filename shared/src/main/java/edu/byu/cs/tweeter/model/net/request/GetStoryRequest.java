@@ -11,4 +11,5 @@ public class GetStoryRequest extends PagedRequest<Status>{
     public GetStoryRequest(AuthToken authToken, String targetUserAlias, int limit, Status lastItem) {
         super(authToken, targetUserAlias, limit, lastItem);
     }
+
 }

@@ -22,4 +22,12 @@ public class GetUserRequest extends AuthorizedRequest{
     public void setAlias(String alias) {
         this.alias = alias;
     }
+
+    @Override
+    public void checkRequest() {
+        super.checkRequest();
+        if (alias == null){
+            badRequest();
+        }
+    }
 }

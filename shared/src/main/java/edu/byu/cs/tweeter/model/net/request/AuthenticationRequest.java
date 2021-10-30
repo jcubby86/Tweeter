@@ -34,4 +34,11 @@ public abstract class AuthenticationRequest extends Request{
     public void setPassword(String password) {
         this.password = password;
     }
+
+    @Override
+    public void checkRequest() {
+        if (username == null || password == null){
+            badRequest();
+        }
+    }
 }

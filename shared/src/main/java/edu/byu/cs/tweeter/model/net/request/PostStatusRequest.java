@@ -24,4 +24,12 @@ public class PostStatusRequest extends AuthorizedRequest{
     public void setStatus(Status status) {
         this.status = status;
     }
+
+    @Override
+    public void checkRequest() {
+        super.checkRequest();
+        if (status == null){
+            badRequest();
+        }
+    }
 }

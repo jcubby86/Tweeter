@@ -34,4 +34,12 @@ public class IsFollowerRequest extends AuthorizedRequest{
     public void setFollowee(String followee) {
         this.followee = followee;
     }
+
+    @Override
+    public void checkRequest() {
+        super.checkRequest();
+        if (followee == null || follower == null){
+            badRequest();
+        }
+    }
 }

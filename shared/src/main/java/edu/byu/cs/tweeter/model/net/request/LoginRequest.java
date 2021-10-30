@@ -20,5 +20,4 @@ public class LoginRequest extends AuthenticationRequest {
     public LoginRequest(String username, String password) {
         super(username, password);
     }
-
 }

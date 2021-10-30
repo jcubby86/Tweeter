@@ -48,4 +48,12 @@ public abstract class PagedRequest<DATA> extends AuthorizedRequest{
     public void setLastItem(DATA lastItem) {
         this.lastItem = lastItem;
     }
+
+    @Override
+    public void checkRequest() {
+        super.checkRequest();
+        if (targetUserAlias == null){
+            badRequest();
+        }
+    }
 }

@@ -9,21 +9,22 @@ import edu.byu.cs.tweeter.model.net.request.PostStatusRequest;
 import edu.byu.cs.tweeter.model.net.response.GetFeedResponse;
 import edu.byu.cs.tweeter.model.net.response.GetStoryResponse;
 import edu.byu.cs.tweeter.model.net.response.PostStatusResponse;
+import edu.byu.cs.tweeter.model.net.response.Response;
 
 public class StatusService extends Service {
 
     public void getStory(GetStoryRequest request, BackgroundTaskObserver<GetStoryResponse> observer) {
-        GetStoryTask getStoryTask = new GetStoryTask(request, new BackgroundTaskHandler<>(observer));
+        GetStoryTask getStoryTask = new GetStoryTask(request, getHandler(observer));
         runTask(getStoryTask);
     }
 
     public void getFeed(GetFeedRequest request, BackgroundTaskObserver<GetFeedResponse> observer) {
-        GetFeedTask getFeedTask = new GetFeedTask(request, new BackgroundTaskHandler<>(observer));
+        GetFeedTask getFeedTask = new GetFeedTask(request, getHandler(observer));
         runTask(getFeedTask);
     }
 
     public void postStatus(PostStatusRequest request, BackgroundTaskObserver<PostStatusResponse> observer) {
-        PostStatusTask statusTask = new PostStatusTask(request, new BackgroundTaskHandler<>(observer));
+        PostStatusTask statusTask = new PostStatusTask(request, getHandler(observer));
         runTask(statusTask);
     }
 }
