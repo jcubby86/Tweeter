@@ -30,10 +30,12 @@ class ServerFacadeTest {
         RegisterRequest request = new RegisterRequest("@username", "password","first", "last", "");
         try {
             RegisterResponse response = serverFacade.register(request);
+
             assertTrue(response.isSuccess());
-            assertNotNull(response.getUser());
-            assertNotNull(response.getAuthToken());
             assertNull(response.getMessage());
+
+            assertEquals("@allen", response.getUser().getAlias());
+            assertNotNull(response.getAuthToken());
         } catch (IOException | TweeterRemoteException e) {
             fail(e);
         }
@@ -44,9 +46,14 @@ class ServerFacadeTest {
         GetFollowersRequest request = new GetFollowersRequest(new AuthToken(), "@allen", 10, null);
         try {
             GetFollowersResponse response = serverFacade.getFollowers(request);
+
             assertTrue(response.isSuccess());
-            assertNotNull(response.getItems());
             assertNull(response.getMessage());
+
+            //9 because the FakeData skips the first user, @allen
+            assertEquals(9, response.getItems().size());
+            assertEquals("@amy", response.getItems().get(0).getAlias());
+            assertEquals("@elizabeth", response.getItems().get(response.getItems().size()-1).getAlias());
         } catch (IOException | TweeterRemoteException e) {
             fail(e);
         }
@@ -57,10 +64,12 @@ class ServerFacadeTest {
         GetCountRequest request = new GetCountRequest(new AuthToken(), "@allen");
         try {
             GetCountResponse response = serverFacade.getCount(request);
+
             assertTrue(response.isSuccess());
+            assertNull(response.getMessage());
+
             assertEquals(20, response.getFollowersCount());
             assertEquals(20, response.getFollowingCount());
-            assertNull(response.getMessage());
         } catch (IOException | TweeterRemoteException e) {
             e.printStackTrace();
         }

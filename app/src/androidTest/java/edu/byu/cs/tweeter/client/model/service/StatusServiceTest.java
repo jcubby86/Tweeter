@@ -56,7 +56,11 @@ public class StatusServiceTest {
         GetStoryResponse response = captor.getValue();
 
         assertTrue(response.isSuccess());
-        assertNotNull(response.getItems());
         assertNull(response.getMessage());
+
+        assertTrue(response.isHasMorePages());
+        assertEquals(10, response.getItems().size());
+        assertEquals("@allen", response.getItems().get(0).getUser().getAlias());
+        assertEquals("@elizabeth", response.getItems().get(response.getItems().size()-1).getUser().getAlias());
     }
 }
