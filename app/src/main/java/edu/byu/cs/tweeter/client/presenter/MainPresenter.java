@@ -108,15 +108,18 @@ public class MainPresenter extends Presenter<MainView> {
     }
 
     public void logout() {
+        view.displayInfoMessage("Logging Out...");
         LogoutRequest request = new LogoutRequest(Cache.getInstance().getCurrUserAuthToken());
         getUserService().logout(request, new BackgroundTaskObserver<LogoutResponse>() {
             @Override
             public void handleFailure(String message) {
+                view.clearInfoMessage();
                 view.displayErrorMessage(message);
             }
 
             @Override
             public void handleSuccess(LogoutResponse response) {
+                view.clearInfoMessage();
                 view.finishLogout();
             }
         });

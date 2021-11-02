@@ -50,7 +50,7 @@ class ServerFacadeTest {
             assertTrue(response.isSuccess());
             assertNull(response.getMessage());
 
-            //9 because the FakeData skips the first user, @allen
+            //9 because the FakeData skips the first user, @allen since they are the targetUser
             assertEquals(9, response.getItems().size());
             assertEquals("@amy", response.getItems().get(0).getAlias());
             assertEquals("@elizabeth", response.getItems().get(response.getItems().size()-1).getAlias());

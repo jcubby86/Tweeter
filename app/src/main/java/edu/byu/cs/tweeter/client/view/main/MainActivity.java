@@ -33,8 +33,6 @@ public class MainActivity extends AppCompatActivity implements StatusDialogFragm
     private static final String LOG_TAG = "MainActivity";
     public static final String CURRENT_USER_KEY = "CurrentUser";
 
-    private Toast logOutToast;
-    private Toast postingToast;
     private User selectedUser;
     private TextView followeeCount;
     private TextView followerCount;
@@ -116,9 +114,6 @@ public class MainActivity extends AppCompatActivity implements StatusDialogFragm
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.logoutMenu) {
-            logOutToast = Toast.makeText(this, "Logging Out...", Toast.LENGTH_LONG);
-            logOutToast.show();
-
             presenter.logout();
             return true;
         } else {
@@ -128,9 +123,6 @@ public class MainActivity extends AppCompatActivity implements StatusDialogFragm
 
     @Override
     public void onStatusPosted(String post) {
-        postingToast = Toast.makeText(this, "Posting Status...", Toast.LENGTH_LONG);
-        postingToast.show();
-
         presenter.postStatus(post);
     }
 
@@ -161,8 +153,6 @@ public class MainActivity extends AppCompatActivity implements StatusDialogFragm
 
     @Override
     public void finishLogout() {
-        logOutToast.cancel();
-
         //Revert to login screen.
         Intent intent = new Intent(this, LoginActivity.class);
         //Clear everything so that the main activity is recreated with the login page.
@@ -174,7 +164,6 @@ public class MainActivity extends AppCompatActivity implements StatusDialogFragm
 
     @Override
     public void statusPostComplete() {
-        postingToast.cancel();
         Toast.makeText(this, "Successfully Posted!", Toast.LENGTH_LONG).show();
     }
 

@@ -9,13 +9,29 @@ import edu.byu.cs.tweeter.server.service.StatusService;
 import edu.byu.cs.tweeter.server.service.UserService;
 
 public abstract class Handler<REQUEST extends Request, RESPONSE extends Response> implements RequestHandler<REQUEST, RESPONSE> {
-    protected FollowService getFollowService(){
-        return new FollowService();
+
+    private UserService userService;
+    private FollowService followService;
+    private StatusService statusService;
+
+    protected UserService getUserService() {
+        if (userService == null){
+            userService = new UserService();
+        }
+        return userService;
     }
-    protected UserService getUserService(){
-        return new UserService();
+
+    protected FollowService getFollowService() {
+        if (followService == null){
+            followService = new FollowService();
+        }
+        return followService;
     }
-    protected StatusService getStatusService(){
-        return new StatusService();
+
+    protected StatusService getStatusService() {
+        if (statusService == null){
+            statusService = new StatusService();
+        }
+        return statusService;
     }
 }
