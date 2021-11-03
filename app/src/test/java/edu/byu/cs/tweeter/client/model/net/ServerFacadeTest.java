@@ -71,7 +71,7 @@ class ServerFacadeTest {
             assertEquals(20, response.getFollowersCount());
             assertEquals(20, response.getFollowingCount());
         } catch (IOException | TweeterRemoteException e) {
-            e.printStackTrace();
+            fail(e);
         }
     }
 }
