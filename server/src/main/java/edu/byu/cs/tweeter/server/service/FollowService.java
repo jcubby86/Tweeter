@@ -1,5 +1,8 @@
 package edu.byu.cs.tweeter.server.service;
 
+import com.amazonaws.services.lambda.runtime.LambdaLogger;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -22,9 +25,15 @@ import edu.byu.cs.tweeter.server.util.Pair;
 public class FollowService extends Service{
     public GetFollowingResponse getFollowing(GetFollowingRequest request) {
         request.checkRequest();
-        Pair<List<User>, Boolean> data = getFakeData().getPageOfUsers(request.getLastItem(), request.getLimit(),
-                getFakeData().findUserByAlias(request.getTargetUserAlias()));
-        return new GetFollowingResponse(data.getFirst(), data.getSecond());
+        String last = request.getLastItem() == null ? null : request.getLastItem().getAlias();
+        Pair<List<String>, Boolean> pair = getFollowDao().getFollowing(request.getTargetUserAlias(),
+                request.getLimit(), last);
+        List<User> users = new ArrayList<>();
+        for (String alias: pair.getFirst()){
+            users.add(getFakeData().findUserByAlias(alias));
+        }
+
+        return new GetFollowingResponse(users, pair.getSecond());
     }
 
     public GetFollowersResponse getFollowers(GetFollowersRequest request){
