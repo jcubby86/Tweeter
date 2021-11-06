@@ -1,10 +1,6 @@
 package edu.byu.cs.tweeter.server.service;
 
-import com.amazonaws.services.lambda.runtime.LambdaLogger;
-
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.net.request.FollowRequest;
@@ -28,10 +24,7 @@ public class FollowService extends Service{
         String last = request.getLastItem() == null ? null : request.getLastItem().getAlias();
         List<String> aliases = getFollowDao().getFollowing(request.getTargetUserAlias(),
                 request.getLimit(), last);
-        List<User> users = new ArrayList<>();
-        for (String alias: aliases){
-            users.add(getFakeData().findUserByAlias(alias));
-        }
+        List<User> users = getUserDao().getUserList(aliases);
 
         return new GetFollowingResponse(users, users.size() > 0);
     }
@@ -41,10 +34,7 @@ public class FollowService extends Service{
         String last = request.getLastItem() == null ? null : request.getLastItem().getAlias();
         List<String> aliases = getFollowDao().getFollowers(request.getTargetUserAlias(),
                 request.getLimit(), last);
-        List<User> users = new ArrayList<>();
-        for (String alias: aliases){
-            users.add(getFakeData().findUserByAlias(alias));
-        }
+        List<User> users = getUserDao().getUserList(aliases);
 
         return new GetFollowersResponse(users, users.size() > 0);
     }

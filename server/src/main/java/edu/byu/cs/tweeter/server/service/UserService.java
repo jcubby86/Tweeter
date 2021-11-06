@@ -12,7 +12,7 @@ import edu.byu.cs.tweeter.model.net.response.RegisterResponse;
 public class UserService extends Service {
     public GetUserResponse getUser(GetUserRequest request) {
         request.checkRequest();
-        return new GetUserResponse(getFakeData().findUserByAlias(request.getAlias()));
+        return new GetUserResponse(getUserDao().getUser(request.getAlias()));
     }
 
     public LoginResponse login(LoginRequest request) {

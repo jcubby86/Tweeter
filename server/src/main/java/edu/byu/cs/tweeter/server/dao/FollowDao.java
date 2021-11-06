@@ -12,9 +12,9 @@ public interface FollowDao {
 
     Pair<Integer, Integer> getCount(String target_handle);
 
-    void putItem(String follower_handle, String followee_handle) throws DataAccessException;
+    void putItem(String follower_handle, String followee_handle);
 
-    void deleteItem(String follower_handle, String followee_handle) throws DataAccessException;
+    void deleteItem(String follower_handle, String followee_handle);
 
-    boolean isFollower(String follower_handle, String followee_handle) throws DataAccessException;
+    boolean isFollower(String follower_handle, String followee_handle);
 }

@@ -12,15 +12,18 @@ import java.util.List;
 import edu.byu.cs.tweeter.server.util.Pair;
 
 public class DynamoDBFollowDao implements FollowDao{
-    private final String PARTITION_FOLLOWER = "follower_handle";
-    private final String SORT_FOLLOWEE = "followee_handle";
+    private static final String TABLE_NAME = "follows";
+    private static final String INDEX_NAME = "followee_handle-follower_handle-index";
+    private static final String PARTITION_FOLLOWER = "follower_handle";
+    private static final String SORT_FOLLOWEE = "followee_handle";
+
     private final Table table;
 
-    public DynamoDBFollowDao() throws DataAccessException {
+    public DynamoDBFollowDao() {
         try {
             AmazonDynamoDB client = AmazonDynamoDBClientBuilder.standard().withRegion("us-west-2").build();
             DynamoDB dynamoDB = new DynamoDB(client);
-            table = dynamoDB.getTable("follows");
+            table = dynamoDB.getTable(TABLE_NAME);
         } catch (Exception e){
             throw new DataAccessException("Could not access Database");
         }
@@ -70,7 +73,7 @@ public class DynamoDBFollowDao implements FollowDao{
             spec = spec.withExclusiveStartKey(PARTITION_FOLLOWER, lastFollowerAlias, SORT_FOLLOWEE, followee_handle);
         }
 
-        ItemCollection<QueryOutcome> followers = table.getIndex("followee_handle-follower_handle-index").query(spec);
+        ItemCollection<QueryOutcome> followers = table.getIndex(INDEX_NAME).query(spec);
         List<String> followerAliases = new ArrayList<>();
 
         for (Item item : followers) {
@@ -83,7 +86,7 @@ public class DynamoDBFollowDao implements FollowDao{
     @Override
     public Pair<Integer, Integer> getCount(String target_handle) {
         QuerySpec followersSpec = getFollowersSpec(target_handle);
-        ItemCollection<QueryOutcome> followers = table.getIndex("followee_handle-follower_handle-index").query(followersSpec);
+        ItemCollection<QueryOutcome> followers = table.getIndex(INDEX_NAME).query(followersSpec);
         QuerySpec followingSpec = getFollowingSpec(target_handle);
         ItemCollection<QueryOutcome> following = table.query(followingSpec);
 
@@ -101,7 +104,7 @@ public class DynamoDBFollowDao implements FollowDao{
         return new Pair<>(numFollowers, numFollowing);
     }
 
-    public void putItem(String follower_handle, String followee_handle) throws DataAccessException {
+    public void putItem(String follower_handle, String followee_handle) {
         try {
             table.putItem(new Item().withPrimaryKey(PARTITION_FOLLOWER, follower_handle, SORT_FOLLOWEE, followee_handle));
         } catch (Exception e){
@@ -109,7 +112,7 @@ public class DynamoDBFollowDao implements FollowDao{
         }
     }
 
-    public void deleteItem(String follower_handle, String followee_handle) throws DataAccessException {
+    public void deleteItem(String follower_handle, String followee_handle) {
         try{
             table.deleteItem(PARTITION_FOLLOWER, follower_handle, SORT_FOLLOWEE, followee_handle);
         }catch (Exception e){
@@ -118,7 +121,7 @@ public class DynamoDBFollowDao implements FollowDao{
     }
 
     @Override
-    public boolean isFollower(String follower_handle, String followee_handle) throws DataAccessException {
+    public boolean isFollower(String follower_handle, String followee_handle) {
         return table.getItem(PARTITION_FOLLOWER, follower_handle, SORT_FOLLOWEE, followee_handle) != null;
     }
 }
