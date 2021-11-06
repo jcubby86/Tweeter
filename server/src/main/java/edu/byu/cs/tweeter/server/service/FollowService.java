@@ -26,42 +26,50 @@ public class FollowService extends Service{
     public GetFollowingResponse getFollowing(GetFollowingRequest request) {
         request.checkRequest();
         String last = request.getLastItem() == null ? null : request.getLastItem().getAlias();
-        Pair<List<String>, Boolean> pair = getFollowDao().getFollowing(request.getTargetUserAlias(),
+        List<String> aliases = getFollowDao().getFollowing(request.getTargetUserAlias(),
                 request.getLimit(), last);
         List<User> users = new ArrayList<>();
-        for (String alias: pair.getFirst()){
+        for (String alias: aliases){
             users.add(getFakeData().findUserByAlias(alias));
         }
 
-        return new GetFollowingResponse(users, pair.getSecond());
+        return new GetFollowingResponse(users, users.size() > 0);
     }
 
     public GetFollowersResponse getFollowers(GetFollowersRequest request){
         request.checkRequest();
-        Pair<List<User>, Boolean> data = getFakeData().getPageOfUsers(request.getLastItem(), request.getLimit(),
-                getFakeData().findUserByAlias(request.getTargetUserAlias()));
+        String last = request.getLastItem() == null ? null : request.getLastItem().getAlias();
+        List<String> aliases = getFollowDao().getFollowers(request.getTargetUserAlias(),
+                request.getLimit(), last);
+        List<User> users = new ArrayList<>();
+        for (String alias: aliases){
+            users.add(getFakeData().findUserByAlias(alias));
+        }
 
-        return new GetFollowersResponse(data.getFirst(), data.getSecond());
+        return new GetFollowersResponse(users, users.size() > 0);
     }
 
     public IsFollowerResponse isFollower(IsFollowerRequest request) {
         request.checkRequest();
-        return new IsFollowerResponse(new Random().nextInt() > 0);
+        return new IsFollowerResponse(getFollowDao().isFollower(request.getFollower(), request.getFollowee()));
     }
 
     public FollowResponse follow(FollowRequest request) {
         request.checkRequest();
+        getFollowDao().putItem(request.getFollowerAlias(), request.getFolloweeAlias());
         return new FollowResponse();
     }
 
     public UnfollowResponse unfollow(UnfollowRequest request) {
         request.checkRequest();
+        getFollowDao().deleteItem(request.getFollowerAlias(), request.getFolloweeAlias());
         return new UnfollowResponse();
     }
 
     public GetCountResponse getCount(GetCountRequest request) {
         request.checkRequest();
-        return new GetCountResponse(20, 20);
+        Pair<Integer, Integer> data = getFollowDao().getCount(request.getTargetUserAlias());
+        return new GetCountResponse(data.getFirst(), data.getSecond());
     }
 
 }

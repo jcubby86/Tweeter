@@ -7,13 +7,15 @@ public abstract class ChangeFollowStatusRequest extends AuthorizedRequest{
      * The user that is being followed.
      */
     private String followeeAlias;
+    private String followerAlias;
 
     protected ChangeFollowStatusRequest(){
     }
 
-    public ChangeFollowStatusRequest(AuthToken authToken, String followeeAlias) {
+    public ChangeFollowStatusRequest(AuthToken authToken, String followerAlias, String followeeAlias) {
         super(authToken);
         this.followeeAlias = followeeAlias;
+        this.followerAlias = followerAlias;
     }
 
     public String getFolloweeAlias() {
@@ -23,10 +25,17 @@ public abstract class ChangeFollowStatusRequest extends AuthorizedRequest{
         this.followeeAlias = followeeAlias;
     }
 
+    public String getFollowerAlias() {
+        return followerAlias;
+    }
+    public void setFollowerAlias(String followerAlias) {
+        this.followerAlias = followerAlias;
+    }
+
     @Override
     public void checkRequest() {
         super.checkRequest();
-        if (followeeAlias == null){
+        if (followeeAlias == null || followerAlias == null){
             badRequest();
         }
     }

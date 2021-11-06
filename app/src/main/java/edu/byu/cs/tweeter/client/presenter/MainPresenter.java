@@ -54,7 +54,7 @@ public class MainPresenter extends Presenter<MainView> {
 
     public void unfollow(User selectedUser) {
         view.displayInfoMessage("Removing " + selectedUser.getName() + "...");
-        UnfollowRequest unfollowRequest = new UnfollowRequest(Cache.getInstance().getCurrUserAuthToken(), selectedUser.getAlias());
+        UnfollowRequest unfollowRequest = new UnfollowRequest(Cache.getInstance().getCurrUserAuthToken(), Cache.getInstance().getCurrUser().getAlias(), selectedUser.getAlias());
         getFollowService().unfollow(unfollowRequest, new BackgroundTaskObserver<UnfollowResponse>() {
             @Override
             public void handleFailure(String message) {
@@ -74,7 +74,7 @@ public class MainPresenter extends Presenter<MainView> {
 
     public void follow(User selectedUser) {
         view.displayInfoMessage("Adding " + selectedUser.getName() + "...");
-        FollowRequest followRequest = new FollowRequest(Cache.getInstance().getCurrUserAuthToken(), selectedUser.getAlias());
+        FollowRequest followRequest = new FollowRequest(Cache.getInstance().getCurrUserAuthToken(), Cache.getInstance().getCurrUser().getAlias(), selectedUser.getAlias());
         getFollowService().follow(followRequest, new BackgroundTaskObserver<FollowResponse>() {
             @Override
             public void handleFailure(String message) {
