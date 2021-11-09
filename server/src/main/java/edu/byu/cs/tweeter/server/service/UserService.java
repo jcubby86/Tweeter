@@ -1,5 +1,6 @@
 package edu.byu.cs.tweeter.server.service;
 
+import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.net.request.GetUserRequest;
 import edu.byu.cs.tweeter.model.net.request.LoginRequest;
 import edu.byu.cs.tweeter.model.net.request.LogoutRequest;
@@ -17,12 +18,13 @@ public class UserService extends Service {
 
     public LoginResponse login(LoginRequest request) {
         request.checkRequest();
-        return new LoginResponse(getFakeData().getFirstUser(), getFakeData().getAuthToken());
+        return new LoginResponse(getUserDao().login(request), getFakeData().getAuthToken());
     }
 
     public RegisterResponse register(RegisterRequest request) {
         request.checkRequest();
-        return new RegisterResponse(getFakeData().getFirstUser(), getFakeData().getAuthToken());
+        User user = getUserDao().register(request);
+        return new RegisterResponse(user, getFakeData().getAuthToken());
     }
 
     public LogoutResponse logout(LogoutRequest request) {

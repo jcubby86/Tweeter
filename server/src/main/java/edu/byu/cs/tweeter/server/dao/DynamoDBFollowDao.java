@@ -14,8 +14,8 @@ import edu.byu.cs.tweeter.server.util.Pair;
 public class DynamoDBFollowDao implements FollowDao{
     private static final String TABLE_NAME = "follows";
     private static final String INDEX_NAME = "followee_handle-follower_handle-index";
-    private static final String PARTITION_FOLLOWER = "follower_handle";
-    private static final String SORT_FOLLOWEE = "followee_handle";
+    private static final String FOLLOWER_HANDLE = "follower_handle";
+    private static final String FOLLOWEE_HANDLE = "followee_handle";
 
     private final Table table;
 
@@ -31,7 +31,7 @@ public class DynamoDBFollowDao implements FollowDao{
 
     private QuerySpec getFollowingSpec(String follower_handle){
         HashMap<String, String> nameMap = new HashMap<>();
-        nameMap.put("#f", PARTITION_FOLLOWER);
+        nameMap.put("#f", FOLLOWER_HANDLE);
 
         HashMap<String, Object> valueMap = new HashMap<>();
         valueMap.put(":ffff", follower_handle);
@@ -43,14 +43,14 @@ public class DynamoDBFollowDao implements FollowDao{
         QuerySpec spec = getFollowingSpec(follower_handle).withMaxResultSize(pageSize);
         if (lastFolloweeAlias != null){
             //Sort and partition switched with index
-            spec.withExclusiveStartKey(SORT_FOLLOWEE, lastFolloweeAlias, PARTITION_FOLLOWER, follower_handle);
+            spec.withExclusiveStartKey(FOLLOWEE_HANDLE, lastFolloweeAlias, FOLLOWER_HANDLE, follower_handle);
         }
 
         ItemCollection<QueryOutcome> following = table.query(spec);
         List<String> followingAliases = new ArrayList<>();
 
         for (Item item: following){
-            followingAliases.add((String) item.get(SORT_FOLLOWEE));
+            followingAliases.add(item.getString(FOLLOWEE_HANDLE));
         }
 
         return followingAliases;
@@ -58,7 +58,7 @@ public class DynamoDBFollowDao implements FollowDao{
 
     private QuerySpec getFollowersSpec(String followee_handle){
         HashMap<String, String> nameMap = new HashMap<>();
-        nameMap.put("#f", SORT_FOLLOWEE);
+        nameMap.put("#f", FOLLOWEE_HANDLE);
 
         HashMap<String, Object> valueMap = new HashMap<>();
         valueMap.put(":ffff", followee_handle);
@@ -70,14 +70,14 @@ public class DynamoDBFollowDao implements FollowDao{
     public List<String> getFollowers(String followee_handle, int pageSize, String lastFollowerAlias){
         QuerySpec spec = getFollowersSpec(followee_handle).withMaxResultSize(pageSize);
         if (lastFollowerAlias != null){
-            spec = spec.withExclusiveStartKey(PARTITION_FOLLOWER, lastFollowerAlias, SORT_FOLLOWEE, followee_handle);
+            spec = spec.withExclusiveStartKey(FOLLOWER_HANDLE, lastFollowerAlias, FOLLOWEE_HANDLE, followee_handle);
         }
 
         ItemCollection<QueryOutcome> followers = table.getIndex(INDEX_NAME).query(spec);
         List<String> followerAliases = new ArrayList<>();
 
         for (Item item : followers) {
-            followerAliases.add((String) item.get(PARTITION_FOLLOWER));
+            followerAliases.add(item.getString(FOLLOWER_HANDLE));
         }
 
         return followerAliases;
@@ -106,7 +106,7 @@ public class DynamoDBFollowDao implements FollowDao{
 
     public void putItem(String follower_handle, String followee_handle) {
         try {
-            table.putItem(new Item().withPrimaryKey(PARTITION_FOLLOWER, follower_handle, SORT_FOLLOWEE, followee_handle));
+            table.putItem(new Item().withPrimaryKey(FOLLOWER_HANDLE, follower_handle, FOLLOWEE_HANDLE, followee_handle));
         } catch (Exception e){
             throw new DataAccessException("Could not put Item");
         }
@@ -114,7 +114,7 @@ public class DynamoDBFollowDao implements FollowDao{
 
     public void deleteItem(String follower_handle, String followee_handle) {
         try{
-            table.deleteItem(PARTITION_FOLLOWER, follower_handle, SORT_FOLLOWEE, followee_handle);
+            table.deleteItem(FOLLOWER_HANDLE, follower_handle, FOLLOWEE_HANDLE, followee_handle);
         }catch (Exception e){
             throw new DataAccessException("Could not delete Item");
         }
@@ -122,6 +122,6 @@ public class DynamoDBFollowDao implements FollowDao{
 
     @Override
     public boolean isFollower(String follower_handle, String followee_handle) {
-        return table.getItem(PARTITION_FOLLOWER, follower_handle, SORT_FOLLOWEE, followee_handle) != null;
+        return table.getItem(FOLLOWER_HANDLE, follower_handle, FOLLOWEE_HANDLE, followee_handle) != null;
     }
 }
