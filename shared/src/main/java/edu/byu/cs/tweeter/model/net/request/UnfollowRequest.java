@@ -8,8 +8,8 @@ public class UnfollowRequest extends ChangeFollowStatusRequest{
     private UnfollowRequest() {
     }
 
-    public UnfollowRequest(AuthToken authToken, String follower, String followeeAlias) {
-        super(authToken, follower, followeeAlias);
+    public UnfollowRequest(AuthToken authToken, String followerAlias, String followeeAlias) {
+        super(authToken, followerAlias, followeeAlias);
     }
 
 }

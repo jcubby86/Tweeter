@@ -1,22 +1,38 @@
 package edu.byu.cs.tweeter.server.service;
 
-import com.amazonaws.services.lambda.runtime.LambdaLogger;
-
-import edu.byu.cs.tweeter.server.dao.DataAccessException;
-import edu.byu.cs.tweeter.server.dao.DynamoDBFollowDao;
-import edu.byu.cs.tweeter.server.dao.DynamoDBUserDao;
-import edu.byu.cs.tweeter.server.dao.FollowDao;
-import edu.byu.cs.tweeter.server.dao.UserDao;
+import edu.byu.cs.tweeter.server.dao.AuthDAO;
+import edu.byu.cs.tweeter.server.dao.DAOFactory;
+import edu.byu.cs.tweeter.server.dao.FeedDAO;
+import edu.byu.cs.tweeter.server.dao.FollowDAO;
+import edu.byu.cs.tweeter.server.dao.StoryDAO;
+import edu.byu.cs.tweeter.server.dao.UserDAO;
 import edu.byu.cs.tweeter.server.util.FakeData;
 
 public abstract class Service {
     public static final String INTERNAL_SERVER_ERROR = "[InternalServerError]";
+    private final DAOFactory daoFactory;
+
+    public Service(DAOFactory daoFactory){
+        this.daoFactory = daoFactory;
+    }
+
     protected FakeData getFakeData() {
         return new FakeData();
     }
-    protected FollowDao getFollowDao() {
-        return new DynamoDBFollowDao();
+    protected FollowDAO getFollowDAO() {
+        return daoFactory.getFollowDAO();
     }
-    protected UserDao getUserDao(){ return new DynamoDBUserDao();}
+    protected UserDAO getUserDAO(){
+        return daoFactory.getUserDAO();
+    }
+    protected AuthDAO getAuthDAO(){
+        return daoFactory.getAuthDAO();
+    }
+    protected StoryDAO getStoryDAO(){
+        return daoFactory.getStoryDAO();
+    }
+    protected FeedDAO getFeedDAO(){
+        return daoFactory.getFeedDAO();
+    }
 
 }

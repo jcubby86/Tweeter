@@ -4,7 +4,7 @@ import java.util.List;
 
 import edu.byu.cs.tweeter.server.util.Pair;
 
-public interface FollowDao {
+public interface FollowDAO {
 
     List<String> getFollowing(String follower_handle, int pageSize, String lastFolloweeAlias);
 

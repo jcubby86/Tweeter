@@ -11,7 +11,7 @@ import java.util.List;
 
 import edu.byu.cs.tweeter.server.util.Pair;
 
-public class DynamoDBFollowDao implements FollowDao{
+public class DynamoDBFollowDAO implements FollowDAO {
     private static final String TABLE_NAME = "follows";
     private static final String INDEX_NAME = "followee_handle-follower_handle-index";
     private static final String FOLLOWER_HANDLE = "follower_handle";
@@ -19,7 +19,7 @@ public class DynamoDBFollowDao implements FollowDao{
 
     private final Table table;
 
-    public DynamoDBFollowDao() {
+    public DynamoDBFollowDAO() {
         try {
             AmazonDynamoDB client = AmazonDynamoDBClientBuilder.standard().withRegion("us-west-2").build();
             DynamoDB dynamoDB = new DynamoDB(client);
@@ -122,6 +122,10 @@ public class DynamoDBFollowDao implements FollowDao{
 
     @Override
     public boolean isFollower(String follower_handle, String followee_handle) {
-        return table.getItem(FOLLOWER_HANDLE, follower_handle, FOLLOWEE_HANDLE, followee_handle) != null;
+        try{
+            return table.getItem(FOLLOWER_HANDLE, follower_handle, FOLLOWEE_HANDLE, followee_handle) != null;
+        }catch (Exception e){
+            throw new DataAccessException("Could not delete Item");
+        }
     }
 }

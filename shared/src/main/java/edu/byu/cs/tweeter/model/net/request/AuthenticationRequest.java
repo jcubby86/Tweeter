@@ -1,7 +1,7 @@
 package edu.byu.cs.tweeter.model.net.request;
 
 public abstract class AuthenticationRequest extends Request{
-    private String username;
+    private String alias;
     private String password;
 
     /**
@@ -12,20 +12,20 @@ public abstract class AuthenticationRequest extends Request{
     /**
      * Creates an instance.
      *
-     * @param username the username of the user to be logged in.
+     * @param alias the username of the user to be logged in.
      * @param password the password of the user to be logged in.
      */
-    public AuthenticationRequest(String username, String password) {
-        this.username = username;
+    public AuthenticationRequest(String alias, String password) {
+        this.alias = alias;
         this.password = password;
     }
 
 
-    public String getUsername() {
-        return username;
+    public String getAlias() {
+        return alias;
     }
-    public void setUsername(String username) {
-        this.username = username;
+    public void setAlias(String alias) {
+        this.alias = alias;
     }
 
     public String getPassword() {
@@ -37,7 +37,7 @@ public abstract class AuthenticationRequest extends Request{
 
     @Override
     public void checkRequest() {
-        if (username == null || password == null){
+        if (alias == null || password == null){
             badRequest();
         }
     }

@@ -5,10 +5,11 @@ import java.util.List;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.net.request.LoginRequest;
 import edu.byu.cs.tweeter.model.net.request.RegisterRequest;
+import edu.byu.cs.tweeter.server.util.Pair;
 
-public interface UserDao {
+public interface UserDAO {
     User getUser(String alias);
     List<User> getUserList(List<String> aliases);
-    User login(LoginRequest request);
-    User register(RegisterRequest request);
+    Pair<User, Boolean> login(LoginRequest request);
+    Pair<User, Boolean> register(RegisterRequest request);
 }
