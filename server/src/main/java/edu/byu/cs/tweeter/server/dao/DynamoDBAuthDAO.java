@@ -20,6 +20,10 @@ public class DynamoDBAuthDAO extends DynamoDBDAO implements AuthDAO {
 
     private final Table table = getTable(TABLE_NAME);
 
+    public DynamoDBAuthDAO(DAOFactory factory) {
+        super(factory);
+    }
+
     @Override
     public boolean isAuthorized(AuthToken authToken) {
         try {

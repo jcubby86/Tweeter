@@ -32,6 +32,10 @@ public class DynamoDBUserDAO extends DynamoDBDAO implements UserDAO {
 
     private final Table table = getTable(TABLE_NAME);
 
+    public DynamoDBUserDAO(DAOFactory factory) {
+        super(factory);
+    }
+
     private void putUser(User user, String password) {
         table.putItem(new Item().withPrimaryKey(PARTITION_ALIAS, user.getAlias())
                 .withString(FIRST_NAME, user.getFirstName())

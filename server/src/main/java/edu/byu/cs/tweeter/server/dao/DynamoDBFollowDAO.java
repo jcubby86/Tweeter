@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.server.util.Pair;
 
 public class DynamoDBFollowDAO extends DynamoDBDAO implements FollowDAO {
@@ -19,6 +20,10 @@ public class DynamoDBFollowDAO extends DynamoDBDAO implements FollowDAO {
     private static final String FOLLOWEE_HANDLE = "followee_handle";
 
     private final Table table = getTable(TABLE_NAME);
+
+    public DynamoDBFollowDAO(DAOFactory factory) {
+        super(factory);
+    }
 
     private QuerySpec getFollowingSpec(String follower_handle){
         HashMap<String, String> nameMap = new HashMap<>();
@@ -30,7 +35,7 @@ public class DynamoDBFollowDAO extends DynamoDBDAO implements FollowDAO {
                 .withNameMap(nameMap).withValueMap(valueMap);
     }
 
-    public List<String> getFollowing(String follower_handle, int pageSize, String lastFolloweeAlias){
+    public List<User> getFollowingPaged(String follower_handle, int pageSize, String lastFolloweeAlias){
         try{
             QuerySpec spec = getFollowingSpec(follower_handle).withMaxResultSize(pageSize);
             if (lastFolloweeAlias != null){
@@ -45,7 +50,7 @@ public class DynamoDBFollowDAO extends DynamoDBDAO implements FollowDAO {
                 followingAliases.add(item.getString(FOLLOWEE_HANDLE));
             }
 
-            return followingAliases;
+            return factory.getUserDAO().getUserList(followingAliases);
         } catch (Exception e){
             throw new DataAccessException("Could not retrieve following");
         }
@@ -62,7 +67,7 @@ public class DynamoDBFollowDAO extends DynamoDBDAO implements FollowDAO {
                 .withNameMap(nameMap).withValueMap(valueMap);
     }
 
-    public List<String> getFollowers(String followee_handle, int pageSize, String lastFollowerAlias){
+    public List<User> getFollowersPaged(String followee_handle, int pageSize, String lastFollowerAlias){
         try{
             QuerySpec spec = getFollowersSpec(followee_handle).withMaxResultSize(pageSize);
             if (lastFollowerAlias != null){
@@ -76,32 +81,35 @@ public class DynamoDBFollowDAO extends DynamoDBDAO implements FollowDAO {
                 followerAliases.add(item.getString(FOLLOWER_HANDLE));
             }
 
-            return followerAliases;
+            return factory.getUserDAO().getUserList(followerAliases);
         } catch (Exception e){
             throw new DataAccessException("Could not retrieve followers");
         }
     }
 
     @Override
+    public List<String> getFollowing(String follower_handle) {
+        QuerySpec followingSpec = getFollowingSpec(follower_handle);
+        ItemCollection<QueryOutcome> following = table.query(followingSpec);
+
+        return getAliases(following, FOLLOWEE_HANDLE);
+    }
+
+    @Override
+    public List<String> getFollowers(String followee_handle) {
+        QuerySpec followersSpec = getFollowersSpec(followee_handle);
+        ItemCollection<QueryOutcome> followers = table.getIndex(INDEX_NAME).query(followersSpec);
+
+        return getAliases(followers, FOLLOWER_HANDLE);
+    }
+
+    @Override
     public Pair<Integer, Integer> getCount(String target_handle) {
         try{
-            QuerySpec followersSpec = getFollowersSpec(target_handle);
-            ItemCollection<QueryOutcome> followers = table.getIndex(INDEX_NAME).query(followersSpec);
-            QuerySpec followingSpec = getFollowingSpec(target_handle);
-            ItemCollection<QueryOutcome> following = table.query(followingSpec);
+            List<String> followers = getFollowers(target_handle);
+            List<String> following = getFollowing(target_handle);
 
-            int numFollowers = 0;
-            int numFollowing = 0;
-
-            for (Item ignored : followers){
-                numFollowers += 1;
-            }
-
-            for (Item ignored : following){
-                numFollowing += 1;
-            }
-
-            return new Pair<>(numFollowers, numFollowing);
+            return new Pair<>(followers.size(), following.size());
         } catch (Exception e){
             throw new DataAccessException("Could not get counts");
         }
@@ -130,5 +138,13 @@ public class DynamoDBFollowDAO extends DynamoDBDAO implements FollowDAO {
         }catch (Exception e){
             throw new DataAccessException("Could not delete Item");
         }
+    }
+
+    private List<String> getAliases(ItemCollection<QueryOutcome> items, String target){
+        List<String> aliases = new ArrayList<>();
+        for (Item item : items){
+            aliases.add(item.getString(target));
+        }
+        return aliases;
     }
 }

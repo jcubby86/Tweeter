@@ -1,7 +1,5 @@
 package edu.byu.cs.tweeter.server.service;
 
-import com.amazonaws.services.dynamodbv2.model.Get;
-
 import java.util.List;
 
 import edu.byu.cs.tweeter.model.domain.User;
@@ -15,7 +13,6 @@ import edu.byu.cs.tweeter.model.net.response.FollowResponse;
 import edu.byu.cs.tweeter.model.net.response.GetCountResponse;
 import edu.byu.cs.tweeter.model.net.response.GetFollowersResponse;
 import edu.byu.cs.tweeter.model.net.response.GetFollowingResponse;
-import edu.byu.cs.tweeter.model.net.response.GetStoryResponse;
 import edu.byu.cs.tweeter.model.net.response.IsFollowerResponse;
 import edu.byu.cs.tweeter.model.net.response.UnfollowResponse;
 import edu.byu.cs.tweeter.server.dao.DAOFactory;
@@ -33,9 +30,8 @@ public class FollowService extends Service{
         if (!getAuthDAO().isAuthorized(request.getAuthToken()))
             return new GetFollowingResponse("User not authorized");
         String last = request.getLastItem() == null ? null : request.getLastItem().getAlias();
-        List<String> aliases = getFollowDAO().getFollowing(request.getTargetUserAlias(),
+        List<User> users = getFollowDAO().getFollowingPaged(request.getTargetUserAlias(),
                 request.getLimit(), last);
-        List<User> users = getUserDAO().getUserList(aliases);
 
         return new GetFollowingResponse(users, users.size() > 0);
     }
@@ -45,9 +41,8 @@ public class FollowService extends Service{
         if (!getAuthDAO().isAuthorized(request.getAuthToken()))
             return new GetFollowersResponse("User not authorized");
         String last = request.getLastItem() == null ? null : request.getLastItem().getAlias();
-        List<String> aliases = getFollowDAO().getFollowers(request.getTargetUserAlias(),
+        List<User> users = getFollowDAO().getFollowersPaged(request.getTargetUserAlias(),
                 request.getLimit(), last);
-        List<User> users = getUserDAO().getUserList(aliases);
 
         return new GetFollowersResponse(users, users.size() > 0);
     }

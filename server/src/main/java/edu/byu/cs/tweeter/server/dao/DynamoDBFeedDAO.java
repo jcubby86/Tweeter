@@ -11,6 +11,10 @@ public class DynamoDBFeedDAO extends DynamoDBStatusDAO implements FeedDAO{
 
     private final Table table = getTable(TABLE_NAME);
 
+    public DynamoDBFeedDAO(DAOFactory factory) {
+        super(factory);
+    }
+
     @Override
     public List<Status> getFeed(String alias, int pageSize, Status lastStatus) {
         return doQuery(table, alias, pageSize, lastStatus);

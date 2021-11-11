@@ -30,6 +30,10 @@ public class DynamoDBStatusDAO extends DynamoDBDAO{
     @SuppressWarnings("SimpleDateFormat")
     private final SimpleDateFormat statusFormat = new SimpleDateFormat("MMM d yyyy h:mm aaa");
 
+    public DynamoDBStatusDAO(DAOFactory factory){
+        super(factory);
+    }
+
     protected List<Status> doQuery(Table table, String alias, int pageSize, Status lastStatus){
         try {
             HashMap<String, String> nameMap = new HashMap<>();
@@ -48,7 +52,8 @@ public class DynamoDBStatusDAO extends DynamoDBDAO{
 
             ItemCollection<QueryOutcome> items = table.query(spec);
             List<Status> statuses = new ArrayList<>();
-            UserDAO userDao = new DynamoDBUserDAO();
+
+            UserDAO userDao = factory.getUserDAO();
             for (Item item: items){
                 statuses.add(new Status(item.getString(POST),
                         userDao.getUser(item.getString(AUTHOR)),

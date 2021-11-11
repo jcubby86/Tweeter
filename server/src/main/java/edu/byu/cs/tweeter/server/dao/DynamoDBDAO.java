@@ -9,6 +9,8 @@ public class DynamoDBDAO {
     private static final AmazonDynamoDB client;
     protected static final DynamoDB dynamoDB;
 
+    protected final DAOFactory factory;
+
     static {
         try {
             client = AmazonDynamoDBClientBuilder.standard().withRegion("us-west-2").build();
@@ -16,6 +18,10 @@ public class DynamoDBDAO {
         } catch (Exception e){
             throw new DataAccessException("Could not access Database");
         }
+    }
+
+    public DynamoDBDAO(DAOFactory factory) {
+        this.factory = factory;
     }
 
     Table getTable(String tableName){
