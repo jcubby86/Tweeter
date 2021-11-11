@@ -16,9 +16,6 @@ public abstract class Service {
         this.daoFactory = daoFactory;
     }
 
-    protected FakeData getFakeData() {
-        return new FakeData();
-    }
     protected FollowDAO getFollowDAO() {
         return daoFactory.getFollowDAO();
     }

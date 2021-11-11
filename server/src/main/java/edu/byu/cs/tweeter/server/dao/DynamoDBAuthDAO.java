@@ -1,8 +1,5 @@
 package edu.byu.cs.tweeter.server.dao;
 
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
-import com.amazonaws.services.dynamodbv2.document.DynamoDB;
 import com.amazonaws.services.dynamodbv2.document.Item;
 import com.amazonaws.services.dynamodbv2.document.ItemCollection;
 import com.amazonaws.services.dynamodbv2.document.QueryOutcome;
@@ -79,14 +76,5 @@ public class DynamoDBAuthDAO extends DynamoDBDAO implements AuthDAO {
         }
     }
 
-    public static void main(String[] args){
-        DynamoDBAuthDAO dao = new DynamoDBAuthDAO();
-
-//        for (int i = 0; i < 10; i++) {
-//            dao.putToken(new AuthToken(String.valueOf(i), System.currentTimeMillis() - EXPIRE_TIME, "@allen2"));
-//        }
-
-        dao.getAuthToken("@allen2");
-    }
 
 }

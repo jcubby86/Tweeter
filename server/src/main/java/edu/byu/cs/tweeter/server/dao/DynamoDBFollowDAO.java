@@ -1,8 +1,9 @@
 package edu.byu.cs.tweeter.server.dao;
 
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
-import com.amazonaws.services.dynamodbv2.document.*;
+import com.amazonaws.services.dynamodbv2.document.Item;
+import com.amazonaws.services.dynamodbv2.document.ItemCollection;
+import com.amazonaws.services.dynamodbv2.document.QueryOutcome;
+import com.amazonaws.services.dynamodbv2.document.Table;
 import com.amazonaws.services.dynamodbv2.document.spec.QuerySpec;
 
 import java.util.ArrayList;
@@ -92,11 +93,11 @@ public class DynamoDBFollowDAO extends DynamoDBDAO implements FollowDAO {
             int numFollowers = 0;
             int numFollowing = 0;
 
-            for (Item item: followers){
+            for (Item ignored : followers){
                 numFollowers += 1;
             }
 
-            for (Item item: following){
+            for (Item ignored : following){
                 numFollowing += 1;
             }
 

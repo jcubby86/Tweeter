@@ -7,7 +7,7 @@ import com.amazonaws.services.dynamodbv2.document.Table;
 
 public class DynamoDBDAO {
     private static final AmazonDynamoDB client;
-    private static final DynamoDB dynamoDB;
+    protected static final DynamoDB dynamoDB;
 
     static {
         try {

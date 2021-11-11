@@ -1,8 +1,5 @@
 package edu.byu.cs.tweeter.server.dao;
 
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
-import com.amazonaws.services.dynamodbv2.document.DynamoDB;
 import com.amazonaws.services.dynamodbv2.document.Item;
 import com.amazonaws.services.dynamodbv2.document.Table;
 import com.amazonaws.services.s3.AmazonS3;
@@ -11,8 +8,6 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -21,7 +16,6 @@ import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.net.request.LoginRequest;
 import edu.byu.cs.tweeter.model.net.request.RegisterRequest;
 import edu.byu.cs.tweeter.server.security.PasswordEncryptor;
-import edu.byu.cs.tweeter.server.util.FakeData;
 import edu.byu.cs.tweeter.server.util.Pair;
 
 public class DynamoDBUserDAO extends DynamoDBDAO implements UserDAO {
@@ -68,17 +62,6 @@ public class DynamoDBUserDAO extends DynamoDBDAO implements UserDAO {
             }
             return users;
 
-//            TableKeysAndAttributes tableKeysAndAttributes = new TableKeysAndAttributes(TABLE_NAME);
-//            tableKeysAndAttributes.addHashOnlyPrimaryKeys(PARTITION_ALIAS, aliases.toArray());
-//
-//            BatchGetItemOutcome outcome = dynamoDB.batchGetItem(tableKeysAndAttributes);
-//
-//            List<Item> items = outcome.getTableItems().get(TABLE_NAME);
-//            List<User> users = new ArrayList<>();
-//            for (Item item : items) {
-//                users.add(itemToUser(item));
-//            }
-//            return users;
         } catch (Exception e){
             throw new DataAccessException("Could not get users");
         }
@@ -136,11 +119,4 @@ public class DynamoDBUserDAO extends DynamoDBDAO implements UserDAO {
                 item.getString(IMAGE_URL));
     }
 
-
-    public static void main(String[] args) throws InvalidKeySpecException, NoSuchAlgorithmException {
-        DynamoDBUserDAO userDao = new DynamoDBUserDAO();
-        for (User user: new FakeData().getFakeUsers()){
-            userDao.putUser(user, PasswordEncryptor.generateStrongPasswordHash("12345"));
-        }
-    }
 }
