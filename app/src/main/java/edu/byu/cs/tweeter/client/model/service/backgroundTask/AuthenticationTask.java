@@ -21,7 +21,8 @@ public abstract class AuthenticationTask<REQUEST extends AuthenticationRequest, 
     protected RESPONSE runTask(REQUEST request) throws IOException, TweeterRemoteException {
         RESPONSE response = doAuthenticate(request);
 
-        BackgroundTaskUtils.loadImage(response.getUser());
+        if (response.isSuccess())
+            BackgroundTaskUtils.loadImage(response.getUser());
 
         return response;
     }

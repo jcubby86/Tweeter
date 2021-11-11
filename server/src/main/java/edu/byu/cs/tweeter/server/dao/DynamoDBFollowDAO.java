@@ -11,23 +11,13 @@ import java.util.List;
 
 import edu.byu.cs.tweeter.server.util.Pair;
 
-public class DynamoDBFollowDAO implements FollowDAO {
+public class DynamoDBFollowDAO extends DynamoDBDAO implements FollowDAO {
     private static final String TABLE_NAME = "follows";
     private static final String INDEX_NAME = "followee_handle-follower_handle-index";
     private static final String FOLLOWER_HANDLE = "follower_handle";
     private static final String FOLLOWEE_HANDLE = "followee_handle";
 
-    private final Table table;
-
-    public DynamoDBFollowDAO() {
-        try {
-            AmazonDynamoDB client = AmazonDynamoDBClientBuilder.standard().withRegion("us-west-2").build();
-            DynamoDB dynamoDB = new DynamoDB(client);
-            table = dynamoDB.getTable(TABLE_NAME);
-        } catch (Exception e){
-            throw new DataAccessException("Could not access Database");
-        }
-    }
+    private final Table table = getTable(TABLE_NAME);
 
     private QuerySpec getFollowingSpec(String follower_handle){
         HashMap<String, String> nameMap = new HashMap<>();
@@ -40,20 +30,24 @@ public class DynamoDBFollowDAO implements FollowDAO {
     }
 
     public List<String> getFollowing(String follower_handle, int pageSize, String lastFolloweeAlias){
-        QuerySpec spec = getFollowingSpec(follower_handle).withMaxResultSize(pageSize);
-        if (lastFolloweeAlias != null){
-            //Sort and partition switched with index
-            spec.withExclusiveStartKey(FOLLOWEE_HANDLE, lastFolloweeAlias, FOLLOWER_HANDLE, follower_handle);
+        try{
+            QuerySpec spec = getFollowingSpec(follower_handle).withMaxResultSize(pageSize);
+            if (lastFolloweeAlias != null){
+                //Sort and partition switched with index
+                spec.withExclusiveStartKey(FOLLOWEE_HANDLE, lastFolloweeAlias, FOLLOWER_HANDLE, follower_handle);
+            }
+
+            ItemCollection<QueryOutcome> following = table.query(spec);
+            List<String> followingAliases = new ArrayList<>();
+
+            for (Item item: following){
+                followingAliases.add(item.getString(FOLLOWEE_HANDLE));
+            }
+
+            return followingAliases;
+        } catch (Exception e){
+            throw new DataAccessException("Could not retrieve following");
         }
-
-        ItemCollection<QueryOutcome> following = table.query(spec);
-        List<String> followingAliases = new ArrayList<>();
-
-        for (Item item: following){
-            followingAliases.add(item.getString(FOLLOWEE_HANDLE));
-        }
-
-        return followingAliases;
     }
 
     private QuerySpec getFollowersSpec(String followee_handle){
@@ -68,40 +62,48 @@ public class DynamoDBFollowDAO implements FollowDAO {
     }
 
     public List<String> getFollowers(String followee_handle, int pageSize, String lastFollowerAlias){
-        QuerySpec spec = getFollowersSpec(followee_handle).withMaxResultSize(pageSize);
-        if (lastFollowerAlias != null){
-            spec = spec.withExclusiveStartKey(FOLLOWER_HANDLE, lastFollowerAlias, FOLLOWEE_HANDLE, followee_handle);
+        try{
+            QuerySpec spec = getFollowersSpec(followee_handle).withMaxResultSize(pageSize);
+            if (lastFollowerAlias != null){
+                spec = spec.withExclusiveStartKey(FOLLOWER_HANDLE, lastFollowerAlias, FOLLOWEE_HANDLE, followee_handle);
+            }
+
+            ItemCollection<QueryOutcome> followers = table.getIndex(INDEX_NAME).query(spec);
+            List<String> followerAliases = new ArrayList<>();
+
+            for (Item item : followers) {
+                followerAliases.add(item.getString(FOLLOWER_HANDLE));
+            }
+
+            return followerAliases;
+        } catch (Exception e){
+            throw new DataAccessException("Could not retrieve followers");
         }
-
-        ItemCollection<QueryOutcome> followers = table.getIndex(INDEX_NAME).query(spec);
-        List<String> followerAliases = new ArrayList<>();
-
-        for (Item item : followers) {
-            followerAliases.add(item.getString(FOLLOWER_HANDLE));
-        }
-
-        return followerAliases;
     }
 
     @Override
     public Pair<Integer, Integer> getCount(String target_handle) {
-        QuerySpec followersSpec = getFollowersSpec(target_handle);
-        ItemCollection<QueryOutcome> followers = table.getIndex(INDEX_NAME).query(followersSpec);
-        QuerySpec followingSpec = getFollowingSpec(target_handle);
-        ItemCollection<QueryOutcome> following = table.query(followingSpec);
+        try{
+            QuerySpec followersSpec = getFollowersSpec(target_handle);
+            ItemCollection<QueryOutcome> followers = table.getIndex(INDEX_NAME).query(followersSpec);
+            QuerySpec followingSpec = getFollowingSpec(target_handle);
+            ItemCollection<QueryOutcome> following = table.query(followingSpec);
 
-        int numFollowers = 0;
-        int numFollowing = 0;
+            int numFollowers = 0;
+            int numFollowing = 0;
 
-        for (Item item: followers){
-            numFollowers += 1;
+            for (Item item: followers){
+                numFollowers += 1;
+            }
+
+            for (Item item: following){
+                numFollowing += 1;
+            }
+
+            return new Pair<>(numFollowers, numFollowing);
+        } catch (Exception e){
+            throw new DataAccessException("Could not get counts");
         }
-
-        for (Item item: following){
-            numFollowing += 1;
-        }
-
-        return new Pair<>(numFollowers, numFollowing);
     }
 
     public void putItem(String follower_handle, String followee_handle) {

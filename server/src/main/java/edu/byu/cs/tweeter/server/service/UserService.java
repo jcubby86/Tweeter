@@ -50,7 +50,7 @@ public class UserService extends Service {
 
     public LogoutResponse logout(LogoutRequest request) {
         request.checkRequest();
-        getAuthDAO().deleteItem(request.getAuthToken());
+        getAuthDAO().deleteItem(request.getAuthToken().getToken());
         return new LogoutResponse();
     }
 }

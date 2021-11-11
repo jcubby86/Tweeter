@@ -29,7 +29,8 @@ public class GetUserTask extends AuthorizedTask<GetUserRequest, GetUserResponse>
     protected GetUserResponse runTask(GetUserRequest request) throws IOException, TweeterRemoteException {
         GetUserResponse response = getServerFacade().getUser(request);
 
-        BackgroundTaskUtils.loadImage(response.getUser());
+        if (response.isSuccess())
+            BackgroundTaskUtils.loadImage(response.getUser());
 
         return response;
     }

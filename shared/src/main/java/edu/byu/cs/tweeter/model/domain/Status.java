@@ -40,28 +40,35 @@ public class Status implements Serializable {
         this.mentions = mentions;
     }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
-
     public User getUser() {
         return user;
     }
-
-    public String getDate() {
+    public void setUser(User user) {
+        this.user = user;
+    }
+    public String getDatetime() {
         return datetime;
     }
-
+    public void setDatetime(String datetime) {
+        this.datetime = datetime;
+    }
     public String getPost() {
         return post;
     }
-
+    public void setPost(String post) {
+        this.post = post;
+    }
     public List<String> getUrls() {
         return urls;
     }
-
+    public void setUrls(List<String> urls) {
+        this.urls = urls;
+    }
     public List<String> getMentions() {
         return mentions;
+    }
+    public void setMentions(List<String> mentions) {
+        this.mentions = mentions;
     }
 
     @Override

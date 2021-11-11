@@ -44,13 +44,7 @@ public class ServerFacade {
     private final ClientCommunicator clientCommunicator = new ClientCommunicator(SERVER_URL);
 
     private <REQUEST extends Request, RESPONSE extends Response> RESPONSE post(String urlPath, REQUEST request, Map<String, String> headers, Class<RESPONSE> returnType) throws IOException, TweeterRemoteException {
-        RESPONSE response = clientCommunicator.doPost(urlPath, request, headers, returnType);
-
-        if(response.isSuccess()) {
-            return response;
-        } else {
-            throw new RuntimeException(response.getMessage());
-        }
+        return clientCommunicator.doPost(urlPath, request, headers, returnType);
     }
 
     /**

@@ -1,10 +1,15 @@
 package edu.byu.cs.tweeter.server.util;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Objects;
 
 import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.Status;
@@ -93,7 +98,7 @@ public class FakeData {
         }
     }
 
-    private void generateFakeStatuses() {
+    private void generateFakeStatuses(){
         allStatuses.clear();
 
         Calendar calendar = new GregorianCalendar();
@@ -110,11 +115,24 @@ public class FakeData {
                         "\nMy friend " + mention.getAlias() + " likes this website" +
                         "\n" + url;
                 calendar.add(Calendar.MINUTE, 1);
-                String datetime = calendar.getTime().toString();
+                String datetime = getFormattedDateTime();
                 Status status = new Status(post, sender, datetime, urls, mentions);
                 allStatuses.add(status);
             }
         }
+    }
+
+    @SuppressWarnings("SimpleDateFormat")
+    private String getFormattedDateTime(){
+        SimpleDateFormat userFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        SimpleDateFormat statusFormat = new SimpleDateFormat("MMM d yyyy h:mm aaa");
+
+        try {
+            return statusFormat.format(Objects.requireNonNull(userFormat.parse(LocalDate.now().toString() + " " + LocalTime.now().toString().substring(0, 8))));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public User getFirstUser() {
@@ -197,7 +215,7 @@ public class FakeData {
             for (int i = 0; i < fakeStatuses.size(); ++i) {
                 Status curStatus = fakeStatuses.get(i);
                 if (curStatus.getUser().getAlias().equals(lastStatus.getUser().getAlias()) &&
-                        curStatus.getDate().equals(lastStatus.getDate())) {
+                        curStatus.getDatetime().equals(lastStatus.getDatetime())) {
                     index = i + 1;
                     break;
                 }

@@ -24,7 +24,7 @@ import edu.byu.cs.tweeter.server.security.PasswordEncryptor;
 import edu.byu.cs.tweeter.server.util.FakeData;
 import edu.byu.cs.tweeter.server.util.Pair;
 
-public class DynamoDBUserDAO implements UserDAO {
+public class DynamoDBUserDAO extends DynamoDBDAO implements UserDAO {
     private static final String TABLE_NAME = "users";
     private static final String PARTITION_ALIAS = "alias";
     private static final String FIRST_NAME = "first_name";
@@ -36,17 +36,7 @@ public class DynamoDBUserDAO implements UserDAO {
     private static final String S3_BUCKET = "jacob-bastian.tweeter";
     public static final String IMAGE_SUFFIX = "profile.png";
 
-    private final Table table;
-
-    public DynamoDBUserDAO() {
-        try {
-            AmazonDynamoDB client = AmazonDynamoDBClientBuilder.standard().withRegion("us-west-2").build();
-            DynamoDB dynamoDB = new DynamoDB(client);
-            table = dynamoDB.getTable(TABLE_NAME);
-        } catch (Exception e){
-            throw new DataAccessException("Could not access Database");
-        }
-    }
+    private final Table table = getTable(TABLE_NAME);
 
     private void putUser(User user, String password) {
         table.putItem(new Item().withPrimaryKey(PARTITION_ALIAS, user.getAlias())
