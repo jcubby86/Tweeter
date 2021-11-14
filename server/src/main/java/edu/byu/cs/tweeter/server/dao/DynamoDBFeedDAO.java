@@ -21,8 +21,8 @@ public class DynamoDBFeedDAO extends DynamoDBStatusDAO implements FeedDAO{
     }
 
     @Override
-    public void postToFeeds(Status status, List<String> followers) {
-        followers.add(status.getUser().getAlias());
+    public void postToFollowers(Status status) {
+        List<String> followers = factory.getFollowDAO().getFollowers(status.getUser().getAlias());
         doWrite(TABLE_NAME, status, followers);
     }
 

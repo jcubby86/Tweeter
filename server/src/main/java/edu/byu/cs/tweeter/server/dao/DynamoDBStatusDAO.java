@@ -101,14 +101,6 @@ public class DynamoDBStatusDAO extends DynamoDBDAO{
         return statusFormat.format(date);
     }
 
-    protected void put(Table table, Status status, String userAlias) {
-        try {
-            table.putItem(getItem(status, userAlias));
-        } catch (Exception e) {
-            throw new DataAccessException("Could not add to Feed");
-        }
-    }
-
     private Item getItem(Status status, String userAlias) throws ParseException {
         return new Item().withPrimaryKey(PARTITION_USER_ALIAS, userAlias,
                         TIME_MILLIS, toTimeMillis(status.getDatetime()))

@@ -47,7 +47,7 @@ public class AuthToken implements Serializable {
         return timeMillis;
     }
 
-    private static String generateUniqueID(){
+    public static String generateUniqueID(){
         Random r = new Random();
         StringBuilder id = new StringBuilder();
         for (int i = 0; i < ID_SIZE; i++){

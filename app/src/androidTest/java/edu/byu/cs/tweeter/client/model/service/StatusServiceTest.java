@@ -1,6 +1,8 @@
 package edu.byu.cs.tweeter.client.model.service;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import android.os.Looper;
 
@@ -10,41 +12,51 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.mockito.stubbing.Answer;
 
+import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 
+import edu.byu.cs.tweeter.client.model.net.ServerFacade;
 import edu.byu.cs.tweeter.model.domain.AuthToken;
+import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
 import edu.byu.cs.tweeter.model.net.request.GetStoryRequest;
+import edu.byu.cs.tweeter.model.net.request.LoginRequest;
 import edu.byu.cs.tweeter.model.net.response.GetStoryResponse;
+import edu.byu.cs.tweeter.model.net.response.LoginResponse;
 
 public class StatusServiceTest {
 
     private interface GetStoryObserver extends BackgroundTaskObserver<GetStoryResponse> {}
 
     StatusService statusServiceSpy;
-    GetStoryObserver mockObserver;
-    CountDownLatch latch;
+
+    AuthToken authToken;
 
     @Before
-    public void setUp() {
+    public void setUp() throws IOException, TweeterRemoteException {
         statusServiceSpy = Mockito.spy(new StatusService());
-        mockObserver = Mockito.mock(GetStoryObserver.class);
 
-        latch = new CountDownLatch(1);
+        LoginRequest request = new LoginRequest("@allen","12345");
+        LoginResponse response = new ServerFacade().login(request);
+        authToken = response.getAuthToken();
+    }
+
+    @Test
+    public void getStory() throws InterruptedException {
+        GetStoryObserver mockObserver = Mockito.mock(GetStoryObserver.class);
+        CountDownLatch latch = new CountDownLatch(1);
 
         Answer<Void> a = invocation -> {
             latch.countDown();
             return null;
         };
         Mockito.doAnswer(a).when(mockObserver).handleSuccess(Mockito.any());
+        Mockito.doAnswer(a).when(mockObserver).handleFailure(Mockito.any());
 
         BackgroundTaskHandler<GetStoryResponse> handler = new BackgroundTaskHandler<>(Looper.getMainLooper(), mockObserver);
 
         Mockito.doReturn(handler).when(statusServiceSpy).getHandler(Mockito.any());
-    }
 
-    @Test
-    public void getStory() throws InterruptedException {
-        GetStoryRequest request = new GetStoryRequest(new AuthToken(), "@allen", 10 , null);
+        GetStoryRequest request = new GetStoryRequest(authToken, "@allen", 10 , null);
 
         statusServiceSpy.getStory(request, mockObserver);
 
@@ -58,9 +70,7 @@ public class StatusServiceTest {
         assertTrue(response.isSuccess());
         assertNull(response.getMessage());
 
+        assertNotNull(response.getItems());
         assertTrue(response.isHasMorePages());
-        assertEquals(10, response.getItems().size());
-        assertEquals("@allen", response.getItems().get(0).getUser().getAlias());
-        assertEquals("@elizabeth", response.getItems().get(response.getItems().size()-1).getUser().getAlias());
     }
 }

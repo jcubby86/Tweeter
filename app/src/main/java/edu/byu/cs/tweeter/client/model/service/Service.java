@@ -8,7 +8,7 @@ import edu.byu.cs.tweeter.model.net.request.Request;
 import edu.byu.cs.tweeter.model.net.response.Response;
 
 public abstract class Service {
-    protected <RESPONSE extends Response> BackgroundTaskHandler<RESPONSE> getHandler(BackgroundTaskObserver<RESPONSE> observer){
+    public <RESPONSE extends Response> BackgroundTaskHandler<RESPONSE> getHandler(BackgroundTaskObserver<RESPONSE> observer){
         return new BackgroundTaskHandler<>(observer);
     }
 

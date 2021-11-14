@@ -27,7 +27,9 @@ public class DynamoDBAuthDAO extends DynamoDBDAO implements AuthDAO {
     @Override
     public boolean isAuthorized(AuthToken authToken) {
         try {
-            return table.getItem(PARTITION_AUTH_KEY, authToken.getToken()) != null;
+            Item item = table.getItem(PARTITION_AUTH_KEY, authToken.getToken());
+            return item != null &&
+                    System.currentTimeMillis() - item.getLong(TIME_MILLIS) < EXPIRE_TIME;
         } catch (Exception e){
             throw new DataAccessException("Unable to verify authentication of user");
         }

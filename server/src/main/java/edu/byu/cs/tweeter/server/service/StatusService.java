@@ -37,8 +37,7 @@ public class StatusService extends Service{
         request.checkRequest();
         if (!getAuthDAO().isAuthorized(request.getAuthToken()))
             return new PostStatusResponse("User not authorized");
-        List<String> followers = getFollowDAO().getFollowers(request.getStatus().getUser().getAlias());
-        getFeedDAO().postToFeeds(request.getStatus(), followers);
+        getFeedDAO().postToFollowers(request.getStatus());
         getStoryDAO().postToStories(request.getStatus());
 
         return new PostStatusResponse();
