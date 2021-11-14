@@ -7,7 +7,7 @@ import com.amazonaws.services.dynamodbv2.document.Table;
 
 public class DynamoDBDAO {
     private static final AmazonDynamoDB client;
-    protected static final DynamoDB dynamoDB;
+    private static final DynamoDB dynamoDB;
 
     protected final DAOFactory factory;
 
@@ -22,6 +22,10 @@ public class DynamoDBDAO {
 
     public DynamoDBDAO(DAOFactory factory) {
         this.factory = factory;
+    }
+
+    protected static DynamoDB getDynamoDB() {
+        return dynamoDB;
     }
 
     Table getTable(String tableName){

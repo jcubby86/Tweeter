@@ -28,7 +28,7 @@ public class DynamoDBUserDAO extends DynamoDBDAO implements UserDAO {
 
     private static final String S3_URL = "https://s3.us-west-2.amazonaws.com/";
     private static final String S3_BUCKET = "jacob-bastian.tweeter";
-    public static final String IMAGE_SUFFIX = "profile.png";
+    private static final String IMAGE_SUFFIX = "profile.png";
 
     private final Table table = getTable(TABLE_NAME);
 

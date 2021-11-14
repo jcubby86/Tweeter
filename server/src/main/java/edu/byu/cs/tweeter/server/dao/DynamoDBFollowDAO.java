@@ -136,7 +136,7 @@ public class DynamoDBFollowDAO extends DynamoDBDAO implements FollowDAO {
         try{
             return table.getItem(FOLLOWER_HANDLE, follower_handle, FOLLOWEE_HANDLE, followee_handle) != null;
         }catch (Exception e){
-            throw new DataAccessException("Could not delete Item");
+            throw new DataAccessException("Could not determine following relationship");
         }
     }
 

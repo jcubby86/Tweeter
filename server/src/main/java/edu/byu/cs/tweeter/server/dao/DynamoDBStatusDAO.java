@@ -29,12 +29,26 @@ public class DynamoDBStatusDAO extends DynamoDBDAO{
 
     @SuppressWarnings("SimpleDateFormat")
     private final SimpleDateFormat statusFormat = new SimpleDateFormat("MMM d yyyy h:mm aaa");
+    private final String TABLE_NAME;
+    private final Table table;
 
-    public DynamoDBStatusDAO(DAOFactory factory){
+    public DynamoDBStatusDAO(DAOFactory factory, String tableName){
         super(factory);
+        TABLE_NAME = tableName;
+        table = getTable(TABLE_NAME);
     }
 
-    protected List<Status> doQuery(Table table, String alias, int pageSize, Status lastStatus){
+    private long toTimeMillis(String datetime) throws ParseException {
+        Date date = statusFormat.parse(datetime);
+        return date.getTime();
+    }
+
+    private String formatDateTime(long timeMillis){
+        Date date = new Date(timeMillis);
+        return statusFormat.format(date);
+    }
+
+    protected List<Status> doQuery(String alias, int pageSize, Status lastStatus){
         try {
             HashMap<String, String> nameMap = new HashMap<>();
             nameMap.put("#f", PARTITION_USER_ALIAS);
@@ -67,7 +81,16 @@ public class DynamoDBStatusDAO extends DynamoDBDAO{
         }
     }
 
-    protected void doWrite(String tableName, Status status, List<String> aliases){
+    private Item getItem(Status status, String userAlias) throws ParseException {
+        return new Item().withPrimaryKey(PARTITION_USER_ALIAS, userAlias,
+                TIME_MILLIS, toTimeMillis(status.getDatetime()))
+                .withString(AUTHOR, status.getUser().getAlias())
+                .withString(POST, status.getPost())
+                .withList(URLS, status.getUrls())
+                .withList(MENTIONS, status.getMentions());
+    }
+
+    protected void doWrite(Status status, List<String> aliases){
         try{
             Set<String> set = new HashSet<>();
             List<Item> items = new ArrayList<>();
@@ -78,35 +101,16 @@ public class DynamoDBStatusDAO extends DynamoDBDAO{
                 }
             }
 
-            TableWriteItems tableWriteItems = new TableWriteItems(tableName)
+            TableWriteItems tableWriteItems = new TableWriteItems(TABLE_NAME)
                     .withItemsToPut(items.toArray(new Item[0]));
-            BatchWriteItemOutcome outcome = dynamoDB.batchWriteItem(tableWriteItems);
+            BatchWriteItemOutcome outcome = getDynamoDB().batchWriteItem(tableWriteItems);
 
             while (outcome.getUnprocessedItems().size() > 0) {
-                outcome = dynamoDB.batchWriteItemUnprocessed(outcome.getUnprocessedItems());
+                outcome = getDynamoDB().batchWriteItemUnprocessed(outcome.getUnprocessedItems());
             }
 
         } catch (Exception e){
             throw new DataAccessException("Could not post Status");
         }
-    }
-
-    private long toTimeMillis(String datetime) throws ParseException {
-        Date date = statusFormat.parse(datetime);
-        return date.getTime();
-    }
-
-    private String formatDateTime(long timeMillis){
-        Date date = new Date(timeMillis);
-        return statusFormat.format(date);
-    }
-
-    private Item getItem(Status status, String userAlias) throws ParseException {
-        return new Item().withPrimaryKey(PARTITION_USER_ALIAS, userAlias,
-                        TIME_MILLIS, toTimeMillis(status.getDatetime()))
-                .withString(AUTHOR, status.getUser().getAlias())
-                .withString(POST, status.getPost())
-                .withList(URLS, status.getUrls())
-                .withList(MENTIONS, status.getMentions());
     }
 }
