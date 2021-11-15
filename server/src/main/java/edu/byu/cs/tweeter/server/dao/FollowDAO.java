@@ -3,13 +3,15 @@ package edu.byu.cs.tweeter.server.dao;
 import java.util.List;
 
 import edu.byu.cs.tweeter.model.domain.User;
+import edu.byu.cs.tweeter.model.net.request.FollowRequest;
+import edu.byu.cs.tweeter.model.net.request.UnfollowRequest;
 import edu.byu.cs.tweeter.server.util.Pair;
 
 public interface FollowDAO {
 
-    List<User> getFollowingPaged(String follower_handle, int pageSize, String lastFolloweeAlias);
+    Pair<List<String>, Boolean> getFollowingPaged(String follower_handle, int pageSize, String lastFolloweeAlias);
 
-    List<User> getFollowersPaged(String followee_handle, int pageSize, String lastFollowerAlias);
+    Pair<List<String>, Boolean> getFollowersPaged(String followee_handle, int pageSize, String lastFollowerAlias);
 
     List<String> getFollowing(String follower_handle);
 
@@ -17,9 +19,9 @@ public interface FollowDAO {
 
     Pair<Integer, Integer> getCount(String target_handle);
 
-    void putItem(String follower_handle, String followee_handle);
+    void follow(FollowRequest request);
 
-    void deleteItem(String follower_handle, String followee_handle);
+    void unfollow(UnfollowRequest request);
 
     boolean isFollower(String follower_handle, String followee_handle);
 }

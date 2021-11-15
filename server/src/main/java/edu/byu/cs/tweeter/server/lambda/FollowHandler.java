@@ -8,6 +8,6 @@ import edu.byu.cs.tweeter.model.net.response.FollowResponse;
 public class FollowHandler extends Handler<FollowRequest, FollowResponse>{
     @Override
     public FollowResponse handleRequest(FollowRequest input, Context context) {
-        return getFollowService(context.getLogger()).follow(input);
+        return getFollowService().follow(input);
     }
 }

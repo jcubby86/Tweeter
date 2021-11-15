@@ -16,13 +16,13 @@ import edu.byu.cs.tweeter.server.util.Pair;
 
 public class UserService extends Service {
 
-    public UserService(DAOFactory daoFactory, LambdaLogger logger) {
-        super(daoFactory, logger);
+    public UserService(DAOFactory daoFactory) {
+        super(daoFactory);
     }
 
     public GetUserResponse getUser(GetUserRequest request) {
         if (isAuthorized(request)) {
-            logger.log("Retrieving user " + request.getAlias() + " for user " + request.getAuthToken().getUserAlias());
+            System.out.println("Retrieving user " + request.getAlias() + " for user " + request.getAuthToken().getUserAlias());
             return new GetUserResponse(getUserDAO().getUser(request.getAlias()));
         } else {
             logUnauthorized(request);
@@ -35,10 +35,10 @@ public class UserService extends Service {
         Pair<User, Boolean> data = getUserDAO().login(request);
 
         if (data.getSecond()) {
-            logger.log("Logging in " + request.getAlias());
+            System.out.println("Logging in " + request.getAlias());
             return new LoginResponse(data.getFirst(), getAuthDAO().getAuthToken(request.getAlias()));
         } else {
-            logger.log("Incorrect Password");
+            System.out.println("Incorrect Password");
             return new LoginResponse("Incorrect Password");
         }
     }
@@ -48,17 +48,17 @@ public class UserService extends Service {
         Pair<User, Boolean> data = getUserDAO().register(request);
 
         if (data.getSecond()) {
-            logger.log("Registering " + request.getAlias());
+            System.out.println("Registering " + request.getAlias());
             return new RegisterResponse(data.getFirst(), getAuthDAO().getAuthToken(request.getAlias()));
         } else {
-            logger.log("Alias is already taken");
+            System.out.println("Alias is already taken");
             return new RegisterResponse("Alias is already taken");
         }
     }
 
     public LogoutResponse logout(LogoutRequest request) {
         request.checkRequest();
-        logger.log("Logging out " + request.getAuthToken().getUserAlias());
+        System.out.println("Logging out " + request.getAuthToken().getUserAlias());
         getAuthDAO().deleteItem(request.getAuthToken().getToken());
         return new LogoutResponse();
     }

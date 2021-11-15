@@ -7,7 +7,6 @@ import com.amazonaws.services.dynamodbv2.document.QueryOutcome;
 import com.amazonaws.services.dynamodbv2.document.Table;
 import com.amazonaws.services.dynamodbv2.document.TableWriteItems;
 import com.amazonaws.services.dynamodbv2.document.spec.QuerySpec;
-import com.amazonaws.services.lambda.runtime.LambdaLogger;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -19,10 +18,9 @@ import java.util.List;
 import java.util.Set;
 
 import edu.byu.cs.tweeter.model.domain.Status;
+import edu.byu.cs.tweeter.server.util.Pair;
 
 public class DynamoDBStatusDAO extends DynamoDBDAO{
-    private static final String PARTITION_USER_ALIAS = "alias";
-    private static final String TIME_MILLIS = "time_millis";
     private static final String AUTHOR = "author";
     private static final String POST = "post";
     private static final String URLS = "urls";
@@ -33,8 +31,7 @@ public class DynamoDBStatusDAO extends DynamoDBDAO{
     private final String TABLE_NAME;
     private final Table table;
 
-    public DynamoDBStatusDAO(DAOFactory factory, LambdaLogger logger, String tableName){
-        super(factory, logger);
+    public DynamoDBStatusDAO(String tableName){
         TABLE_NAME = tableName;
         table = getTable(TABLE_NAME);
     }
@@ -49,10 +46,10 @@ public class DynamoDBStatusDAO extends DynamoDBDAO{
         return statusFormat.format(date);
     }
 
-    protected List<Status> doQuery(String alias, int pageSize, Status lastStatus){
+    protected Pair<List<Status>, Boolean> doQuery(String alias, int pageSize, Status lastStatus){
         try {
             HashMap<String, String> nameMap = new HashMap<>();
-            nameMap.put("#f", PARTITION_USER_ALIAS);
+            nameMap.put("#f", USER_ALIAS);
 
             HashMap<String, Object> valueMap = new HashMap<>();
             valueMap.put(":ffff", alias);
@@ -61,30 +58,32 @@ public class DynamoDBStatusDAO extends DynamoDBDAO{
                     .withNameMap(nameMap).withValueMap(valueMap).withScanIndexForward(false)
                     .withMaxResultSize(pageSize);
             if (lastStatus != null) {
-                spec = spec.withExclusiveStartKey(PARTITION_USER_ALIAS, alias,
+                spec = spec.withExclusiveStartKey(USER_ALIAS, alias,
                         TIME_MILLIS, toTimeMillis(lastStatus.getDatetime()));
             }
 
             ItemCollection<QueryOutcome> items = table.query(spec);
             List<Status> statuses = new ArrayList<>();
 
-            UserDAO userDao = factory.getUserDAO();
+            Table userTable = getTable(USER_TABLE);
             for (Item item: items){
+                Item userItem = userTable.getItem(USER_ALIAS, item.getString(AUTHOR));
+                
                 statuses.add(new Status(item.getString(POST),
-                        userDao.getUser(item.getString(AUTHOR)),
+                        itemToUser(userItem),
                         formatDateTime(item.getLong(TIME_MILLIS)),
                         item.getList(URLS), item.getList(MENTIONS)));
             }
 
-            return statuses;
+            return new Pair<>(statuses, statuses.size() == pageSize);
         } catch (Exception e){
-            logger.log(e.getMessage());
+            System.out.println(e.getMessage());
             throw new DataAccessException("Could not get Feed");
         }
     }
 
     private Item getItem(Status status, String userAlias) throws ParseException {
-        return new Item().withPrimaryKey(PARTITION_USER_ALIAS, userAlias,
+        return new Item().withPrimaryKey(USER_ALIAS, userAlias,
                 TIME_MILLIS, toTimeMillis(status.getDatetime()))
                 .withString(AUTHOR, status.getUser().getAlias())
                 .withString(POST, status.getPost())
@@ -112,7 +111,7 @@ public class DynamoDBStatusDAO extends DynamoDBDAO{
             }
 
         } catch (Exception e){
-            logger.log(e.getMessage());
+            System.out.println(e.getMessage());
             throw new DataAccessException("Could not post Status");
         }
     }

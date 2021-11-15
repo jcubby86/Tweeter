@@ -8,6 +8,6 @@ import edu.byu.cs.tweeter.model.net.response.PostStatusResponse;
 public class PostStatusHandler extends Handler<PostStatusRequest, PostStatusResponse> {
     @Override
     public PostStatusResponse handleRequest(PostStatusRequest input, Context context) {
-        return getStatusService(context.getLogger()).postStatus(input);
+        return getStatusService().postStatus(input);
     }
 }

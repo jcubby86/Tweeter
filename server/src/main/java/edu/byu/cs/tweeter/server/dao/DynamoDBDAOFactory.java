@@ -1,37 +1,29 @@
 package edu.byu.cs.tweeter.server.dao;
 
-import com.amazonaws.services.lambda.runtime.LambdaLogger;
-
 public class DynamoDBDAOFactory implements DAOFactory {
-
-    private final LambdaLogger logger;
-
-    public DynamoDBDAOFactory(LambdaLogger logger) {
-        this.logger = logger;
-    }
 
     @Override
     public AuthDAO getAuthDAO() {
-        return new DynamoDBAuthDAO(this, logger);
+        return new DynamoDBAuthDAO();
     }
 
     @Override
     public FeedDAO getFeedDAO() {
-        return new DynamoDBFeedDAO(this, logger);
+        return new DynamoDBFeedDAO();
     }
 
     @Override
     public FollowDAO getFollowDAO() {
-        return new DynamoDBFollowDAO(this, logger);
+        return new DynamoDBFollowDAO();
     }
 
     @Override
     public StoryDAO getStoryDAO() {
-        return new DynamoDBStoryDAO(this, logger);
+        return new DynamoDBStoryDAO();
     }
 
     @Override
     public UserDAO getUserDAO() {
-        return new DynamoDBUserDAO(this, logger);
+        return new DynamoDBUserDAO();
     }
 }

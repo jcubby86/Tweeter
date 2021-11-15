@@ -8,6 +8,6 @@ import edu.byu.cs.tweeter.model.net.response.GetStoryResponse;
 public class GetStoryHandler extends Handler<GetStoryRequest, GetStoryResponse> {
     @Override
     public GetStoryResponse handleRequest(GetStoryRequest input, Context context) {
-        return getStatusService(context.getLogger()).getStory(input);
+        return getStatusService().getStory(input);
     }
 }

@@ -9,17 +9,14 @@ import edu.byu.cs.tweeter.server.dao.FeedDAO;
 import edu.byu.cs.tweeter.server.dao.FollowDAO;
 import edu.byu.cs.tweeter.server.dao.StoryDAO;
 import edu.byu.cs.tweeter.server.dao.UserDAO;
-import edu.byu.cs.tweeter.server.util.Pair;
 
 public abstract class Service {
     protected static final String NOT_AUTHORIZED = "User not authorized";
 
-    protected final LambdaLogger logger;
     private final DAOFactory daoFactory;
 
-    public Service(DAOFactory daoFactory, LambdaLogger logger){
+    public Service(DAOFactory daoFactory){
         this.daoFactory = daoFactory;
-        this.logger = logger;
     }
 
     protected FollowDAO getFollowDAO() {
@@ -44,6 +41,6 @@ public abstract class Service {
     }
 
     protected void logUnauthorized(AuthorizedRequest request) {
-        logger.log(NOT_AUTHORIZED + ": " + request.getAuthToken().getUserAlias());
+        System.out.println(NOT_AUTHORIZED + ": " + request.getAuthToken().getUserAlias());
     }
 }

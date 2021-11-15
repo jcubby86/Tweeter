@@ -2,7 +2,8 @@ package edu.byu.cs.tweeter.server.dao;
 
 import com.amazonaws.services.dynamodbv2.document.Item;
 import com.amazonaws.services.dynamodbv2.document.Table;
-import com.amazonaws.services.lambda.runtime.LambdaLogger;
+import com.amazonaws.services.dynamodbv2.document.spec.UpdateItemSpec;
+import com.amazonaws.services.dynamodbv2.document.utils.ValueMap;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.ObjectMetadata;
@@ -14,31 +15,27 @@ import java.util.Base64;
 import java.util.List;
 
 import edu.byu.cs.tweeter.model.domain.User;
+import edu.byu.cs.tweeter.model.net.request.FollowRequest;
 import edu.byu.cs.tweeter.model.net.request.LoginRequest;
 import edu.byu.cs.tweeter.model.net.request.RegisterRequest;
+import edu.byu.cs.tweeter.model.net.request.UnfollowRequest;
 import edu.byu.cs.tweeter.server.security.PasswordEncryptor;
 import edu.byu.cs.tweeter.server.util.Pair;
 
 public class DynamoDBUserDAO extends DynamoDBDAO implements UserDAO {
-    private static final String TABLE_NAME = "users";
-    private static final String PARTITION_ALIAS = "alias";
-    private static final String FIRST_NAME = "first_name";
-    private static final String LAST_NAME = "last_name";
-    private static final String IMAGE_URL = "image_url";
     private static final String PASSWORD = "password";
+    private static final String FOLLOWER_COUNT = "follower_count";
+    private static final String FOLLOWING_COUNT = "following_count";
+
 
     private static final String S3_URL = "https://s3.us-west-2.amazonaws.com/";
     private static final String S3_BUCKET = "jacob-bastian.tweeter";
     private static final String IMAGE_SUFFIX = "profile.png";
 
-    private final Table table = getTable(TABLE_NAME);
-
-    public DynamoDBUserDAO(DAOFactory factory, LambdaLogger logger) {
-        super(factory, logger);
-    }
+    private final Table table = getTable(USER_TABLE);
 
     private void putUser(User user, String password) {
-        table.putItem(new Item().withPrimaryKey(PARTITION_ALIAS, user.getAlias())
+        table.putItem(new Item().withPrimaryKey(USER_ALIAS, user.getAlias())
                 .withString(FIRST_NAME, user.getFirstName())
                 .withString(LAST_NAME, user.getLastName())
                 .withString(IMAGE_URL, user.getImageUrl())
@@ -50,13 +47,13 @@ public class DynamoDBUserDAO extends DynamoDBDAO implements UserDAO {
         try {
             return itemToUser(getItem(alias));
         } catch (Exception e){
-            logger.log(e.getMessage());
+            System.out.println(e.getMessage());
             throw new DataAccessException("Could not get user");
         }
     }
 
     private Item getItem(String alias){
-        return table.getItem(PARTITION_ALIAS, alias);
+        return table.getItem(USER_ALIAS, alias);
     }
 
     @Override
@@ -69,7 +66,7 @@ public class DynamoDBUserDAO extends DynamoDBDAO implements UserDAO {
             return users;
 
         } catch (Exception e){
-            logger.log(e.getMessage());
+            System.out.println(e.getMessage());
             throw new DataAccessException("Could not get users");
         }
     }
@@ -81,7 +78,7 @@ public class DynamoDBUserDAO extends DynamoDBDAO implements UserDAO {
             boolean success = PasswordEncryptor.validatePassword(request.getPassword(), item.getString(PASSWORD));
             return new Pair<>(itemToUser(item), success);
         } catch (Exception e) {
-            logger.log(e.getMessage());
+            System.out.println(e.getMessage());
             throw new DataAccessException("Could not login user");
         }
 
@@ -102,7 +99,7 @@ public class DynamoDBUserDAO extends DynamoDBDAO implements UserDAO {
             putUser(user, hashedPass);
             return new Pair<>(user, true);
         } catch (Exception e) {
-            logger.log(e.getMessage());
+            System.out.println(e.getMessage());
             throw new DataAccessException("Could not register user");
         }
     }
@@ -121,11 +118,28 @@ public class DynamoDBUserDAO extends DynamoDBDAO implements UserDAO {
         return S3_URL + S3_BUCKET + "/" + request.getAlias() + IMAGE_SUFFIX;
     }
 
-    private User itemToUser(Item item){
-        return new User(item.getString(FIRST_NAME),
-                item.getString(LAST_NAME),
-                item.getString(PARTITION_ALIAS),
-                item.getString(IMAGE_URL));
+    private void updateItem(String userAlias, String column, int change) throws DataAccessException {
+        try{
+            Item item = getItem(userAlias);
+            UpdateItemSpec spec = new UpdateItemSpec().withPrimaryKey(USER_ALIAS, userAlias)
+                    .withUpdateExpression("set " + column + " = :a")
+                    .withValueMap(new ValueMap().withInt(":a", item.getInt(column) + change));
+            table.updateItem(spec);
+        } catch (Exception e){
+            throw new DataAccessException("Could not update Item");
+        }
+    }
+
+    @Override
+    public void follow(FollowRequest request) {
+        updateItem(request.getFolloweeAlias(), FOLLOWER_COUNT, 1);
+        updateItem(request.getFollowerAlias(), FOLLOWING_COUNT, 1);
+    }
+
+    @Override
+    public void unfollow(UnfollowRequest request) {
+        updateItem(request.getFolloweeAlias(), FOLLOWER_COUNT, -1);
+        updateItem(request.getFollowerAlias(), FOLLOWING_COUNT, -1);
     }
 
 }

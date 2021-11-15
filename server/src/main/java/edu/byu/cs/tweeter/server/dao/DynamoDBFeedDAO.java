@@ -1,26 +1,23 @@
 package edu.byu.cs.tweeter.server.dao;
 
-import com.amazonaws.services.lambda.runtime.LambdaLogger;
-
 import java.util.List;
 
 import edu.byu.cs.tweeter.model.domain.Status;
+import edu.byu.cs.tweeter.server.util.Pair;
 
 public class DynamoDBFeedDAO extends DynamoDBStatusDAO implements FeedDAO{
-    private static final String TABLE_NAME = "feed";
 
-    public DynamoDBFeedDAO(DAOFactory factory, LambdaLogger logger) {
-        super(factory, logger, TABLE_NAME);
+    public DynamoDBFeedDAO() {
+        super(FEED_TABLE);
     }
 
     @Override
-    public List<Status> getFeed(String alias, int pageSize, Status lastStatus) {
+    public Pair<List<Status>, Boolean> getFeed(String alias, int pageSize, Status lastStatus) {
         return doQuery(alias, pageSize, lastStatus);
     }
 
     @Override
-    public void postToFollowers(Status status) {
-        List<String> followers = factory.getFollowDAO().getFollowers(status.getUser().getAlias());
+    public void postToFollowers(Status status, List<String> followers) {
         if (followers.size() > 0) {
             doWrite(status, followers);
         }

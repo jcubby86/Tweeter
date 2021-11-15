@@ -8,6 +8,6 @@ import edu.byu.cs.tweeter.model.net.response.UnfollowResponse;
 public class UnfollowHandler extends Handler<UnfollowRequest, UnfollowResponse> {
     @Override
     public UnfollowResponse handleRequest(UnfollowRequest input, Context context) {
-        return getFollowService(context.getLogger()).unfollow(input);
+        return getFollowService().unfollow(input);
     }
 }

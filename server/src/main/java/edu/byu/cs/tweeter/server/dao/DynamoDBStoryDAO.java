@@ -1,21 +1,19 @@
 package edu.byu.cs.tweeter.server.dao;
 
-import com.amazonaws.services.lambda.runtime.LambdaLogger;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import edu.byu.cs.tweeter.model.domain.Status;
+import edu.byu.cs.tweeter.server.util.Pair;
 
 public class DynamoDBStoryDAO extends DynamoDBStatusDAO implements StoryDAO{
-    private static final String TABLE_NAME = "story";
 
-    public DynamoDBStoryDAO(DAOFactory factory, LambdaLogger logger) {
-        super(factory, logger, TABLE_NAME);
+    public DynamoDBStoryDAO() {
+        super(STORY_TABLE);
     }
 
     @Override
-    public List<Status> getStory(String alias, int pageSize, Status lastStatus) {
+    public Pair<List<Status>, Boolean> getStory(String alias, int pageSize, Status lastStatus) {
         return doQuery(alias, pageSize, lastStatus);
     }
 

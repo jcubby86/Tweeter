@@ -8,27 +8,7 @@ import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 
 public class PasswordEncryptor {
-    public static void main(String[] args) throws NoSuchAlgorithmException, InvalidKeySpecException
-    {
-        // Given at register
-        String  registerPassword = "password";
-        // Store this in database
-        String generatedSecuredPasswordHash = generateStrongPasswordHash(registerPassword);
-        System.out.println("Generated Password: " + generatedSecuredPasswordHash);
-
-        // Given at login
-        String loginPassword = "password";
-        boolean matched = validatePassword(loginPassword, generatedSecuredPasswordHash);
-        System.out.println("Passwords Match: " + matched);
-
-        // Given at login
-        String incorrectLoginPassword = "basPassword";
-        matched = validatePassword(incorrectLoginPassword, generatedSecuredPasswordHash);
-        System.out.println("Passwords Match: " + matched);
-    }
-
-    public static boolean validatePassword(String originalPassword, String storedPassword) throws NoSuchAlgorithmException, InvalidKeySpecException
-    {
+    public static boolean validatePassword(String originalPassword, String storedPassword) throws NoSuchAlgorithmException, InvalidKeySpecException {
         String[] parts = storedPassword.split(":");
         int iterations = Integer.parseInt(parts[0]);
         byte[] salt = fromHex(parts[1]);
@@ -45,8 +25,7 @@ public class PasswordEncryptor {
         }
         return diff == 0;
     }
-    private static byte[] fromHex(String hex) throws NoSuchAlgorithmException
-    {
+    private static byte[] fromHex(String hex) {
         byte[] bytes = new byte[hex.length() / 2];
         for(int i = 0; i<bytes.length ;i++)
         {
@@ -55,8 +34,7 @@ public class PasswordEncryptor {
         return bytes;
     }
 
-    public static String generateStrongPasswordHash(String password) throws NoSuchAlgorithmException, InvalidKeySpecException
-    {
+    public static String generateStrongPasswordHash(String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
         int iterations = 1000;
         char[] chars = password.toCharArray();
         byte[] salt = getSalt();
@@ -75,8 +53,7 @@ public class PasswordEncryptor {
         return salt;
     }
 
-    private static String toHex(byte[] array) throws NoSuchAlgorithmException
-    {
+    private static String toHex(byte[] array) {
         BigInteger bi = new BigInteger(1, array);
         String hex = bi.toString(16);
         int paddingLength = (array.length * 2) - hex.length();

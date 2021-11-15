@@ -12,18 +12,19 @@ import edu.byu.cs.tweeter.model.net.response.GetFeedResponse;
 import edu.byu.cs.tweeter.model.net.response.GetStoryResponse;
 import edu.byu.cs.tweeter.model.net.response.PostStatusResponse;
 import edu.byu.cs.tweeter.server.dao.DAOFactory;
+import edu.byu.cs.tweeter.server.util.Pair;
 
 public class StatusService extends Service{
 
-    public StatusService(DAOFactory daoFactory, LambdaLogger logger) {
-        super(daoFactory, logger);
+    public StatusService(DAOFactory daoFactory) {
+        super(daoFactory);
     }
 
     public GetStoryResponse getStory(GetStoryRequest request){
         if (isAuthorized(request)) {
-            List<Status> statuses = getStoryDAO().getStory(request.getTargetUserAlias(), request.getLimit(), request.getLastItem());
-            logger.log("Story retrieved for user: " + request.getTargetUserAlias());
-            return new GetStoryResponse(statuses, statuses.size() > 0);
+            Pair<List<Status>, Boolean> data = getStoryDAO().getStory(request.getTargetUserAlias(), request.getLimit(), request.getLastItem());
+            System.out.println("Story retrieved for user: " + request.getTargetUserAlias());
+            return new GetStoryResponse(data.getFirst(), data.getSecond());
         } else {
             logUnauthorized(request);
             return new GetStoryResponse(NOT_AUTHORIZED);
@@ -32,9 +33,9 @@ public class StatusService extends Service{
 
     public GetFeedResponse getFeed(GetFeedRequest request){
         if (isAuthorized(request)) {
-            List<Status> statuses = getFeedDAO().getFeed(request.getTargetUserAlias(), request.getLimit(), request.getLastItem());
-            logger.log("Feed retrieved for user: " + request.getTargetUserAlias());
-            return new GetFeedResponse(statuses, statuses.size() > 0);
+            Pair<List<Status>, Boolean> data = getFeedDAO().getFeed(request.getTargetUserAlias(), request.getLimit(), request.getLastItem());
+            System.out.println("Feed retrieved for user: " + request.getTargetUserAlias());
+            return new GetFeedResponse(data.getFirst(), data.getSecond());
         } else {
             logUnauthorized(request);
             return new GetFeedResponse(NOT_AUTHORIZED);
@@ -43,9 +44,10 @@ public class StatusService extends Service{
 
     public PostStatusResponse postStatus(PostStatusRequest request) {
         if (isAuthorized(request)) {
-            getFeedDAO().postToFollowers(request.getStatus());
+            List<String> followers = getFollowDAO().getFollowers(request.getAuthToken().getUserAlias());
+            getFeedDAO().postToFollowers(request.getStatus(), followers);
             getStoryDAO().postToStories(request.getStatus());
-            logger.log("Status posted by user: " + request.getStatus().getUser().getAlias());
+            System.out.println("Status posted by user: " + request.getStatus().getUser().getAlias());
             return new PostStatusResponse();
         } else {
             logUnauthorized(request);
