@@ -5,6 +5,7 @@ import com.amazonaws.services.dynamodbv2.document.ItemCollection;
 import com.amazonaws.services.dynamodbv2.document.QueryOutcome;
 import com.amazonaws.services.dynamodbv2.document.Table;
 import com.amazonaws.services.dynamodbv2.document.spec.QuerySpec;
+import com.amazonaws.services.lambda.runtime.LambdaLogger;
 
 import java.util.HashMap;
 
@@ -20,8 +21,8 @@ public class DynamoDBAuthDAO extends DynamoDBDAO implements AuthDAO {
 
     private final Table table = getTable(TABLE_NAME);
 
-    public DynamoDBAuthDAO(DAOFactory factory) {
-        super(factory);
+    public DynamoDBAuthDAO(DAOFactory factory, LambdaLogger logger) {
+        super(factory, logger);
     }
 
     @Override
@@ -31,6 +32,7 @@ public class DynamoDBAuthDAO extends DynamoDBDAO implements AuthDAO {
             return item != null &&
                     System.currentTimeMillis() - item.getLong(TIME_MILLIS) < EXPIRE_TIME;
         } catch (Exception e){
+            logger.log(e.getMessage());
             throw new DataAccessException("Unable to verify authentication of user");
         }
     }
@@ -44,6 +46,7 @@ public class DynamoDBAuthDAO extends DynamoDBDAO implements AuthDAO {
             putToken(authToken);
             return authToken;
         } catch (Exception e){
+            logger.log(e.getMessage());
             throw new DataAccessException("Unable to authenticate user");
         }
     }
@@ -60,6 +63,7 @@ public class DynamoDBAuthDAO extends DynamoDBDAO implements AuthDAO {
         try{
             table.deleteItem(PARTITION_AUTH_KEY, token);
         }catch (Exception e){
+            logger.log(e.getMessage());
             throw new DataAccessException("Unable to Logout");
         }
     }

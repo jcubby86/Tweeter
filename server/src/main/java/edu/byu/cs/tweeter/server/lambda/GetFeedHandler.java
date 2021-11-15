@@ -8,6 +8,6 @@ import edu.byu.cs.tweeter.model.net.response.GetFeedResponse;
 public class GetFeedHandler extends Handler<GetFeedRequest, GetFeedResponse> {
     @Override
     public GetFeedResponse handleRequest(GetFeedRequest input, Context context) {
-        return getStatusService().getFeed(input);
+        return getStatusService(context.getLogger()).getFeed(input);
     }
 }

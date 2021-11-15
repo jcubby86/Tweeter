@@ -8,6 +8,6 @@ import edu.byu.cs.tweeter.model.net.response.GetUserResponse;
 public class GetUserHandler extends Handler<GetUserRequest, GetUserResponse> {
     @Override
     public GetUserResponse handleRequest(GetUserRequest input, Context context) {
-        return getUserService().getUser(input);
+        return getUserService(context.getLogger()).getUser(input);
     }
 }

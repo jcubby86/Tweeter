@@ -8,6 +8,6 @@ import edu.byu.cs.tweeter.model.net.response.LogoutResponse;
 public class LogoutHandler extends Handler<LogoutRequest, LogoutResponse>{
     @Override
     public LogoutResponse handleRequest(LogoutRequest input, Context context) {
-        return getUserService().logout(input);
+        return getUserService(context.getLogger()).logout(input);
     }
 }

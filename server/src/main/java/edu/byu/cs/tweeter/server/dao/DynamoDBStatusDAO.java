@@ -7,6 +7,7 @@ import com.amazonaws.services.dynamodbv2.document.QueryOutcome;
 import com.amazonaws.services.dynamodbv2.document.Table;
 import com.amazonaws.services.dynamodbv2.document.TableWriteItems;
 import com.amazonaws.services.dynamodbv2.document.spec.QuerySpec;
+import com.amazonaws.services.lambda.runtime.LambdaLogger;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -32,8 +33,8 @@ public class DynamoDBStatusDAO extends DynamoDBDAO{
     private final String TABLE_NAME;
     private final Table table;
 
-    public DynamoDBStatusDAO(DAOFactory factory, String tableName){
-        super(factory);
+    public DynamoDBStatusDAO(DAOFactory factory, LambdaLogger logger, String tableName){
+        super(factory, logger);
         TABLE_NAME = tableName;
         table = getTable(TABLE_NAME);
     }
@@ -77,6 +78,7 @@ public class DynamoDBStatusDAO extends DynamoDBDAO{
 
             return statuses;
         } catch (Exception e){
+            logger.log(e.getMessage());
             throw new DataAccessException("Could not get Feed");
         }
     }
@@ -110,6 +112,7 @@ public class DynamoDBStatusDAO extends DynamoDBDAO{
             }
 
         } catch (Exception e){
+            logger.log(e.getMessage());
             throw new DataAccessException("Could not post Status");
         }
     }

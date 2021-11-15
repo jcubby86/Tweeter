@@ -1,5 +1,7 @@
 package edu.byu.cs.tweeter.server.dao;
 
+import com.amazonaws.services.lambda.runtime.LambdaLogger;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,8 +10,8 @@ import edu.byu.cs.tweeter.model.domain.Status;
 public class DynamoDBStoryDAO extends DynamoDBStatusDAO implements StoryDAO{
     private static final String TABLE_NAME = "story";
 
-    public DynamoDBStoryDAO(DAOFactory factory) {
-        super(factory, TABLE_NAME);
+    public DynamoDBStoryDAO(DAOFactory factory, LambdaLogger logger) {
+        super(factory, logger, TABLE_NAME);
     }
 
     @Override

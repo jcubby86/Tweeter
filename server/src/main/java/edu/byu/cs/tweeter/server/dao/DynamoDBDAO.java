@@ -4,12 +4,14 @@ import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import com.amazonaws.services.dynamodbv2.document.DynamoDB;
 import com.amazonaws.services.dynamodbv2.document.Table;
+import com.amazonaws.services.lambda.runtime.LambdaLogger;
 
 public class DynamoDBDAO {
     private static final AmazonDynamoDB client;
     private static final DynamoDB dynamoDB;
 
     protected final DAOFactory factory;
+    protected final LambdaLogger logger;
 
     static {
         try {
@@ -20,8 +22,9 @@ public class DynamoDBDAO {
         }
     }
 
-    public DynamoDBDAO(DAOFactory factory) {
+    public DynamoDBDAO(DAOFactory factory, LambdaLogger logger) {
         this.factory = factory;
+        this.logger = logger;
     }
 
     protected static DynamoDB getDynamoDB() {

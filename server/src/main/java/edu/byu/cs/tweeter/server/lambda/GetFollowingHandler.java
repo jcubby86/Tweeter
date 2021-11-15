@@ -9,6 +9,6 @@ public class GetFollowingHandler extends Handler<GetFollowingRequest, GetFollowi
 
     @Override
     public GetFollowingResponse handleRequest(GetFollowingRequest input, Context context) {
-        return getFollowService().getFollowing(input);
+        return getFollowService(context.getLogger()).getFollowing(input);
     }
 }

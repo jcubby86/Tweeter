@@ -8,6 +8,6 @@ import edu.byu.cs.tweeter.model.net.response.GetFollowersResponse;
 public class GetFollowersHandler extends Handler<GetFollowersRequest, GetFollowersResponse> {
     @Override
     public GetFollowersResponse handleRequest(GetFollowersRequest input, Context context) {
-        return getFollowService().getFollowers(input);
+        return getFollowService(context.getLogger()).getFollowers(input);
     }
 }

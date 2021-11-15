@@ -5,6 +5,7 @@ import com.amazonaws.services.dynamodbv2.document.ItemCollection;
 import com.amazonaws.services.dynamodbv2.document.QueryOutcome;
 import com.amazonaws.services.dynamodbv2.document.Table;
 import com.amazonaws.services.dynamodbv2.document.spec.QuerySpec;
+import com.amazonaws.services.lambda.runtime.LambdaLogger;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,8 +22,8 @@ public class DynamoDBFollowDAO extends DynamoDBDAO implements FollowDAO {
 
     private final Table table = getTable(TABLE_NAME);
 
-    public DynamoDBFollowDAO(DAOFactory factory) {
-        super(factory);
+    public DynamoDBFollowDAO(DAOFactory factory, LambdaLogger logger) {
+        super(factory, logger);
     }
 
     private QuerySpec getFollowingSpec(String follower_handle){
@@ -52,6 +53,7 @@ public class DynamoDBFollowDAO extends DynamoDBDAO implements FollowDAO {
 
             return factory.getUserDAO().getUserList(followingAliases);
         } catch (Exception e){
+            logger.log(e.getMessage());
             throw new DataAccessException("Could not retrieve following");
         }
     }
@@ -83,6 +85,7 @@ public class DynamoDBFollowDAO extends DynamoDBDAO implements FollowDAO {
 
             return factory.getUserDAO().getUserList(followerAliases);
         } catch (Exception e){
+            logger.log(e.getMessage());
             throw new DataAccessException("Could not retrieve followers");
         }
     }
@@ -111,6 +114,7 @@ public class DynamoDBFollowDAO extends DynamoDBDAO implements FollowDAO {
 
             return new Pair<>(followers.size(), following.size());
         } catch (Exception e){
+            logger.log(e.getMessage());
             throw new DataAccessException("Could not get counts");
         }
     }
@@ -119,6 +123,7 @@ public class DynamoDBFollowDAO extends DynamoDBDAO implements FollowDAO {
         try {
             table.putItem(new Item().withPrimaryKey(FOLLOWER_HANDLE, follower_handle, FOLLOWEE_HANDLE, followee_handle));
         } catch (Exception e){
+            logger.log(e.getMessage());
             throw new DataAccessException("Could not put Item");
         }
     }
@@ -127,6 +132,7 @@ public class DynamoDBFollowDAO extends DynamoDBDAO implements FollowDAO {
         try{
             table.deleteItem(FOLLOWER_HANDLE, follower_handle, FOLLOWEE_HANDLE, followee_handle);
         }catch (Exception e){
+            logger.log(e.getMessage());
             throw new DataAccessException("Could not delete Item");
         }
     }
@@ -136,6 +142,7 @@ public class DynamoDBFollowDAO extends DynamoDBDAO implements FollowDAO {
         try{
             return table.getItem(FOLLOWER_HANDLE, follower_handle, FOLLOWEE_HANDLE, followee_handle) != null;
         }catch (Exception e){
+            logger.log(e.getMessage());
             throw new DataAccessException("Could not determine following relationship");
         }
     }

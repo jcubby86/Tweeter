@@ -1,5 +1,7 @@
 package edu.byu.cs.tweeter.server.service;
 
+import com.amazonaws.services.lambda.runtime.LambdaLogger;
+
 import java.util.List;
 
 import edu.byu.cs.tweeter.model.domain.User;
@@ -21,61 +23,77 @@ import edu.byu.cs.tweeter.server.util.Pair;
 
 public class FollowService extends Service{
 
-    public FollowService(DAOFactory daoFactory) {
-        super(daoFactory);
+    public FollowService(DAOFactory daoFactory, LambdaLogger logger) {
+        super(daoFactory, logger);
     }
 
     public GetFollowingResponse getFollowing(GetFollowingRequest request) {
-        request.checkRequest();
-        if (!getAuthDAO().isAuthorized(request.getAuthToken()))
-            return new GetFollowingResponse("User not authorized");
-        String last = request.getLastItem() == null ? null : request.getLastItem().getAlias();
-        List<User> users = getFollowDAO().getFollowingPaged(request.getTargetUserAlias(),
-                request.getLimit(), last);
-
-        return new GetFollowingResponse(users, users.size() > 0);
+        if (isAuthorized(request)) {
+            String last = request.getLastItem() == null ? null : request.getLastItem().getAlias();
+            List<User> users = getFollowDAO().getFollowingPaged(request.getTargetUserAlias(),
+                    request.getLimit(), last);
+            logger.log("Retrieved following for " + request.getTargetUserAlias());
+            return new GetFollowingResponse(users, users.size() > 0);
+        } else {
+            logUnauthorized(request);
+            return new GetFollowingResponse(NOT_AUTHORIZED);
+        }
     }
 
     public GetFollowersResponse getFollowers(GetFollowersRequest request){
-        request.checkRequest();
-        if (!getAuthDAO().isAuthorized(request.getAuthToken()))
-            return new GetFollowersResponse("User not authorized");
-        String last = request.getLastItem() == null ? null : request.getLastItem().getAlias();
-        List<User> users = getFollowDAO().getFollowersPaged(request.getTargetUserAlias(),
-                request.getLimit(), last);
-
-        return new GetFollowersResponse(users, users.size() > 0);
+        if (isAuthorized(request)) {
+            String last = request.getLastItem() == null ? null : request.getLastItem().getAlias();
+            List<User> users = getFollowDAO().getFollowersPaged(request.getTargetUserAlias(),
+                    request.getLimit(), last);
+            logger.log("Retrieved followers for " + request.getTargetUserAlias());
+            return new GetFollowersResponse(users, users.size() > 0);
+        } else {
+            logUnauthorized(request);
+            return new GetFollowersResponse(NOT_AUTHORIZED);
+        }
     }
 
     public IsFollowerResponse isFollower(IsFollowerRequest request) {
-        request.checkRequest();
-        if (!getAuthDAO().isAuthorized(request.getAuthToken()))
-            return new IsFollowerResponse("User not authorized");
-        return new IsFollowerResponse(getFollowDAO().isFollower(request.getFollower(), request.getFollowee()));
+        if (isAuthorized(request)) {
+            logger.log("Checking if " + request.getFollower() + "is following " + request.getFollowee());
+            return new IsFollowerResponse(getFollowDAO().isFollower(request.getFollower(), request.getFollowee()));
+        } else {
+            logUnauthorized(request);
+            return new IsFollowerResponse(NOT_AUTHORIZED);
+        }
     }
 
     public FollowResponse follow(FollowRequest request) {
-        request.checkRequest();
-        if (!getAuthDAO().isAuthorized(request.getAuthToken()))
-            return new FollowResponse("User not authorized");
-        getFollowDAO().putItem(request.getFollowerAlias(), request.getFolloweeAlias());
-        return new FollowResponse();
+        if (isAuthorized(request)) {
+            getFollowDAO().putItem(request.getFollowerAlias(), request.getFolloweeAlias());
+            logger.log(request.getFollowerAlias() + " following " + request.getFolloweeAlias());
+            return new FollowResponse();
+        } else {
+            logUnauthorized(request);
+            return new FollowResponse(NOT_AUTHORIZED);
+        }
     }
 
     public UnfollowResponse unfollow(UnfollowRequest request) {
-        request.checkRequest();
-        if (!getAuthDAO().isAuthorized(request.getAuthToken()))
-            return new UnfollowResponse("User not authorized");
-        getFollowDAO().deleteItem(request.getFollowerAlias(), request.getFolloweeAlias());
-        return new UnfollowResponse();
+        if (isAuthorized(request)) {
+            getFollowDAO().deleteItem(request.getFollowerAlias(), request.getFolloweeAlias());
+            logger.log(request.getFollowerAlias() + " unfollowing " + request.getFolloweeAlias());
+            return new UnfollowResponse();
+        } else {
+            logUnauthorized(request);
+            return new UnfollowResponse(NOT_AUTHORIZED);
+        }
     }
 
     public GetCountResponse getCount(GetCountRequest request) {
-        request.checkRequest();
-        if (!getAuthDAO().isAuthorized(request.getAuthToken()))
-            return new GetCountResponse("User not authorized");
-        Pair<Integer, Integer> data = getFollowDAO().getCount(request.getTargetUserAlias());
-        return new GetCountResponse(data.getFirst(), data.getSecond());
+        if (isAuthorized(request)) {
+            Pair<Integer, Integer> data = getFollowDAO().getCount(request.getTargetUserAlias());
+            logger.log("Getting counts for " + request.getTargetUserAlias());
+            return new GetCountResponse(data.getFirst(), data.getSecond());
+        } else {
+            logUnauthorized(request);
+            return new GetCountResponse(NOT_AUTHORIZED);
+        }
     }
 
 }

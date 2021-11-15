@@ -8,6 +8,6 @@ import edu.byu.cs.tweeter.model.net.response.RegisterResponse;
 public class RegisterHandler extends Handler<RegisterRequest, RegisterResponse> {
     @Override
     public RegisterResponse handleRequest(RegisterRequest input, Context context) {
-        return getUserService().register(input);
+        return getUserService(context.getLogger()).register(input);
     }
 }

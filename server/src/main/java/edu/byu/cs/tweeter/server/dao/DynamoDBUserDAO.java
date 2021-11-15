@@ -2,6 +2,7 @@ package edu.byu.cs.tweeter.server.dao;
 
 import com.amazonaws.services.dynamodbv2.document.Item;
 import com.amazonaws.services.dynamodbv2.document.Table;
+import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.ObjectMetadata;
@@ -32,8 +33,8 @@ public class DynamoDBUserDAO extends DynamoDBDAO implements UserDAO {
 
     private final Table table = getTable(TABLE_NAME);
 
-    public DynamoDBUserDAO(DAOFactory factory) {
-        super(factory);
+    public DynamoDBUserDAO(DAOFactory factory, LambdaLogger logger) {
+        super(factory, logger);
     }
 
     private void putUser(User user, String password) {
@@ -49,6 +50,7 @@ public class DynamoDBUserDAO extends DynamoDBDAO implements UserDAO {
         try {
             return itemToUser(getItem(alias));
         } catch (Exception e){
+            logger.log(e.getMessage());
             throw new DataAccessException("Could not get user");
         }
     }
@@ -67,6 +69,7 @@ public class DynamoDBUserDAO extends DynamoDBDAO implements UserDAO {
             return users;
 
         } catch (Exception e){
+            logger.log(e.getMessage());
             throw new DataAccessException("Could not get users");
         }
     }
@@ -78,6 +81,7 @@ public class DynamoDBUserDAO extends DynamoDBDAO implements UserDAO {
             boolean success = PasswordEncryptor.validatePassword(request.getPassword(), item.getString(PASSWORD));
             return new Pair<>(itemToUser(item), success);
         } catch (Exception e) {
+            logger.log(e.getMessage());
             throw new DataAccessException("Could not login user");
         }
 
@@ -98,6 +102,7 @@ public class DynamoDBUserDAO extends DynamoDBDAO implements UserDAO {
             putUser(user, hashedPass);
             return new Pair<>(user, true);
         } catch (Exception e) {
+            logger.log(e.getMessage());
             throw new DataAccessException("Could not register user");
         }
     }

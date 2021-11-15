@@ -8,6 +8,6 @@ import edu.byu.cs.tweeter.model.net.response.IsFollowerResponse;
 public class IsFollowerHandler extends Handler<IsFollowerRequest, IsFollowerResponse> {
     @Override
     public IsFollowerResponse handleRequest(IsFollowerRequest input, Context context) {
-        return getFollowService().isFollower(input);
+        return getFollowService(context.getLogger()).isFollower(input);
     }
 }

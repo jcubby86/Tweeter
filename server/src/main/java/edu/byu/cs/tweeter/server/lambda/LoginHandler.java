@@ -12,7 +12,7 @@ import edu.byu.cs.tweeter.model.net.response.LoginResponse;
 public class LoginHandler extends Handler<LoginRequest, LoginResponse> {
     @Override
     public LoginResponse handleRequest(LoginRequest input, Context context) {
-        return getUserService().login(input);
+        return getUserService(context.getLogger()).login(input);
     }
 
 }
