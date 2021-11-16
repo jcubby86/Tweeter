@@ -12,9 +12,7 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
-import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
-import edu.byu.cs.tweeter.model.net.request.FollowRequest;
 import edu.byu.cs.tweeter.model.net.request.GetUserRequest;
 import edu.byu.cs.tweeter.model.net.request.LoginRequest;
 import edu.byu.cs.tweeter.model.net.request.RegisterRequest;
@@ -121,11 +119,5 @@ public class DynamoDBUserDAO extends DynamoDBDAO implements UserDAO {
         }
     }
 
-    public static void main(String[] args){
-        AuthToken token = new DynamoDBAuthDAO().getAuthToken("@newguy");
-        FollowRequest request = new FollowRequest(token, "@newguy", "@allen");
-        new DynamoDBFollowDAO().follow(request);
-
-    }
 
 }

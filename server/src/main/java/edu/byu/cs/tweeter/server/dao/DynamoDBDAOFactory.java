@@ -2,6 +2,16 @@ package edu.byu.cs.tweeter.server.dao;
 
 public class DynamoDBDAOFactory implements DAOFactory {
 
+    private static DynamoDBDAOFactory instance = new DynamoDBDAOFactory();
+
+    public static DynamoDBDAOFactory getInstance(){
+        return instance;
+    }
+
+    public static void setInstance(DynamoDBDAOFactory dynamoDBDAOFactory) {
+        DynamoDBDAOFactory.instance = dynamoDBDAOFactory;
+    }
+
     @Override
     public AuthDAO getAuthDAO() {
         return new DynamoDBAuthDAO();

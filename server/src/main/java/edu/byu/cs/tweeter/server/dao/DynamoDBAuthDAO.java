@@ -13,6 +13,7 @@ import edu.byu.cs.tweeter.model.domain.AuthToken;
 public class DynamoDBAuthDAO extends DynamoDBDAO implements AuthDAO {
     private static final String AUTH_INDEX = "alias-time_millis-index";
     private static final String PARTITION_AUTH_KEY = "auth_key";
+    //120 minutes * 60 seconds * 1000 milliseconds
     private static final long EXPIRE_TIME = 120 * 60 * 1000;
 
     private final Table authTable = getTable(AUTH_TABLE);

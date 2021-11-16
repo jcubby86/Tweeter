@@ -94,11 +94,7 @@ public class DynamoDBFollowDAO extends DynamoDBDAO implements FollowDAO {
         try{
             Table userTable = getTable(USER_TABLE);
             Item item = userTable.getItem(USER_ALIAS, request.getTargetUserAlias());
-
-            return new Pair<>(
-                    item.hasAttribute(FOLLOWER_COUNT) ? item.getInt(FOLLOWER_COUNT) : 0,
-                    item.hasAttribute(FOLLOWING_COUNT) ? item.getInt(FOLLOWING_COUNT) : 0
-            );
+            return new Pair<>(item.getInt(FOLLOWER_COUNT), item.getInt(FOLLOWING_COUNT));
         } catch (Exception e){
             System.out.println(e.getMessage());
             throw new DataAccessException("Could not get counts");
@@ -111,12 +107,11 @@ public class DynamoDBFollowDAO extends DynamoDBDAO implements FollowDAO {
             Item item = userTable.getItem(USER_ALIAS, userAlias);
             UpdateItemSpec spec = new UpdateItemSpec().withPrimaryKey(USER_ALIAS, userAlias)
                     .withUpdateExpression("set " + column + " = :a")
-                    .withValueMap(new ValueMap().withInt(":a",
-                            item.hasAttribute(column) ? item.getInt(column) + change : change));
+                    .withValueMap(new ValueMap().withInt(":a", item.getInt(column) + change));
             userTable.updateItem(spec);
         } catch (Exception e){
             System.out.println(e.getMessage());
-            throw new DataAccessException("Could not update Item");
+            throw new DataAccessException("Could not update counts");
         }
     }
 

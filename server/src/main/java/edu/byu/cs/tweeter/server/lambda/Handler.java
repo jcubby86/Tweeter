@@ -12,14 +12,14 @@ import edu.byu.cs.tweeter.server.service.UserService;
 public abstract class Handler<REQUEST extends Request, RESPONSE extends Response> implements RequestHandler<REQUEST, RESPONSE> {
 
     protected UserService getUserService() {
-        return new UserService(new DynamoDBDAOFactory());
+        return new UserService(DynamoDBDAOFactory.getInstance());
     }
 
     protected FollowService getFollowService() {
-        return new FollowService(new DynamoDBDAOFactory());
+        return new FollowService(DynamoDBDAOFactory.getInstance());
     }
 
     protected StatusService getStatusService() {
-        return new StatusService(new DynamoDBDAOFactory());
+        return new StatusService(DynamoDBDAOFactory.getInstance());
     }
 }

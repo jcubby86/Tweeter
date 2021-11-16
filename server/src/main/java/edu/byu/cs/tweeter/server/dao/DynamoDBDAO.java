@@ -14,11 +14,13 @@ public class DynamoDBDAO {
     protected static final String FEED_TABLE = "feed";
     protected static final String STORY_TABLE = "story";
     protected static final String AUTH_TABLE = "auth_tokens";
+
     protected static final String USER_ALIAS = "alias";
     protected static final String FIRST_NAME = "first_name";
     protected static final String LAST_NAME = "last_name";
     protected static final String IMAGE_URL = "image_url";
     protected static final String TIME_MILLIS = "time_millis";
+
     protected static final String FOLLOWER_COUNT = "follower_count";
     protected static final String FOLLOWING_COUNT = "following_count";
 
