@@ -155,6 +155,10 @@ public class StoryFragment extends Fragment implements PagedView<Status> {
             userName = itemView.findViewById(R.id.statusName);
             post = itemView.findViewById(R.id.statusPost);
             datetime = itemView.findViewById(R.id.statusDatetime);
+
+            //itemView.setOnClickListener(view -> Toast.makeText(getContext(), "You selected '" + userName.getText() + "'.", Toast.LENGTH_SHORT).show());
+
+            itemView.setOnClickListener(view -> presenter.getUser(userAlias.getText().toString()));
         }
 
         /**

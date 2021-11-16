@@ -156,18 +156,9 @@ public class FeedFragment extends Fragment implements PagedView<Status> {
             post = itemView.findViewById(R.id.statusPost);
             datetime = itemView.findViewById(R.id.statusDatetime);
 
-            itemView.setOnClickListener(view -> Toast.makeText(getContext(), "You selected '" + userName.getText() + "'.", Toast.LENGTH_SHORT).show());
-            /*
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    String alias = userAlias.getText().toString();
-                    if (!user.getAlias().equals(alias)){
-                        presenter.getUser(alias);
-                    }
-                }
-            });
-             */
+            //itemView.setOnClickListener(view -> Toast.makeText(getContext(), "You selected '" + userName.getText() + "'.", Toast.LENGTH_SHORT).show());
+
+            itemView.setOnClickListener(view -> presenter.getUser(userAlias.getText().toString()));
         }
 
         /**
