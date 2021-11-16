@@ -2,8 +2,6 @@ package edu.byu.cs.tweeter.server.dao;
 
 import com.amazonaws.services.dynamodbv2.document.Item;
 import com.amazonaws.services.dynamodbv2.document.Table;
-import com.amazonaws.services.dynamodbv2.document.spec.UpdateItemSpec;
-import com.amazonaws.services.dynamodbv2.document.utils.ValueMap;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.ObjectMetadata;
@@ -14,36 +12,40 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
+import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.net.request.FollowRequest;
+import edu.byu.cs.tweeter.model.net.request.GetUserRequest;
 import edu.byu.cs.tweeter.model.net.request.LoginRequest;
 import edu.byu.cs.tweeter.model.net.request.RegisterRequest;
-import edu.byu.cs.tweeter.model.net.request.UnfollowRequest;
 import edu.byu.cs.tweeter.server.security.PasswordEncryptor;
 import edu.byu.cs.tweeter.server.util.Pair;
 
 public class DynamoDBUserDAO extends DynamoDBDAO implements UserDAO {
     private static final String PASSWORD = "password";
-    private static final String FOLLOWER_COUNT = "follower_count";
-    private static final String FOLLOWING_COUNT = "following_count";
 
 
     private static final String S3_URL = "https://s3.us-west-2.amazonaws.com/";
     private static final String S3_BUCKET = "jacob-bastian.tweeter";
     private static final String IMAGE_SUFFIX = "profile.png";
 
-    private final Table table = getTable(USER_TABLE);
+    private final Table userTable = getTable(USER_TABLE);
 
     private void putUser(User user, String password) {
-        table.putItem(new Item().withPrimaryKey(USER_ALIAS, user.getAlias())
+        userTable.putItem(new Item().withPrimaryKey(USER_ALIAS, user.getAlias())
                 .withString(FIRST_NAME, user.getFirstName())
                 .withString(LAST_NAME, user.getLastName())
                 .withString(IMAGE_URL, user.getImageUrl())
-                .withString(PASSWORD, password));
+                .withString(PASSWORD, password)
+                .withInt(FOLLOWER_COUNT, 0)
+                .withInt(FOLLOWING_COUNT,0));
     }
 
-    @Override
-    public User getUser(String alias) {
+    private Item getItem(String alias){
+        return userTable.getItem(USER_ALIAS, alias);
+    }
+
+    private User getUser(String alias) {
         try {
             return itemToUser(getItem(alias));
         } catch (Exception e){
@@ -52,8 +54,9 @@ public class DynamoDBUserDAO extends DynamoDBDAO implements UserDAO {
         }
     }
 
-    private Item getItem(String alias){
-        return table.getItem(USER_ALIAS, alias);
+    @Override
+    public User getUser(GetUserRequest request){
+        return getUser(request.getAlias());
     }
 
     @Override
@@ -84,6 +87,20 @@ public class DynamoDBUserDAO extends DynamoDBDAO implements UserDAO {
 
     }
 
+    private String uploadImage(RegisterRequest request) {
+        AmazonS3 s3 = AmazonS3ClientBuilder.standard().withRegion("us-west-2").build();
+
+        byte[] imageBytes = Base64.getDecoder().decode(request.getImage().getBytes());
+        InputStream stream  = new ByteArrayInputStream(imageBytes);
+        ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setContentLength(imageBytes.length);
+        metadata.setContentType("image/png");
+
+        s3.putObject(S3_BUCKET, request.getAlias() + IMAGE_SUFFIX, stream, metadata);
+
+        return S3_URL + S3_BUCKET + "/" + request.getAlias() + IMAGE_SUFFIX;
+    }
+
     @Override
     public Pair<User, Boolean> register(RegisterRequest request) {
         try {
@@ -104,42 +121,11 @@ public class DynamoDBUserDAO extends DynamoDBDAO implements UserDAO {
         }
     }
 
-    private String uploadImage(RegisterRequest request) {
-        AmazonS3 s3 = AmazonS3ClientBuilder.standard().withRegion("us-west-2").build();
+    public static void main(String[] args){
+        AuthToken token = new DynamoDBAuthDAO().getAuthToken("@newguy");
+        FollowRequest request = new FollowRequest(token, "@newguy", "@allen");
+        new DynamoDBFollowDAO().follow(request);
 
-        byte[] imageBytes = Base64.getDecoder().decode(request.getImage().getBytes());
-        InputStream stream  = new ByteArrayInputStream(imageBytes);
-        ObjectMetadata metadata = new ObjectMetadata();
-        metadata.setContentLength(imageBytes.length);
-        metadata.setContentType("image/png");
-
-        s3.putObject(S3_BUCKET, request.getAlias() + IMAGE_SUFFIX, stream, metadata);
-
-        return S3_URL + S3_BUCKET + "/" + request.getAlias() + IMAGE_SUFFIX;
-    }
-
-    private void updateItem(String userAlias, String column, int change) throws DataAccessException {
-        try{
-            Item item = getItem(userAlias);
-            UpdateItemSpec spec = new UpdateItemSpec().withPrimaryKey(USER_ALIAS, userAlias)
-                    .withUpdateExpression("set " + column + " = :a")
-                    .withValueMap(new ValueMap().withInt(":a", item.getInt(column) + change));
-            table.updateItem(spec);
-        } catch (Exception e){
-            throw new DataAccessException("Could not update Item");
-        }
-    }
-
-    @Override
-    public void follow(FollowRequest request) {
-        updateItem(request.getFolloweeAlias(), FOLLOWER_COUNT, 1);
-        updateItem(request.getFollowerAlias(), FOLLOWING_COUNT, 1);
-    }
-
-    @Override
-    public void unfollow(UnfollowRequest request) {
-        updateItem(request.getFolloweeAlias(), FOLLOWER_COUNT, -1);
-        updateItem(request.getFollowerAlias(), FOLLOWING_COUNT, -1);
     }
 
 }

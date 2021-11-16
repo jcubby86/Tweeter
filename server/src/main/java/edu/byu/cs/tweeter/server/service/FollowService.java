@@ -28,7 +28,7 @@ public class FollowService extends Service{
     public GetFollowingResponse getFollowing(GetFollowingRequest request) {
         if (isAuthorized(request)) {
             String last = request.getLastItem() == null ? null : request.getLastItem().getAlias();
-            Pair<List<String>, Boolean> data = getFollowDAO().getFollowingPaged(request.getTargetUserAlias(),
+            Pair<List<String>, Boolean> data = getFollowDAO().getFollowing(request.getTargetUserAlias(),
                     request.getLimit(), last);
             List<User> users = getUserDAO().getUserList(data.getFirst());
             System.out.println("Retrieved following for " + request.getTargetUserAlias());
@@ -42,7 +42,7 @@ public class FollowService extends Service{
     public GetFollowersResponse getFollowers(GetFollowersRequest request){
         if (isAuthorized(request)) {
             String last = request.getLastItem() == null ? null : request.getLastItem().getAlias();
-            Pair<List<String>, Boolean> data = getFollowDAO().getFollowersPaged(request.getTargetUserAlias(),
+            Pair<List<String>, Boolean> data = getFollowDAO().getFollowers(request.getTargetUserAlias(),
                     request.getLimit(), last);
             List<User> users = getUserDAO().getUserList(data.getFirst());
 
@@ -57,7 +57,7 @@ public class FollowService extends Service{
     public IsFollowerResponse isFollower(IsFollowerRequest request) {
         if (isAuthorized(request)) {
             System.out.println("Checking if " + request.getFollower() + "is following " + request.getFollowee());
-            return new IsFollowerResponse(getFollowDAO().isFollower(request.getFollower(), request.getFollowee()));
+            return new IsFollowerResponse(getFollowDAO().isFollower(request));
         } else {
             logUnauthorized(request);
             return new IsFollowerResponse(NOT_AUTHORIZED);
@@ -67,7 +67,6 @@ public class FollowService extends Service{
     public FollowResponse follow(FollowRequest request) {
         if (isAuthorized(request)) {
             getFollowDAO().follow(request);
-            getUserDAO().follow(request);
             System.out.println(request.getFollowerAlias() + " following " + request.getFolloweeAlias());
             return new FollowResponse();
         } else {
@@ -79,7 +78,6 @@ public class FollowService extends Service{
     public UnfollowResponse unfollow(UnfollowRequest request) {
         if (isAuthorized(request)) {
             getFollowDAO().unfollow(request);
-            getUserDAO().unfollow(request);
             System.out.println(request.getFollowerAlias() + " unfollowing " + request.getFolloweeAlias());
             return new UnfollowResponse();
         } else {
@@ -90,7 +88,7 @@ public class FollowService extends Service{
 
     public GetCountResponse getCount(GetCountRequest request) {
         if (isAuthorized(request)) {
-            Pair<Integer, Integer> data = getFollowDAO().getCount(request.getTargetUserAlias());
+            Pair<Integer, Integer> data = getFollowDAO().getCount(request);
             System.out.println("Getting counts for " + request.getTargetUserAlias());
             return new GetCountResponse(data.getFirst(), data.getSecond());
         } else {

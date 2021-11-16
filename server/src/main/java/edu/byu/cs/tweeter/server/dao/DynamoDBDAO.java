@@ -19,6 +19,8 @@ public class DynamoDBDAO {
     protected static final String LAST_NAME = "last_name";
     protected static final String IMAGE_URL = "image_url";
     protected static final String TIME_MILLIS = "time_millis";
+    protected static final String FOLLOWER_COUNT = "follower_count";
+    protected static final String FOLLOWING_COUNT = "following_count";
 
     private static final AmazonDynamoDB client;
     private static final DynamoDB dynamoDB;

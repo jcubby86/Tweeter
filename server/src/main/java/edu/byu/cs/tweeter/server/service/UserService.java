@@ -1,7 +1,5 @@
 package edu.byu.cs.tweeter.server.service;
 
-import com.amazonaws.services.lambda.runtime.LambdaLogger;
-
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.net.request.GetUserRequest;
 import edu.byu.cs.tweeter.model.net.request.LoginRequest;
@@ -23,7 +21,7 @@ public class UserService extends Service {
     public GetUserResponse getUser(GetUserRequest request) {
         if (isAuthorized(request)) {
             System.out.println("Retrieving user " + request.getAlias() + " for user " + request.getAuthToken().getUserAlias());
-            return new GetUserResponse(getUserDAO().getUser(request.getAlias()));
+            return new GetUserResponse(getUserDAO().getUser(request));
         } else {
             logUnauthorized(request);
             return new GetUserResponse(NOT_AUTHORIZED);

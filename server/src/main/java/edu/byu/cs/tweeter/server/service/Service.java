@@ -1,7 +1,5 @@
 package edu.byu.cs.tweeter.server.service;
 
-import com.amazonaws.services.lambda.runtime.LambdaLogger;
-
 import edu.byu.cs.tweeter.model.net.request.AuthorizedRequest;
 import edu.byu.cs.tweeter.server.dao.AuthDAO;
 import edu.byu.cs.tweeter.server.dao.DAOFactory;

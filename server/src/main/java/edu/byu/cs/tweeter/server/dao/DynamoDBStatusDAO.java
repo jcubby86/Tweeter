@@ -29,11 +29,11 @@ public class DynamoDBStatusDAO extends DynamoDBDAO{
     @SuppressWarnings("SimpleDateFormat")
     private final SimpleDateFormat statusFormat = new SimpleDateFormat("MMM d yyyy h:mm aaa");
     private final String TABLE_NAME;
-    private final Table table;
+    private final Table statusTable;
 
     public DynamoDBStatusDAO(String tableName){
         TABLE_NAME = tableName;
-        table = getTable(TABLE_NAME);
+        statusTable = getTable(TABLE_NAME);
     }
 
     private long toTimeMillis(String datetime) throws ParseException {
@@ -62,7 +62,7 @@ public class DynamoDBStatusDAO extends DynamoDBDAO{
                         TIME_MILLIS, toTimeMillis(lastStatus.getDatetime()));
             }
 
-            ItemCollection<QueryOutcome> items = table.query(spec);
+            ItemCollection<QueryOutcome> items = statusTable.query(spec);
             List<Status> statuses = new ArrayList<>();
 
             Table userTable = getTable(USER_TABLE);
