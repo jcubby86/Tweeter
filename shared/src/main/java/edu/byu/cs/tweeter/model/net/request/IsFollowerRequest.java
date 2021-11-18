@@ -3,10 +3,7 @@ package edu.byu.cs.tweeter.model.net.request;
 import edu.byu.cs.tweeter.model.domain.AuthToken;
 
 public class IsFollowerRequest extends AuthorizedRequest{
-    /**
-     * The alleged follower.
-     */
-    private String follower;
+
     /**
      * The alleged followee.
      */
@@ -15,17 +12,9 @@ public class IsFollowerRequest extends AuthorizedRequest{
     private IsFollowerRequest() {
     }
 
-    public IsFollowerRequest(AuthToken authToken, String follower, String followee) {
+    public IsFollowerRequest(AuthToken authToken, String followee) {
         super(authToken);
-        this.follower = follower;
         this.followee = followee;
-    }
-
-    public String getFollower() {
-        return follower;
-    }
-    public void setFollower(String follower) {
-        this.follower = follower;
     }
 
     public String getFollowee() {
@@ -38,7 +27,7 @@ public class IsFollowerRequest extends AuthorizedRequest{
     @Override
     public void checkRequest() {
         super.checkRequest();
-        if (followee == null || follower == null){
+        if (followee == null){
             badRequest();
         }
     }

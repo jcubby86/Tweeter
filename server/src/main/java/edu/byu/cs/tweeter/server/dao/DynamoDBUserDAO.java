@@ -22,7 +22,6 @@ import edu.byu.cs.tweeter.server.util.Pair;
 public class DynamoDBUserDAO extends DynamoDBDAO implements UserDAO {
     private static final String PASSWORD = "password";
 
-
     private static final String S3_URL = "https://s3.us-west-2.amazonaws.com/";
     private static final String S3_BUCKET = "jacob-bastian.tweeter";
     private static final String IMAGE_SUFFIX = "profile.png";

@@ -56,7 +56,7 @@ public class FollowService extends Service{
 
     public IsFollowerResponse isFollower(IsFollowerRequest request) {
         if (isAuthorized(request)) {
-            System.out.println("Checking if " + request.getFollower() + "is following " + request.getFollowee());
+            System.out.println("Checking if " + request.getAuthToken().getUserAlias() + "is following " + request.getFollowee());
             return new IsFollowerResponse(getFollowDAO().isFollower(request));
         } else {
             logUnauthorized(request);
@@ -67,7 +67,7 @@ public class FollowService extends Service{
     public FollowResponse follow(FollowRequest request) {
         if (isAuthorized(request)) {
             getFollowDAO().follow(request);
-            System.out.println(request.getFollowerAlias() + " following " + request.getFolloweeAlias());
+            System.out.println(request.getAuthToken().getUserAlias() + " following " + request.getFolloweeAlias());
             return new FollowResponse();
         } else {
             logUnauthorized(request);
@@ -78,7 +78,7 @@ public class FollowService extends Service{
     public UnfollowResponse unfollow(UnfollowRequest request) {
         if (isAuthorized(request)) {
             getFollowDAO().unfollow(request);
-            System.out.println(request.getFollowerAlias() + " unfollowing " + request.getFolloweeAlias());
+            System.out.println(request.getAuthToken().getUserAlias() + " unfollowing " + request.getFolloweeAlias());
             return new UnfollowResponse();
         } else {
             logUnauthorized(request);

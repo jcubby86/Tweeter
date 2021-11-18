@@ -25,64 +25,51 @@ public class DynamoDBFollowDAO extends DynamoDBDAO implements FollowDAO {
 
     private final Table followsTable = getTable(FOLLOWS_TABLE);
 
-    private QuerySpec getFollowingSpec(String follower_handle){
+    private QuerySpec getQuerySpec(String handle, String attribute, int pageSize){
         HashMap<String, String> nameMap = new HashMap<>();
-        nameMap.put("#f", FOLLOWER_HANDLE);
+        nameMap.put("#f", attribute);
 
         HashMap<String, Object> valueMap = new HashMap<>();
-        valueMap.put(":ffff", follower_handle);
+        valueMap.put(":ffff", handle);
         return new QuerySpec().withKeyConditionExpression("#f = :ffff")
-                .withNameMap(nameMap).withValueMap(valueMap);
+                .withNameMap(nameMap).withValueMap(valueMap).withMaxResultSize(pageSize);
+    }
+
+    private Pair<List<String>, Boolean> getPair(int pageSize, ItemCollection<QueryOutcome> followers, String followerHandle) {
+        List<String> followerAliases = new ArrayList<>();
+
+        for (Item item : followers) {
+            followerAliases.add(item.getString(followerHandle));
+        }
+
+        return new Pair<>(followerAliases, followerAliases.size() == pageSize);
     }
 
     public Pair<List<String>, Boolean> getFollowing(String follower_handle, int pageSize, String lastFolloweeAlias){
         try{
-            QuerySpec spec = getFollowingSpec(follower_handle).withMaxResultSize(pageSize);
+            QuerySpec spec = getQuerySpec(follower_handle, FOLLOWER_HANDLE, pageSize);
             if (lastFolloweeAlias != null){
                 //Sort and partition switched with index
                 spec.withExclusiveStartKey(FOLLOWEE_HANDLE, lastFolloweeAlias, FOLLOWER_HANDLE, follower_handle);
             }
 
             ItemCollection<QueryOutcome> following = followsTable.query(spec);
-            List<String> followingAliases = new ArrayList<>();
-
-            for (Item item: following){
-                followingAliases.add(item.getString(FOLLOWEE_HANDLE));
-            }
-
-            return new Pair<>(followingAliases, followingAliases.size() == pageSize);
+            return getPair(pageSize, following, FOLLOWEE_HANDLE);
         } catch (Exception e){
             System.out.println(e.getMessage());
             throw new DataAccessException("Could not retrieve following");
         }
     }
 
-    private QuerySpec getFollowersSpec(String followee_handle){
-        HashMap<String, String> nameMap = new HashMap<>();
-        nameMap.put("#f", FOLLOWEE_HANDLE);
-
-        HashMap<String, Object> valueMap = new HashMap<>();
-        valueMap.put(":ffff", followee_handle);
-
-        return new QuerySpec().withKeyConditionExpression("#f = :ffff")
-                .withNameMap(nameMap).withValueMap(valueMap);
-    }
-
     public Pair<List<String>, Boolean> getFollowers(String followee_handle, int pageSize, String lastFollowerAlias){
         try{
-            QuerySpec spec = getFollowersSpec(followee_handle).withMaxResultSize(pageSize);
+            QuerySpec spec = getQuerySpec(followee_handle, FOLLOWEE_HANDLE, pageSize);
             if (lastFollowerAlias != null){
                 spec = spec.withExclusiveStartKey(FOLLOWER_HANDLE, lastFollowerAlias, FOLLOWEE_HANDLE, followee_handle);
             }
 
             ItemCollection<QueryOutcome> followers = followsTable.getIndex(FOLLOWS_INDEX).query(spec);
-            List<String> followerAliases = new ArrayList<>();
-
-            for (Item item : followers) {
-                followerAliases.add(item.getString(FOLLOWER_HANDLE));
-            }
-
-            return new Pair<>(followerAliases, followerAliases.size() == pageSize);
+            return getPair(pageSize, followers, FOLLOWER_HANDLE);
         } catch (Exception e){
             System.out.println(e.getMessage());
             throw new DataAccessException("Could not retrieve followers");
@@ -117,32 +104,32 @@ public class DynamoDBFollowDAO extends DynamoDBDAO implements FollowDAO {
 
     public void follow(FollowRequest request) {
         try {
-            followsTable.putItem(new Item().withPrimaryKey(FOLLOWER_HANDLE, request.getFollowerAlias(),
+            followsTable.putItem(new Item().withPrimaryKey(FOLLOWER_HANDLE, request.getAuthToken().getUserAlias(),
                     FOLLOWEE_HANDLE, request.getFolloweeAlias()));
         } catch (Exception e){
             System.out.println(e.getMessage());
             throw new DataAccessException("Could not follow user");
         }
         updateCount(request.getFolloweeAlias(), FOLLOWER_COUNT, 1);
-        updateCount(request.getFollowerAlias(), FOLLOWING_COUNT, 1);
+        updateCount(request.getAuthToken().getUserAlias(), FOLLOWING_COUNT, 1);
     }
 
     public void unfollow(UnfollowRequest request) {
         try{
-            followsTable.deleteItem(FOLLOWER_HANDLE, request.getFollowerAlias(),
+            followsTable.deleteItem(FOLLOWER_HANDLE, request.getAuthToken().getUserAlias(),
                     FOLLOWEE_HANDLE, request.getFolloweeAlias());
         }catch (Exception e){
             System.out.println(e.getMessage());
             throw new DataAccessException("Could not unfollow user");
         }
         updateCount(request.getFolloweeAlias(), FOLLOWER_COUNT, -1);
-        updateCount(request.getFollowerAlias(), FOLLOWING_COUNT, -1);
+        updateCount(request.getAuthToken().getUserAlias(), FOLLOWING_COUNT, -1);
     }
 
     @Override
     public boolean isFollower(IsFollowerRequest request) {
         try{
-            return followsTable.getItem(FOLLOWER_HANDLE, request.getFollower(), FOLLOWEE_HANDLE, request.getFollowee()) != null;
+            return followsTable.getItem(FOLLOWER_HANDLE, request.getAuthToken().getUserAlias(), FOLLOWEE_HANDLE, request.getFollowee()) != null;
         }catch (Exception e){
             System.out.println(e.getMessage());
             throw new DataAccessException("Could not determine following relationship");
