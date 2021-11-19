@@ -11,6 +11,7 @@ import edu.byu.cs.tweeter.model.net.response.GetStoryResponse;
 import edu.byu.cs.tweeter.model.net.response.PostStatusResponse;
 import edu.byu.cs.tweeter.server.dao.DAOFactory;
 import edu.byu.cs.tweeter.server.dao.FollowDAO;
+import edu.byu.cs.tweeter.server.sqs.UpdateFeedsMessage;
 import edu.byu.cs.tweeter.server.util.Pair;
 
 public class StatusService extends Service{
@@ -45,16 +46,6 @@ public class StatusService extends Service{
 
     public PostStatusResponse postStatus(PostStatusRequest request) {
         if (isAuthorized(request)) {
-
-            FollowDAO followDAO = getFollowDAO();
-            Pair<List<String>, Boolean> data = followDAO.getFollowers(request.getAuthToken().getUserAlias(), PAGE_SIZE, null);
-            List<String> followers = data.getFirst();
-            while (data.getSecond()){
-                data = followDAO.getFollowers(request.getAuthToken().getUserAlias(), PAGE_SIZE, followers.get(followers.size()-1));
-                followers.addAll(data.getFirst());
-            }
-
-            getFeedDAO().postToFollowers(request.getStatus(), followers);
             getStoryDAO().postToStories(request.getStatus());
             System.out.println("Status posted by user: " + request.getStatus().getUser().getAlias());
             return new PostStatusResponse();
@@ -62,6 +53,10 @@ public class StatusService extends Service{
             logUnauthorized(request);
             return new PostStatusResponse(NOT_AUTHORIZED);
         }
+    }
+
+    public void sqsPostStatus(UpdateFeedsMessage message){
+        getFeedDAO().postToFollowers(message.getStatus(), message.getFollowers());
     }
 
 }

@@ -97,4 +97,9 @@ public class FollowService extends Service{
         }
     }
 
+    public List<String> sqsGetFollowers(String targetUserAlias, String lastFollowerAlias, int pageSize){
+        return getFollowDAO().getFollowers(targetUserAlias,
+                pageSize, lastFollowerAlias).getFirst();
+    }
+
 }

@@ -109,6 +109,7 @@ public class DynamoDBStatusDAO extends DynamoDBDAO{
             while (outcome.getUnprocessedItems().size() > 0) {
                 outcome = getDynamoDB().batchWriteItemUnprocessed(outcome.getUnprocessedItems());
             }
+            System.out.println("Posted batch of Status to Feeds");
 
         } catch (Exception e){
             System.out.println(e.getMessage());
