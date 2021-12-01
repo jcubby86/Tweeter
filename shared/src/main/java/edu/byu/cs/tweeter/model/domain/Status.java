@@ -11,23 +11,24 @@ public class Status implements Serializable {
     /**
      * Text for the status.
      */
-    public String post;
+    private String post;
     /**
      * User who sent the status.
      */
-    public User user;
+    private User user;
     /**
      * String representation of the date/time at which the status was sent.
      */
-    public String datetime;
+    private String datetime;
     /**
      * URLs contained in the post text.
      */
-    public List<String> urls;
+    private List<String> urls;
     /**
      * User mentions contained in the post text.
      */
-    public List<String> mentions;
+    private List<String> mentions;
+    private String author;
 
     public Status() {
     }
@@ -35,6 +36,15 @@ public class Status implements Serializable {
     public Status(String post, User user, String datetime, List<String> urls, List<String> mentions) {
         this.post = post;
         this.user = user;
+        this.author = user.getAlias();
+        this.datetime = datetime;
+        this.urls = urls;
+        this.mentions = mentions;
+    }
+
+    public Status(String post, String author, String datetime, List<String> urls, List<String> mentions) {
+        this.post = post;
+        this.author = author;
         this.datetime = datetime;
         this.urls = urls;
         this.mentions = mentions;
@@ -69,6 +79,12 @@ public class Status implements Serializable {
     }
     public void setMentions(List<String> mentions) {
         this.mentions = mentions;
+    }
+    public String getAuthor() {
+        return author;
+    }
+    public void setAuthor(String author) {
+        this.author = author;
     }
 
     @Override

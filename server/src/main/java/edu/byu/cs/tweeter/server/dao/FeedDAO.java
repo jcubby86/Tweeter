@@ -6,6 +6,6 @@ import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.server.util.Pair;
 
 public interface FeedDAO {
-    Pair<List<Status>, Boolean> getFeed(String alias, int pageSize, Status lastStatus);
+    Pair<List<Status>, Boolean> getFeed(String alias, int pageSize, String lastItem);
     void postToFollowers(Status status, List<String> followers);
 }

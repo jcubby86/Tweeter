@@ -27,9 +27,8 @@ public class FollowService extends Service{
 
     public GetFollowingResponse getFollowing(GetFollowingRequest request) {
         if (isAuthorized(request)) {
-            String last = request.getLastItem() == null ? null : request.getLastItem().getAlias();
             Pair<List<String>, Boolean> data = getFollowDAO().getFollowing(request.getTargetUserAlias(),
-                    request.getLimit(), last);
+                    request.getLimit(), request.getLastItem());
             List<User> users = getUserDAO().getUserList(data.getFirst());
             System.out.println("Retrieved following for " + request.getTargetUserAlias());
             return new GetFollowingResponse(users, data.getSecond());
@@ -41,9 +40,8 @@ public class FollowService extends Service{
 
     public GetFollowersResponse getFollowers(GetFollowersRequest request){
         if (isAuthorized(request)) {
-            String last = request.getLastItem() == null ? null : request.getLastItem().getAlias();
             Pair<List<String>, Boolean> data = getFollowDAO().getFollowers(request.getTargetUserAlias(),
-                    request.getLimit(), last);
+                    request.getLimit(), request.getLastItem());
             List<User> users = getUserDAO().getUserList(data.getFirst());
 
             System.out.println("Retrieved followers for " + request.getTargetUserAlias());

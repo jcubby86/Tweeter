@@ -10,10 +10,11 @@ import java.util.Collections;
 
 public class SQSClient {
 
+    public static final String SQS_QUEUE_PREFIX = "https://sqs.us-west-2.amazonaws.com/081910277536/";
 
     public static void sendMessage(String queueUrl, String messageBody){
         SendMessageRequest send_msg_request = new SendMessageRequest()
-                .withQueueUrl(queueUrl)
+                .withQueueUrl(SQS_QUEUE_PREFIX + queueUrl)
                 .withMessageBody(messageBody)
                 .withDelaySeconds(5);
 

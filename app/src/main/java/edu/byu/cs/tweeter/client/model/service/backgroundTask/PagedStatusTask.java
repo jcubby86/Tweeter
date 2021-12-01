@@ -7,7 +7,7 @@ import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.net.request.PagedRequest;
 import edu.byu.cs.tweeter.model.net.response.PagedResponse;
 
-public abstract class PagedStatusTask<REQUEST extends PagedRequest<Status>, RESPONSE extends PagedResponse<Status>> extends PagedTask<Status, REQUEST, RESPONSE> {
+public abstract class PagedStatusTask<REQUEST extends PagedRequest, RESPONSE extends PagedResponse<Status>> extends PagedTask<Status, REQUEST, RESPONSE> {
 
     private static final String LOG_TAG = "PagedStatusTask";
 

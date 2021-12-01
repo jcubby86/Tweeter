@@ -2,7 +2,7 @@ package edu.byu.cs.tweeter.model.net.request;
 
 import edu.byu.cs.tweeter.model.domain.AuthToken;
 
-public abstract class PagedRequest<DATA> extends AuthorizedRequest{
+public abstract class PagedRequest extends AuthorizedRequest{
     /**
      * The user whose following is being retrieved.
      * (This can be any user, not just the currently logged-in user.)
@@ -16,12 +16,12 @@ public abstract class PagedRequest<DATA> extends AuthorizedRequest{
      * The last person being followed returned in the previous page of results (can be null).
      * This allows the new page to begin where the previous page ended.
      */
-    private DATA lastItem;
+    private String lastItem;
 
     protected PagedRequest() {
     }
 
-    public PagedRequest(AuthToken authToken, String targetUserAlias, int limit, DATA lastItem) {
+    public PagedRequest(AuthToken authToken, String targetUserAlias, int limit, String lastItem) {
         super(authToken);
         this.targetUserAlias = targetUserAlias;
         this.limit = limit;
@@ -42,10 +42,10 @@ public abstract class PagedRequest<DATA> extends AuthorizedRequest{
         this.limit = limit;
     }
 
-    public DATA getLastItem() {
+    public String getLastItem() {
         return lastItem;
     }
-    public void setLastItem(DATA lastItem) {
+    public void setLastItem(String lastItem) {
         this.lastItem = lastItem;
     }
 

@@ -16,7 +16,8 @@ public class FollowingPresenter extends PagedPresenter<User, GetFollowingRespons
 
     @Override
     protected void callService(User user, BackgroundTaskObserver<GetFollowingResponse> observer) {
-        GetFollowingRequest request = new GetFollowingRequest(Cache.getInstance().getCurrUserAuthToken(), user.getAlias(), PAGE_SIZE, lastItem);
+        GetFollowingRequest request = new GetFollowingRequest(Cache.getInstance().getCurrUserAuthToken(),
+                user.getAlias(), PAGE_SIZE, lastItem == null ? null : lastItem.getAlias());
         getFollowService().getFollowing(request, observer);
     }
 

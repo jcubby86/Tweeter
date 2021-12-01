@@ -11,7 +11,7 @@ import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
 import edu.byu.cs.tweeter.model.net.request.PagedRequest;
 import edu.byu.cs.tweeter.model.net.response.PagedResponse;
 
-public abstract class PagedTask<DATA, REQUEST extends PagedRequest<DATA>, RESPONSE extends PagedResponse<DATA>> extends AuthorizedTask<REQUEST, RESPONSE> {
+public abstract class PagedTask<DATA, REQUEST extends PagedRequest, RESPONSE extends PagedResponse<DATA>> extends AuthorizedTask<REQUEST, RESPONSE> {
 
     private static final String LOG_TAG = "PagedTask";
 

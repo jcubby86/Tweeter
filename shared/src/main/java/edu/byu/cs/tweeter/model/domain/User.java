@@ -11,19 +11,19 @@ public class User implements Comparable<User>, Serializable {
     /**
      * The user's first name.
      */
-    public String firstName;
+    private String firstName;
     /**
      * The user's last name.
      */
-    public String lastName;
+    private String lastName;
     /**
      * The users "alias" or "handle" by which they are known to other users (e.g., @susan)
      */
-    public String alias;
+    private String alias;
     /**
      * URL that points to the user's profile image.
      */
-    public String imageUrl;
+    private String imageUrl;
     /**
      * Byte array containing the user's profile image (after download from web).
      */

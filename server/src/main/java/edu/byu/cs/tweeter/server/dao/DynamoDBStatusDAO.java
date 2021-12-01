@@ -46,7 +46,7 @@ public class DynamoDBStatusDAO extends DynamoDBDAO{
         return statusFormat.format(date);
     }
 
-    protected Pair<List<Status>, Boolean> doQuery(String alias, int pageSize, Status lastStatus){
+    protected Pair<List<Status>, Boolean> doQuery(String alias, int pageSize, String lastItem){
         try {
             HashMap<String, String> nameMap = new HashMap<>();
             nameMap.put("#f", USER_ALIAS);
@@ -57,9 +57,9 @@ public class DynamoDBStatusDAO extends DynamoDBDAO{
             QuerySpec spec = new QuerySpec().withKeyConditionExpression("#f = :ffff")
                     .withNameMap(nameMap).withValueMap(valueMap).withScanIndexForward(false)
                     .withMaxResultSize(pageSize);
-            if (lastStatus != null) {
+            if (lastItem != null) {
                 spec = spec.withExclusiveStartKey(USER_ALIAS, alias,
-                        TIME_MILLIS, toTimeMillis(lastStatus.getDatetime()));
+                        TIME_MILLIS, toTimeMillis(lastItem));
             }
 
             ItemCollection<QueryOutcome> items = statusTable.query(spec);
@@ -85,7 +85,7 @@ public class DynamoDBStatusDAO extends DynamoDBDAO{
     private Item getItem(Status status, String userAlias) throws ParseException {
         return new Item().withPrimaryKey(USER_ALIAS, userAlias,
                 TIME_MILLIS, toTimeMillis(status.getDatetime()))
-                .withString(AUTHOR, status.getUser().getAlias())
+                .withString(AUTHOR, status.getAuthor())
                 .withString(POST, status.getPost())
                 .withList(URLS, status.getUrls())
                 .withList(MENTIONS, status.getMentions());

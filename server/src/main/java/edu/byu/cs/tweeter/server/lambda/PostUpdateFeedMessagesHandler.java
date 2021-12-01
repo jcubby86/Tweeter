@@ -1,21 +1,21 @@
-package edu.byu.cs.tweeter.server.sqs;
+package edu.byu.cs.tweeter.server.lambda;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.SQSEvent;
 
-import java.util.Collections;
 import java.util.List;
 
 import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.net.JsonSerializer;
 import edu.byu.cs.tweeter.server.dao.FactoryManager;
 import edu.byu.cs.tweeter.server.service.FollowService;
-import edu.byu.cs.tweeter.server.util.Pair;
+import edu.byu.cs.tweeter.server.sqs.SQSClient;
+import edu.byu.cs.tweeter.server.sqs.UpdateFeedsMessage;
 
 public class PostUpdateFeedMessagesHandler implements RequestHandler<SQSEvent, Void> {
-    private static final int PAGE_SIZE = 25;
-    private static final String UPDATE_FEEDS_QUEUE = "https://sqs.us-west-2.amazonaws.com/081910277536/UpdateFeedsQueue";
+    private static final int PAGE_SIZE = 5;
+    private static final String UPDATE_FEEDS_QUEUE = "UpdateFeedsQueue";
 
     @Override
     public Void handleRequest(SQSEvent event, Context context) {
@@ -25,19 +25,23 @@ public class PostUpdateFeedMessagesHandler implements RequestHandler<SQSEvent, V
             FollowService followService = new FollowService(FactoryManager.getDAOFactory());
 
             List<String> followers = followService.sqsGetFollowers(
-                    status.getUser().getAlias(), null, PAGE_SIZE);
+                    status.getAuthor(), null, PAGE_SIZE);
+
+            int messagesSent = 0;
 
             while(followers.size() > 0){
-                UpdateFeedsMessage updateFeedsMessage = new UpdateFeedsMessage(status, followers);
+                UpdateFeedsMessage updateFeedsMessage = new UpdateFeedsMessage(status, followers, ++messagesSent);
                 String message = JsonSerializer.serialize(updateFeedsMessage);
 
                 //TODO replace this with actual call to SQS Queue
-                SQSEvent sqsEvent = SQSClient.getSQSEvent(message);
-                new UpdateFeedsHandler().handleRequest(sqsEvent, null);
+                //SQSEvent sqsEvent = SQSClient.getSQSEvent(message);
+                //new UpdateFeedsHandler().handleRequest(sqsEvent, null);
                 //----------------------------------------------------------
-                System.out.println("Added UpdateFeedsMessage to SQS Queue");
+                SQSClient.sendMessage(UPDATE_FEEDS_QUEUE, message);
 
-                followers = followService.sqsGetFollowers(status.getUser().getAlias(), followers.get(followers.size() - 1), PAGE_SIZE);
+                System.out.println("Added UpdateFeedsMessage " + messagesSent + " to SQS Queue.");
+
+                followers = followService.sqsGetFollowers(status.getAuthor(), followers.get(followers.size() - 1), PAGE_SIZE);
             }
 
         }

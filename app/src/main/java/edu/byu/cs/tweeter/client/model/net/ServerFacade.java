@@ -1,8 +1,8 @@
 package edu.byu.cs.tweeter.client.model.net;
 
 import java.io.IOException;
-import java.util.Map;
 
+import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
 import edu.byu.cs.tweeter.model.net.request.FollowRequest;
 import edu.byu.cs.tweeter.model.net.request.GetCountRequest;
@@ -43,8 +43,8 @@ public class ServerFacade {
 
     private final ClientCommunicator clientCommunicator = new ClientCommunicator(SERVER_URL);
 
-    private <REQUEST extends Request, RESPONSE extends Response> RESPONSE post(String urlPath, REQUEST request, Map<String, String> headers, Class<RESPONSE> returnType) throws IOException, TweeterRemoteException {
-        return clientCommunicator.doPost(urlPath, request, headers, returnType);
+    private <REQUEST extends Request, RESPONSE extends Response> RESPONSE post(String urlPath, REQUEST request, Class<RESPONSE> returnType) throws IOException, TweeterRemoteException {
+        return clientCommunicator.doPost(urlPath, request, null, returnType);
     }
 
     /**
@@ -54,19 +54,19 @@ public class ServerFacade {
      * @return the login response.
      */
     public LoginResponse login(LoginRequest request) throws IOException, TweeterRemoteException {
-        return post("/login", request, null, LoginResponse.class);
+        return post("/login", request, LoginResponse.class);
     }
 
     public RegisterResponse register(RegisterRequest request) throws IOException, TweeterRemoteException {
-        return post("/register", request, null, RegisterResponse.class);
+        return post("/register", request, RegisterResponse.class);
     }
 
     public LogoutResponse logout(LogoutRequest request) throws IOException, TweeterRemoteException {
-        return post("/logout", request, null, LogoutResponse.class);
+        return post("/logout", request, LogoutResponse.class);
     }
 
     public GetUserResponse getUser(GetUserRequest request) throws IOException, TweeterRemoteException {
-        return post("/getuser", request, null, GetUserResponse.class);
+        return post("/getuser", request, GetUserResponse.class);
     }
 
 
@@ -80,39 +80,59 @@ public class ServerFacade {
      * @return the followees.
      */
     public GetFollowingResponse getFollowing(GetFollowingRequest request) throws IOException, TweeterRemoteException {
-        return post("/getfollowing", request, null, GetFollowingResponse.class);
+        return post("/getfollowing", request, GetFollowingResponse.class);
     }
 
     public GetFollowersResponse getFollowers(GetFollowersRequest request) throws IOException, TweeterRemoteException {
-        return post("/getfollowers", request, null, GetFollowersResponse.class);
+        return post("/getfollowers", request, GetFollowersResponse.class);
     }
 
     public FollowResponse follow(FollowRequest request) throws IOException, TweeterRemoteException {
-        return post("/follow", request, null, FollowResponse.class);
+        return post("/follow", request, FollowResponse.class);
     }
 
     public UnfollowResponse unfollow(UnfollowRequest request) throws IOException, TweeterRemoteException {
-        return post("/unfollow", request, null, UnfollowResponse.class);
+        return post("/unfollow", request, UnfollowResponse.class);
     }
 
     public IsFollowerResponse isFollower(IsFollowerRequest request) throws IOException, TweeterRemoteException {
-        return post("/isfollower", request, null, IsFollowerResponse.class);
+        return post("/isfollower", request, IsFollowerResponse.class);
     }
 
     public GetCountResponse getCount(GetCountRequest request) throws IOException, TweeterRemoteException {
-        return post("/getcount", request, null, GetCountResponse.class);
+        return post("/getcount", request, GetCountResponse.class);
     }
 
 
     public GetStoryResponse getStory(GetStoryRequest request) throws IOException, TweeterRemoteException {
-        return post("/getstory", request, null, GetStoryResponse.class);
+        return post("/getstory", request, GetStoryResponse.class);
     }
 
     public GetFeedResponse getFeed(GetFeedRequest request) throws IOException, TweeterRemoteException {
-        return post("/getfeed", request, null, GetFeedResponse.class);
+        return post("/getfeed", request, GetFeedResponse.class);
     }
 
     public PostStatusResponse postStatus(PostStatusRequest request) throws IOException, TweeterRemoteException {
-        return post("/poststatus", request, null, PostStatusResponse.class);
+        return post("/poststatus", request, PostStatusResponse.class);
+    }
+
+
+    public static void main(String[] args) throws IOException, TweeterRemoteException {
+        AuthToken authToken = new AuthToken("", 0L, "");
+        ServerFacade serverFacade = new ServerFacade();
+
+        serverFacade.register(new RegisterRequest("@allen","", "", "", ""));
+        serverFacade.login(new LoginRequest("@allen", ""));
+        serverFacade.follow(new FollowRequest(authToken, ""));
+        serverFacade.getCount(new GetCountRequest(authToken, ""));
+        serverFacade.getFeed(new GetFeedRequest(authToken, "", 0, null));
+        serverFacade.getFollowers(new GetFollowersRequest(authToken, "", 0, null));
+        serverFacade.getFollowing(new GetFollowingRequest(authToken, "", 0, null));
+        serverFacade.getStory(new GetStoryRequest(authToken, "", 0, null));
+        serverFacade.getUser(new GetUserRequest(authToken, ""));
+        serverFacade.isFollower(new IsFollowerRequest(authToken, ""));
+        serverFacade.logout(new LogoutRequest(authToken));
+        serverFacade.postStatus(new PostStatusRequest(authToken, null));
+        serverFacade.unfollow(new UnfollowRequest(authToken, ""));
     }
 }

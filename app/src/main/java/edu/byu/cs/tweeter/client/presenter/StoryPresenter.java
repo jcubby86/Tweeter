@@ -16,7 +16,8 @@ public class StoryPresenter extends PagedPresenter<Status, GetStoryResponse> {
 
     @Override
     protected void callService(User user, BackgroundTaskObserver<GetStoryResponse> observer) {
-        GetStoryRequest request = new GetStoryRequest(Cache.getInstance().getCurrUserAuthToken(), user.getAlias(), PAGE_SIZE, lastItem);
+        GetStoryRequest request = new GetStoryRequest(Cache.getInstance().getCurrUserAuthToken(),
+                user.getAlias(), PAGE_SIZE, lastItem == null ? null : lastItem.getDatetime());
         getStatusService().getStory(request, observer);
     }
 

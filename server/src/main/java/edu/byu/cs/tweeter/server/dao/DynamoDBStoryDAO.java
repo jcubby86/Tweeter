@@ -13,14 +13,14 @@ public class DynamoDBStoryDAO extends DynamoDBStatusDAO implements StoryDAO{
     }
 
     @Override
-    public Pair<List<Status>, Boolean> getStory(String alias, int pageSize, Status lastStatus) {
-        return doQuery(alias, pageSize, lastStatus);
+    public Pair<List<Status>, Boolean> getStory(String alias, int pageSize, String lastItem) {
+        return doQuery(alias, pageSize, lastItem);
     }
 
     @Override
     public void postToStories(Status status) {
         List<String> targetAliases = new ArrayList<>(status.getMentions());
-        targetAliases.add(status.getUser().getAlias());
+        targetAliases.add(status.getAuthor());
         doWrite(status, targetAliases);
     }
 

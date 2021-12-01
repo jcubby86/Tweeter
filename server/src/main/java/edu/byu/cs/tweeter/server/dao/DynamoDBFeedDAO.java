@@ -12,8 +12,8 @@ public class DynamoDBFeedDAO extends DynamoDBStatusDAO implements FeedDAO{
     }
 
     @Override
-    public Pair<List<Status>, Boolean> getFeed(String alias, int pageSize, Status lastStatus) {
-        return doQuery(alias, pageSize, lastStatus);
+    public Pair<List<Status>, Boolean> getFeed(String alias, int pageSize, String lastItem) {
+        return doQuery(alias, pageSize, lastItem);
     }
 
     @Override
