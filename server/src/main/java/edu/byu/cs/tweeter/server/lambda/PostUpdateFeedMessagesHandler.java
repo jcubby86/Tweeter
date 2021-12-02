@@ -14,7 +14,7 @@ import edu.byu.cs.tweeter.server.sqs.SQSClient;
 import edu.byu.cs.tweeter.server.sqs.UpdateFeedsMessage;
 
 public class PostUpdateFeedMessagesHandler implements RequestHandler<SQSEvent, Void> {
-    private static final int PAGE_SIZE = 5;
+    private static final int PAGE_SIZE = 25;
     private static final String UPDATE_FEEDS_QUEUE = "UpdateFeedsQueue";
 
     @Override
