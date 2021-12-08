@@ -12,6 +12,7 @@ import edu.byu.cs.tweeter.client.cache.Cache;
 import edu.byu.cs.tweeter.client.model.service.BackgroundTaskObserver;
 import edu.byu.cs.tweeter.client.model.service.StatusService;
 import edu.byu.cs.tweeter.client.presenter.observers.MainView;
+import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.net.request.PostStatusRequest;
 import edu.byu.cs.tweeter.model.net.response.PostStatusResponse;
 
@@ -33,6 +34,7 @@ class MainPresenterTest {
         Mockito.doReturn(mockStatusService).when(mainPresenterSpy).getStatusService();
 
         Cache.setInstance(mockCache);
+        Mockito.doReturn(new User("@allen", "", "")).when(mockCache).getCurrUser();
     }
 
     @Test
@@ -77,7 +79,7 @@ class MainPresenterTest {
         Mockito.verify(mockStatusService).postStatus(captor.capture(), Mockito.any());
 
         assertEquals("Test Post", captor.getValue().getStatus().getPost());
-        assertEquals(mockCache.getCurrUser(), captor.getValue().getStatus().getUser());
+        assertEquals(mockCache.getCurrUser().getAlias(), captor.getValue().getStatus().getAuthor());
 
         Mockito.verify(mockView).clearInfoMessage();
     }

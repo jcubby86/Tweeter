@@ -25,6 +25,7 @@ public class BackgroundTaskHandler<RESPONSE extends Response> extends Handler {
 
     @Override
     public void handleMessage(@NonNull Message msg) {
+        System.out.println("handleMessage");
         @SuppressWarnings("unchecked")
         RESPONSE response = (RESPONSE) msg.getData().getSerializable(BackgroundTask.RESPONSE_KEY);
         boolean success = response.isSuccess();

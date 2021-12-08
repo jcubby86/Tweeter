@@ -35,6 +35,7 @@ public abstract class BackgroundTask<REQUEST extends Request, RESPONSE extends R
     public void run() {
         RESPONSE response;
         try {
+            System.out.println("running task!");
             response = runTask(request);
         } catch (Exception ex) {
             Log.e(LOG_TAG, ex.getMessage(), ex);
@@ -51,6 +52,8 @@ public abstract class BackgroundTask<REQUEST extends Request, RESPONSE extends R
         msg.setData(msgBundle);
 
         messageHandler.sendMessage(msg);
+
+        System.out.println("message sent");
     }
 
     protected ServerFacade getServerFacade() {

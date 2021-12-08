@@ -23,6 +23,7 @@ public class StatusService extends Service {
     }
 
     public void postStatus(PostStatusRequest request, BackgroundTaskObserver<PostStatusResponse> observer) {
+        System.out.println("In StatusService.postStatus");
         PostStatusTask statusTask = new PostStatusTask(request, getHandler(observer));
         runTask(statusTask);
     }

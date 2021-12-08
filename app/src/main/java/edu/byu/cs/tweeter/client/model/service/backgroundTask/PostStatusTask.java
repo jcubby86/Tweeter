@@ -18,6 +18,7 @@ public class PostStatusTask extends AuthorizedTask<PostStatusRequest, PostStatus
 
     public PostStatusTask(PostStatusRequest request, Handler messageHandler) {
         super(request, messageHandler);
+        System.out.println("In PostStatusTask constructor");
     }
 
     @Override

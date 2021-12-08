@@ -76,7 +76,7 @@ public class User implements Comparable<User>, Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return alias.equals(user.alias);
+        return alias.equals(user.alias) && firstName.equals(user.firstName) && lastName.equals(user.lastName);
     }
 
     @Override

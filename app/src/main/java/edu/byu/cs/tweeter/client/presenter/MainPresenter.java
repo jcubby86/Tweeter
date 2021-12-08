@@ -128,22 +128,11 @@ public class MainPresenter extends Presenter<MainView> {
     public void postStatus(String post) {
         try {
             view.displayInfoMessage("Posting Status...");
+            System.out.println("in MainPresenter.postStatus");
             Status newStatus = new Status(post, Cache.getInstance().getCurrUser().getAlias(),
                     getFormattedDateTime(), parseURLs(post), parseMentions(post));
             PostStatusRequest request = new PostStatusRequest(Cache.getInstance().getCurrUserAuthToken(), newStatus);
-            getStatusService().postStatus(request, new BackgroundTaskObserver<PostStatusResponse>() {
-                @Override
-                public void handleFailure(String message) {
-                    view.clearInfoMessage();
-                    view.displayErrorMessage(message);
-                }
-
-                @Override
-                public void handleSuccess(PostStatusResponse response) {
-                    view.clearInfoMessage();
-                    view.statusPostComplete();
-                }
-            });
+            getStatusService().postStatus(request, getPostStatusObserver());
         } catch (Exception ex) {
             Log.e(LOG_TAG, ex.getMessage(), ex);
             view.clearInfoMessage();
@@ -215,4 +204,21 @@ public class MainPresenter extends Presenter<MainView> {
             return word.length();
         }
     }
+
+    BackgroundTaskObserver<PostStatusResponse> getPostStatusObserver(){
+        return new BackgroundTaskObserver<PostStatusResponse>() {
+            @Override
+            public void handleFailure(String message) {
+                view.clearInfoMessage();
+                view.displayErrorMessage(message);
+            }
+
+            @Override
+            public void handleSuccess(PostStatusResponse response) {
+                view.clearInfoMessage();
+                view.statusPostComplete();
+            }
+        };
+    }
+
 }

@@ -15,10 +15,6 @@ public class PostStatusHandler extends Handler<PostStatusRequest, PostStatusResp
         PostStatusResponse response = getStatusService().postStatus(input);
         if (response.isSuccess()) {
             String message = JsonSerializer.serialize(input.getStatus());
-            //TODO replace this with actual call to SQS Queue
-            //SQSEvent sqsEvent = SQSClient.getSQSEvent(message);
-            //new PostUpdateFeedMessagesHandler().handleRequest(sqsEvent, null);
-            //----------------------------------------------------------
             SQSClient.sendMessage(POST_STATUS_QUEUE, message);
 
             System.out.println("Added status to SQS Queue");

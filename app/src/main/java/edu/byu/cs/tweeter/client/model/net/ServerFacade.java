@@ -113,6 +113,7 @@ public class ServerFacade {
     }
 
     public PostStatusResponse postStatus(PostStatusRequest request) throws IOException, TweeterRemoteException {
+        System.out.println("In ServerFacade.postStatus");
         return post("/poststatus", request, PostStatusResponse.class);
     }
 

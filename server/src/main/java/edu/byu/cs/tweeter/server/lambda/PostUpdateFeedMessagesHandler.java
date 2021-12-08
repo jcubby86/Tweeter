@@ -33,10 +33,6 @@ public class PostUpdateFeedMessagesHandler implements RequestHandler<SQSEvent, V
                 UpdateFeedsMessage updateFeedsMessage = new UpdateFeedsMessage(status, followers, ++messagesSent);
                 String message = JsonSerializer.serialize(updateFeedsMessage);
 
-                //TODO replace this with actual call to SQS Queue
-                //SQSEvent sqsEvent = SQSClient.getSQSEvent(message);
-                //new UpdateFeedsHandler().handleRequest(sqsEvent, null);
-                //----------------------------------------------------------
                 SQSClient.sendMessage(UPDATE_FEEDS_QUEUE, message);
 
                 System.out.println("Added UpdateFeedsMessage " + messagesSent + " to SQS Queue.");
