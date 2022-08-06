@@ -25,12 +25,4 @@ public class SQSClient {
         System.out.println("Message ID: " + msgId);
     }
 
-    public static SQSEvent getSQSEvent(String message){
-        SQSEvent sqsEvent = new SQSEvent();
-        SQSEvent.SQSMessage sqsMessage = new SQSEvent.SQSMessage();
-        sqsMessage.setBody(message);
-        sqsEvent.setRecords(Collections.singletonList(sqsMessage));
-
-        return sqsEvent;
-    }
 }
